@@ -1,0 +1,41 @@
+
+<div class="page-box">
+<h1>Sample Set</h1>
+<div *ngFor="let sampleSet of this.sampleSets; let i=index" style="margin:20px; width:85vh">
+    <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="4vw">
+    <mat-card style="width: 100%">
+          <!--name Column-->
+          <div>
+              <mat-form-field >
+                  <input
+                    matInput
+                    placeholder="Set Name"
+                    [disabled]="true"
+                    [value]="sampleSet.name">
+              </mat-form-field>
+          </div>
+
+          <!--sampleSet Column-->
+          <div class="data" fxLayout="row" fxLayoutGap="5px">
+              <mat-form-field style="width: 100%;">
+                  <textarea
+                    style="width: 100%; height: 200px"
+                    matInput
+                    placeholder="Sample Names"
+                    [disabled]="false">
+                      {{sampleSet.sampleNames}}
+                  </textarea>
+                </mat-form-field>
+          </div>
+    </mat-card>
+    <button mat-icon-button #removeBtn color="warn" >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button #removeBtn color="warn" >
+      <mat-icon>add_box</mat-icon>
+    </button>
+    <button mat-icon-button #removeBtn color="warn" >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>

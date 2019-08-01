@@ -1,0 +1,33 @@
+<mat-toolbar color="primary" class="menu">
+    <div>
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+    <div fxFlex fxLayout fxLayoutAlign="flex-end" class="menu__buttons">
+      <div class="menu_logo">
+        <a routerLink="/">
+          <img class="logo-box"src="../../assets/static/images/logo-white.png" alt="Logo" class="menu__logo-img">
+        </a>
+      </div>
+      <ul fxLayout fxLayoutGap="10px">
+        <li><a (click)="onLogout()">Logout</a></li>
+      </ul>
+    </div>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav #sidenav role="navigation">
+          <mat-toolbar class="toolbar" >
+            <app-navigation></app-navigation>
+          </mat-toolbar>
+
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+

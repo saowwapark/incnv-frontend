@@ -1,0 +1,15 @@
+<script>
+    SystemJS.config({
+      map: {
+        "Ideogram": "../../../node_modules/ideogram/dist/js/ideogram.min.js"
+      },
+      baseURL: '/',
+      defaultJSExtensions: true
+    });
+    SystemJS.import('chromosome.component.ts');
+</script>
+<p>
+  chromosome-test works!
+</p>
+
+<div id="container"></div>

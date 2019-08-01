@@ -1,0 +1,15 @@
+.my-dialog {
+  .mat-dialog-container {
+    padding: 0;
+  }
+  .mat-dialog-actions {
+    margin-bottom: 0;
+  }
+  .mat-dialog-content {
+    margin: 0
+  }
+  .mat-toolbar.mat-accent {
+     background: #039be5;
+     color: white;
+  }
+}

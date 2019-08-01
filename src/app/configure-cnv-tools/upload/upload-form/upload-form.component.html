@@ -1,0 +1,119 @@
+<mat-toolbar mat-dialog-title class="mat-accent m-0">
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <!--upload file Column-->
+    <div class="data" fxLayoutGap="5px">
+      <mat-form-field style="width:400px">
+        <input
+          formControlName="uploadedFile"
+          matInput
+          placeholder="Uploaded File..."
+        />
+      </mat-form-field>
+      <button mat-icon-button type="button" (click)="filePicker.click()">
+        <mat-icon>cloud_upload</mat-icon>
+      </button>
+      <input type="file" #filePicker (change)="onFilePicked($event)" />
+    </div>
+
+    <!--cnvToolName Column-->
+    <mat-form-field style="width:400px">
+      <input
+        fxFlex
+        formControlName="cnvToolName"
+        matInput
+        placeholder="CNV Tool Name"
+        #cnvToolName
+        style="font-size: 2rem"
+      />
+      <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
+        >required</mat-error
+      >
+    </mat-form-field>
+
+    <!--sampleSet Column-->
+    <div class="data" fxLayout="row" fxLayoutGap="5px">
+      <mat-form-field style="width:400px">
+        <input
+          type="text"
+          placeholder="Choose Sample Set"
+          aria-label="Number"
+          matInput
+          [matAutocomplete]="auto"
+          formControlName="sampleSet"
+          #sampleSet
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let sampleSetName of filteredSampleSetNames | async"
+            [value]="sampleSetName"
+          >
+            {{ sampleSetName }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="form.get('sampleSet').hasError('required')"
+          >required</mat-error
+        >
+        <mat-error *ngIf="form.get('sampleSet').hasError('notHave')"
+          >not have</mat-error
+        >
+      </mat-form-field>
+      <button mat-icon-button>
+        <mat-icon (click)="onLoadSampleSetPage()">help</mat-icon>
+      </button>
+    </div>
+
+    <!--tags Column-->
+    <div class="data" fxLayoutGap="5px">
+      <mat-form-field style="width:400px">
+        <mat-chip-list #tagList>
+          <mat-chip
+            *ngFor="let tag of tags"
+            selectable="false"
+            [removable]="true"
+            (removed)="onRemoveTag(tag)"
+          >
+            {{ tag }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Tags ..."
+            [matChipInputFor]="tagList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            matChipInputAddOnBlur="true"
+            (matChipInputTokenEnd)="onAddTag($event)"
+          />
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button
+    *ngIf="action !== 'edit'"
+    mat-button
+    (click)="matDialogRef.close(form)"
+    [disabled]="form.invalid"
+    aria-label="SAVE"
+  >
+    ADD
+  </button>
+
+  <button
+    *ngIf="action === 'edit'"
+    mat-button
+    (click)="matDialogRef.close(['save', form])"
+    [disabled]="form.invalid"
+    aria-label="SAVE"
+  >
+    SAVE
+  </button>
+</div>

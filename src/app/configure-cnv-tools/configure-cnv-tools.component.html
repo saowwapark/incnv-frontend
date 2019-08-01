@@ -1,0 +1,35 @@
+<h1>Configure CNV Tool Files</h1>
+
+<mat-horizontal-stepper>
+  <mat-step label="Configure Header Fields">
+    <app-header-fields></app-header-fields>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext mat-raised-button color="primary">
+        Next
+      </button>
+    </div>
+  </mat-step>
+  <mat-step label="Configure Data Fields">
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button
+        mat-button
+        matStepperNext
+        mat-raised-button
+        color="primary"
+        (click)="onHeaderFieldNext()"
+      >
+        Next
+      </button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="submit()">Submit</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

@@ -1,0 +1,52 @@
+body {
+  color: #212121;
+  background-color: #f3f3f3;
+  height: 100%;
+  width: 100%;
+  margin:0;
+  padding:0;
+}
+
+
+
+.heading-primary {
+
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.7rem;
+
+  color: #fff;
+  backface-visibility: hidden;
+  margin-bottom: 6rem;
+
+  &--main {
+    display: block;
+
+    font-size: 6rem;
+    font-weight: 400;
+
+    letter-spacing: 3rem;
+
+    animation-name: moveToLeft;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+  }
+
+  &--sub {
+    display: block;
+    text-transform: uppercase;
+
+    font-size: 2rem;
+    font-weight: 500;
+
+    letter-spacing: 1.75rem;
+
+    animation-name: moveToRight;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+  }
+
+}
+
+

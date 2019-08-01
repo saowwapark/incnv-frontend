@@ -1,0 +1,181 @@
+<div class="page-box">
+  <h1>Choose CNV Results</h1>
+
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <mat-form-field class="filter-sample-set">
+      <mat-select ngModel name="sampleSet" placeholder="Choose Sample Set">
+        <mat-option
+          *ngFor="let sampleSet of this.sampleSets"
+          [value]="sampleSet.id"
+        >
+          {{ sampleSet.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+    <!-- Filter -->
+    <mat-form-field class="filter">
+      <input
+        matInput
+        (keyup)="applyFilter($event.target.value)"
+        placeholder="Filter"
+      />
+    </mat-form-field>
+  </div>
+  <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-checkbox
+          (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+        >
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(element) : null"
+          [checked]="selection.isSelected(element)"
+        >
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- File Name Column -->
+    <ng-container matColumnDef="fileName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>File Name</th>
+      <td mat-cell *matCellDef="let element">
+        <a (click)="onFileName(element)">
+          {{ element.fileName }}
+        </a>
+      </td>
+    </ng-container>
+    <!-- cnvToolName Column -->
+    <ng-container matColumnDef="cnvToolName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Tool</th>
+      <td mat-cell *matCellDef="let element">
+        <a (click)="onCnvtoolName(element)">
+          {{ element.cnvToolName }}
+        </a>
+      </td>
+    </ng-container>
+    <!-- sampleSet Column -->
+    <ng-container matColumnDef="sampleSet">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sample Set</th>
+      <td mat-cell *matCellDef="let element">
+        <a (click)="onSampleSet(element)">
+          {{ element.sampleSetName }}
+        </a>
+      </td>
+    </ng-container>
+    <!-- tags Column -->
+    <ng-container matColumnDef="tags">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tags</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-chip-list>
+          <mat-chip *ngFor="let tag of element.tags">
+            {{ tag }}
+          </mat-chip>
+        </mat-chip-list>
+      </td>
+    </ng-container>
+    <!-- date Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+      <td mat-cell *matCellDef="let element">11/11/2018</td>
+    </ng-container>
+    <!-- size Column -->
+    <ng-container matColumnDef="size">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
+      <td mat-cell *matCellDef="let element">{{ element.size }}</td>
+    </ng-container>
+    <!-- download Column -->
+    <ng-container matColumnDef="download">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Download</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button>
+          <mat-icon>cloud_download</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- expanded Header Field column (colspan = all columns) -->
+    <ng-container matColumnDef="expandedCnvToolName">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          class="expand-detail"
+          fxLayout="column"
+          [@expandedElement]="
+            element == expandElem_cnvToolName ? 'expanded' : 'collapsed'
+          "
+        >
+          <div class="expand-detail-header">
+            CNV Tool: {{ element.cnvToolName }}
+          </div>
+          <app-header-fields
+            [dataSource]="cnvToolNameDataSource"
+            [isDisabled]="true"
+          ></app-header-fields>
+        </div>
+      </td>
+    </ng-container>
+    <!-- expandedSampleSet column (colspan = all columns) -->
+    <ng-container matColumnDef="expandedSampleSet">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          class="expand-detail"
+          fxLayout="column"
+          [@expandedElement]="
+            element == expandElem_sampleSet ? 'expanded' : 'collapsed'
+          "
+        >
+          <div class="expand-detail-header">
+            Sample Set: {{ element.sampleSetName }}
+          </div>
+          <mat-chip-list>
+            <mat-chip
+              *ngFor="let sampleName of getSampleNames(element.sampleSetId)"
+              color="accent"
+              selected
+            >
+              {{ sampleName }}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: displayedColumns"
+      class="element-row"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedCnvToolName']"
+      class="detail-row"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedSampleSet']"
+      class="detail-row"
+    ></tr>
+  </table>
+
+  <!-- Paginator -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+  <button mat-raised-button color="primary" class="next-button">Next</button>
+</div>

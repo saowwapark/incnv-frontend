@@ -1,0 +1,56 @@
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.filter-sample-set {
+  font-size: 14px;
+  width: 80%;
+}
+
+.filter {
+  font-size: 14px;
+  width: 80%;
+}
+
+.next-button {
+  margin-top: 20px;
+  margin-left: calc(80% + 20px);
+}
+
+
+// ----------------
+
+table {
+  width: 100%;
+}
+
+tr.detail-row {
+  height: 0;
+}
+
+tr.element-row:not(.expanded-row):hover {
+  background: #f5f5f5;
+}
+
+tr.element-row:not(.expanded-row):active {
+  background: #efefef;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+}
+
+.expand-detail {
+  padding: 16px;
+}
+
+.expand-detail-header{
+  opacity: 0.5;
+  font-size: 16px;
+}
