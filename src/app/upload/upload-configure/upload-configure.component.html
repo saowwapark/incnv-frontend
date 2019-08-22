@@ -1,0 +1,27 @@
+<h1>Configure Files</h1>
+
+<mat-vertical-stepper #stepper>
+  <mat-step label="Upload File">
+    <upload-form
+      fxLayout="column"
+      fxLayoutAlign="space-between center"
+      (confirmClicked)="goForward(stepper)"
+    ></upload-form>
+  </mat-step>
+  <mat-step label="Reformat File">
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext mat-raised-button color="primary">
+        Next
+      </button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button>Submit</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

@@ -8,22 +8,22 @@ export const navigationData: Navigation[] = [
     icon: 'apps',
     children: [
       {
-        id: 'configureFiles',
-        title: 'Configure Files',
+        id: 'upload',
+        title: 'Upload',
         type: 'collapsable',
         icon: 'dashboard',
         children: [
           {
-            id: 'configureheaderfields',
-            title: 'Header Fields',
+            id: 'configurefiles',
+            title: 'Configure Files',
             type: 'item',
-            url: '/configureheaderfields'
+            url: '/configurefile'
           },
           {
-            id: 'upload',
-            title: 'Upload',
+            id: 'history',
+            title: 'History',
             type: 'item',
-            url: '/upload'
+            url: '/uploadhistory'
           }
         ]
       },
@@ -40,6 +40,20 @@ export const navigationData: Navigation[] = [
         type: 'item',
         icon: 'shopping_cart',
         url: '/sampleset'
+      },
+      {
+        id: 'cnvtool',
+        title: 'CNVtool',
+        type: 'collapsable',
+        icon: 'dashboard',
+        children: [
+          {
+            id: 'tabFileMapping',
+            title: 'File Mapping',
+            type: 'item',
+            url: '/tabFileMapping'
+          }
+        ]
       },
       {
         id: 'analysis',

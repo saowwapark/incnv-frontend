@@ -1,0 +1,25 @@
+.fileMappingcard {
+  width: 90%;
+}
+
+.header-file {
+  width: calc((100% / 8) * 5);
+  .header-file__field {
+    background-color: #69f0ae;
+    font-weight: bold;
+  }
+  .header-file__value {
+    background-color: #b9f6ca;
+  }
+}
+
+.data-file {
+  width: calc((100% / 8) * 3);
+  .data-file__field {
+    background-color: #ffd54f;
+    font-weight: bold;
+  }
+  .data-file__value {
+    background-color: #ffecb3;
+  }
+}

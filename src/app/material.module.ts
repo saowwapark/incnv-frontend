@@ -1,31 +1,31 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 
-import {ScrollingModule} from '@angular/cdk/scrolling';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import {
-    MatIconModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatListModule,
-    MatSelectModule,
-    MatDividerModule,
-    MatGridListModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatStepperModule,
-    MatCardModule,
-    MatSidenavModule,
-    MatChipsModule,
-    MatAutocompleteModule,
-    MatDialogModule,
-    MatProgressSpinnerModule
+  MatIconModule,
+  MatToolbarModule,
+  MatMenuModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatListModule,
+  MatSelectModule,
+  MatDividerModule,
+  MatGridListModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatButtonModule,
+  MatCheckboxModule,
+  MatStepperModule,
+  MatCardModule,
+  MatSidenavModule,
+  MatChipsModule,
+  MatAutocompleteModule,
+  MatDialogModule,
+  MatProgressSpinnerModule,
+  MatRadioModule
 } from '@angular/material';
-
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -53,8 +53,8 @@ import {
     MatAutocompleteModule,
     MatDialogModule,
     ScrollingModule,
-    MatProgressSpinnerModule
-
+    MatProgressSpinnerModule,
+    MatRadioModule
   ]
 })
 export class CustomMaterialModule {}

@@ -1,0 +1,51 @@
+<mat-table [dataSource]="dataSource">
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let sampleset">
+      <mat-checkbox (click)="$event.stopPropagation()"> </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef> Set Name </mat-header-cell>
+    <mat-cell *matCellDef="let sampleset"> {{ sampleset.name }} </mat-cell>
+  </ng-container>
+  <!-- Sample Names Column -->
+  <ng-container matColumnDef="sampleNames">
+    <mat-header-cell *matHeaderCellDef class="samplesetName"
+      >Sample Names</mat-header-cell
+    >
+    <mat-cell *matCellDef="let sampleset">
+      <mat-chip-list>
+        <mat-chip
+          *ngFor="let sampleName of sampleset.sampleNames"
+          color="accent"
+          selected
+        >
+          {{ sampleName }}
+        </mat-chip>
+      </mat-chip-list>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="edit">
+    <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+    <mat-cell *matCellDef="let sampleset">
+      <button mat-icon-button (click)="onEditSampleset(sampleset)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="delete">
+    <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+    <mat-cell *matCellDef="let sampleset">
+      <button mat-icon-button (click)="onDeleteSampleset(sampleset)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

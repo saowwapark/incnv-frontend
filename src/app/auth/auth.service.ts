@@ -1,3 +1,4 @@
+import { ConstantsService } from './../constants.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,7 +13,11 @@ export class AuthService {
   private tokenTimer: any;
   private authStatusListener = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private _http: HttpClient,
+    private _router: Router,
+    private _constant: ConstantsService
+  ) {}
 
   getToken() {
     return this.token;
@@ -28,8 +33,8 @@ export class AuthService {
 
   createUser(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
-    this.http
-      .post('http://localhost:3000/api/user/signup', authData)
+    this._http
+      .post(`${this._constant.baseAppUrl}api/user/signup`, authData)
       .subscribe(response => {
         console.log(response);
       });
@@ -37,9 +42,9 @@ export class AuthService {
 
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
-    this.http
-      .post<{ token: string; expiresIn: number }>(
-        'http://localhost:3000/api/user/login',
+    this._http
+      .post<{ token: string; expiresIn: number; userId: number }>(
+        `${this._constant.baseAppUrl}api/user/login`,
         authData
       )
       .subscribe(response => {
@@ -47,6 +52,7 @@ export class AuthService {
         this.token = token;
         if (token) {
           const expiresInDuration = response.expiresIn;
+          this._constant.userId = response.userId;
           this.setAuthTimer(expiresInDuration);
           this.isAuthenticated = true;
           this.authStatusListener.next(true);
@@ -55,7 +61,7 @@ export class AuthService {
             now.getTime() + expiresInDuration * 1000
           );
           this.saveAuthData(token, expirationDate);
-          this.router.navigate(['/welcome']);
+          this._router.navigate(['/welcome']);
         }
       });
   }
@@ -81,7 +87,7 @@ export class AuthService {
     this.authStatusListener.next(false);
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
-    this.router.navigate(['/']);
+    this._router.navigate(['/']);
   }
   /**
    * Set authentication timer and logout when token expires

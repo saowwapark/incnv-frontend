@@ -1,9 +1,9 @@
+import { Component, OnInit } from '@angular/core';
 import {
+  HeaderFieldOld,
   HEADER_CODEX2,
   HEADER_CoNIFER
-} from 'src/app/types/mock/ALL_CNV_HEADERS';
-import { Component, OnInit } from '@angular/core';
-import { HeaderField } from 'src/app/types/header-field';
+} from 'src/app/cnvtools/tab-file-mapping/tab-file-mapping.model';
 
 @Component({
   selector: 'app-configure-header-fields',
@@ -11,8 +11,8 @@ import { HeaderField } from 'src/app/types/header-field';
   styleUrls: ['./configure-header-fields.component.scss']
 })
 export class ConfigureHeaderFieldsComponent implements OnInit {
-  oldDataSource: HeaderField[] = [HEADER_CODEX2, HEADER_CoNIFER];
-  newDataSource: HeaderField[];
+  oldDataSource: HeaderFieldOld[] = [HEADER_CODEX2, HEADER_CoNIFER];
+  newDataSource: HeaderFieldOld[];
   constructor() {}
   ngOnInit() {
     this.newDataSource = [this.createEmptyHeaderField()];
@@ -20,12 +20,12 @@ export class ConfigureHeaderFieldsComponent implements OnInit {
   createEmptyHeaderField() {
     return {
       id: null,
-      ownerId: null,
+      userId: null,
       cnvToolName: null,
       sampleName: null,
       chr: null,
       startBp: null,
-      stopBp: null,
+      endBp: null,
       cnvType: null
     };
   }

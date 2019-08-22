@@ -86,8 +86,8 @@
       </td>
     </ng-container>
 
-    <!-- stopBp Column -->
-    <ng-container matColumnDef="stopBp">
+    <!-- endBp Column -->
+    <ng-container matColumnDef="endBp">
       <th mat-header-cell *matHeaderCellDef> Stop Basepair</th>
       <td
         mat-cell
@@ -95,10 +95,10 @@
         [formGroupName]="i">
         <mat-form-field appearance="legacy" floatLabel="never">
           <input
-            formControlName="stopBp"
+            formControlName="endBp"
             matInput
             placeholder="Stop Base Pair..."
-            [value]="element.stopBp">
+            [value]="element.endBp">
         </mat-form-field>
       </td>
     </ng-container>

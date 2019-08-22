@@ -32,7 +32,6 @@ export class SearchUtils {
       }
 
       const value = itemObj[prop];
-
       if (typeof value === 'string') {
         if (this.searchInString(value, searchText)) {
           return true;

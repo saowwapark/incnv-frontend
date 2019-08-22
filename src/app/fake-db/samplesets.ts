@@ -1,10 +1,9 @@
-import { SampleSet } from './../sampleset/sampleset.model';
-
-export class SampleSetsFakeDb {
-  public static SAMPLE_SETS: SampleSet[] = [
+import { Sampleset } from '../sampleset/sampleset.model';
+export class SamplesetsFakeDb {
+  public static SAMPLE_SETS: Sampleset[] = [
     {
       id: 1,
-      ownerId: 1,
+      userId: 1,
       name: 'NGS-data1-G',
       sampleNames: [
         'G2223.remdup.uniqMap.TS.bam',
@@ -21,7 +20,7 @@ export class SampleSetsFakeDb {
     },
     {
       id: 2,
-      ownerId: 1,
+      userId: 1,
       name: 'NGS-data2-NA',
       sampleNames: [
         'NA06994',

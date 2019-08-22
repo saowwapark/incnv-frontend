@@ -1,5 +1,6 @@
-import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
-import { AuthInterceptor } from './auth/auth-interceptor';
+import { ConstantsService } from './constants.service';
+import { TabFileMappingService } from './cnvtools/tab-file-mapping/tab-file-mapping.service';
+import { TabFileMappingComponent } from './cnvtools/tab-file-mapping/tab-file-mapping.component';
 /** Import Angular Module **/
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -31,25 +32,37 @@ import { ChooseFilesComponent } from './analysis/choose-files/choose-files.compo
 import { RecentAnalysisComponent } from './activities/recent-analysis/recent-analysis.component';
 import { RecentUploadFilesComponent } from './activities/recent-upload-files/recent-upload-files.component';
 import { ExportFilesComponent } from './export-files/export-files.component';
-import { SampleSetComponent } from './sampleset/sampleset.component';
+import { SamplesetComponent } from './sampleset/sampleset.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ConfigureHeaderFieldsComponent } from './configure-cnv-tools/configure-header-fields/configure-header-fields.component';
-import { UploadListComponent } from './configure-cnv-tools/upload/upload-list/upload-list.component';
-import { UploadFormDialogComponent } from './configure-cnv-tools/upload/upload-form/upload-form.component';
-import { UploadComponent } from './configure-cnv-tools/upload/upload.component';
+import { UploadListComponent } from './upload/upload-history/upload-list/upload-list.component';
+import { UploadFormComponent } from './upload/upload-configure/upload-form/upload-form.component';
+import { UploadComponent } from './upload/upload.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { ItemComponent } from './navigation/item/item.component';
 import { GroupComponent } from './navigation/group/group.component';
 import { CollapsableComponent } from './navigation/collapsable/collapsable.component';
 import { MenuComponent } from './menu/menu.component';
+import { UploadConfigureComponent } from './upload/upload-configure/upload-configure.component';
+import { UploadHistoryComponent } from './upload/upload-history/upload-history.component';
+import { TabFileMappingCardComponent } from './cnvtools/tab-file-mapping/tab-file-mapping-list/tab-file-mapping-card/tab-file-mapping-card.component';
+import { TabFileMappingListComponent } from './cnvtools/tab-file-mapping/tab-file-mapping-list/tab-file-mapping-list.component';
+import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
+import { AuthInterceptor } from './auth/auth-interceptor';
+import { TabFileMappingFormDialogComponent } from './cnvtools/tab-file-mapping/tab-file-mapping-form/tab-file-mapping-form.component';
+import { SamplesetFormDialogComponent } from './sampleset/sampleset-form/sampleset-form.component';
 
 /** Import Services */
 import { FakeDbService } from './fake-db/fake-db.service';
+import { UploadService } from './upload/upload.service';
 
 /** Import Modules */
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { environment } from 'src/environments/environment';
-import { UploadsService } from './configure-cnv-tools/upload/uploads.service';
+import { SamplesetService } from './sampleset/sampleset.service';
+import { SamplesetListComponent } from './sampleset/sampleset-list/sampleset-list.component';
+import { FileListComponent } from './analysis/choose-files/file-list/file-list.component';
+import { UploadReformatComponent } from './upload/upload-configure/upload-reformat/upload-reformat.component';
 
 @NgModule({
   declarations: [
@@ -69,19 +82,29 @@ import { UploadsService } from './configure-cnv-tools/upload/uploads.service';
     RecentAnalysisComponent,
     RecentUploadFilesComponent,
     ExportFilesComponent,
-    SampleSetComponent,
+    SamplesetComponent,
     PageNotFoundComponent,
     ConfigureHeaderFieldsComponent,
     ShortenPipe,
     UploadListComponent,
-    UploadFormDialogComponent,
+    UploadFormComponent,
     UploadComponent,
     NavigationComponent,
     ItemComponent,
     GroupComponent,
     CollapsableComponent,
     MenuComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    UploadConfigureComponent,
+    UploadHistoryComponent,
+    TabFileMappingCardComponent,
+    TabFileMappingListComponent,
+    TabFileMappingFormDialogComponent,
+    TabFileMappingComponent,
+    SamplesetFormDialogComponent,
+    SamplesetListComponent,
+    FileListComponent,
+    UploadReformatComponent
   ],
   imports: [
     BrowserModule,
@@ -101,9 +124,17 @@ import { UploadsService } from './configure-cnv-tools/upload/uploads.service';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    UploadsService
+    TabFileMappingService,
+    SamplesetService,
+    UploadService,
+    ConstantsService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [UploadFormDialogComponent, ConfirmDialogComponent]
+  entryComponents: [
+    TabFileMappingFormDialogComponent,
+    ConfirmDialogComponent,
+    SamplesetFormDialogComponent,
+    UploadFormComponent
+  ]
 })
 export class AppModule {}

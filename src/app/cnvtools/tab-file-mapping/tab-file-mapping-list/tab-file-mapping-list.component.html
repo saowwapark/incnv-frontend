@@ -1,0 +1,14 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<app-tab-file-mapping-card
+  *ngFor="let fileMappingConfigured of fileMappingConfigureds"
+  [fileMappingConfigured]="fileMappingConfigured"
+  fxLayout="row"
+  fxLayoutAlign="space-around center"
+  style="margin: 20px"
+></app-tab-file-mapping-card>
+<p
+  class="info-text mat-body-1"
+  *ngIf="fileMappingConfigureds.length <= 0 && !isLoading"
+>
+  No CNV Tools added yet!
+</p>

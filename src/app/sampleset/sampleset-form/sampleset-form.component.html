@@ -1,0 +1,64 @@
+<mat-toolbar mat-dialog-title class="mat-accent m-0">
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" fxLayout="column" fxLayoutAlign="start start">
+    <!--Sampleset Name Column-->
+    <mat-form-field>
+      <input fxFlex formControlName="name" matInput placeholder="Set Name" />
+    </mat-form-field>
+    <!--Sample Names Column-->
+    <mat-form-field style="width:400px">
+      <mat-chip-list #sampleNameList>
+        <mat-chip
+          *ngFor="
+            let sampleName of form.get('sampleNames').value;
+            let i = index
+          "
+          selectable="false"
+          [removable]="true"
+          (removed)="onRemoveSampleName(i)"
+        >
+          {{ sampleName }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Sample Name"
+          [matChipInputFor]="sampleNameList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          matChipInputAddOnBlur="true"
+          (matChipInputTokenEnd)="onAddSampleName($event)"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+  </form>
+  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button
+      *ngIf="action !== 'edit'"
+      mat-button
+      (click)="matDialogRef.close(form)"
+      [disabled]="
+        form.get('name').invalid || form.get('sampleNames').value.length === 0
+      "
+      aria-label="SAVE"
+    >
+      ADD
+    </button>
+
+    <button
+      *ngIf="action === 'edit'"
+      mat-button
+      (click)="matDialogRef.close(['save', form])"
+      [disabled]="form.invalid"
+      aria-label="SAVE"
+    >
+      SAVE
+    </button>
+  </div>
+</div>

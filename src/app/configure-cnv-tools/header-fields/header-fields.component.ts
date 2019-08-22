@@ -1,6 +1,6 @@
-import { HeaderField } from 'src/app/types/header-field';
+import { HeaderFieldOld } from 'src/app/cnvtools/tab-file-mapping/tab-file-mapping.model';
 import { FormControl, Validators, FormArray, FormGroup } from '@angular/forms';
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CustomValidators } from '../custom.validators';
 
 @Component({
@@ -9,18 +9,20 @@ import { CustomValidators } from '../custom.validators';
   styleUrls: ['./header-fields.component.scss']
 })
 export class HeaderFieldsComponent implements OnInit {
-  @Input() dataSource: HeaderField[];
+  @Input() dataSource: HeaderFieldOld[];
   @Input() isDisabled: boolean;
   headerForm: FormGroup;
 
-  constructor() { }
-  displayedColumns: string[] = ['no',
-                                'cnvToolName',
-                                'sampleName',
-                                'chr',
-                                'startBp',
-                                'stopBp',
-                                'cnvType'];
+  constructor() {}
+  displayedColumns: string[] = [
+    'no',
+    'cnvToolName',
+    'sampleName',
+    'chr',
+    'startBp',
+    'endBp',
+    'cnvType'
+  ];
   ngOnInit() {
     console.log(this.dataSource);
     this.headerForm = new FormGroup({
@@ -36,33 +38,37 @@ export class HeaderFieldsComponent implements OnInit {
   initCnvHeader(): FormGroup[] {
     const formGroups: FormGroup[] = new Array<FormGroup>();
     for (let i = 0; i < this.dataSource.length; i++) {
-      const formGroup = new FormGroup({
-        cnvToolName: new FormControl(
-          { value: null,
-            disabled: this.isDisabled},
-          [ Validators.required,
-            CustomValidators.duplicatedInList(this.getCnvToolNameFromDB(), 'alreadyHave')]),
-        sampleName: new FormControl(
-          { value: null,
-            disabled: this.isDisabled},
-          [Validators.required]),
-        chr: new FormControl(
-          { value: null,
-            disabled: this.isDisabled},
-          [Validators.required]),
-        startBp: new FormControl(
-          { value: null,
-            disabled: this.isDisabled },
-          [Validators.required]),
-        stopBp: new FormControl(
-          { value: null,
-            disabled: this.isDisabled },
-          [Validators.required]),
-        cnvType: new FormControl(
-          { value: null,
-            disabled: this.isDisabled },
-          [Validators.required]),
-      }, [CustomValidators.duplicateInFormGroup]);
+      const formGroup = new FormGroup(
+        {
+          cnvToolName: new FormControl(
+            { value: null, disabled: this.isDisabled },
+            [
+              Validators.required,
+              CustomValidators.duplicatedInList(
+                this.getCnvToolNameFromDB(),
+                'alreadyHave'
+              )
+            ]
+          ),
+          sampleName: new FormControl(
+            { value: null, disabled: this.isDisabled },
+            [Validators.required]
+          ),
+          chr: new FormControl({ value: null, disabled: this.isDisabled }, [
+            Validators.required
+          ]),
+          startBp: new FormControl({ value: null, disabled: this.isDisabled }, [
+            Validators.required
+          ]),
+          endBp: new FormControl({ value: null, disabled: this.isDisabled }, [
+            Validators.required
+          ]),
+          cnvType: new FormControl({ value: null, disabled: this.isDisabled }, [
+            Validators.required
+          ])
+        },
+        [CustomValidators.duplicateInFormGroup]
+      );
 
       formGroups.push(formGroup);
     }
@@ -76,9 +82,8 @@ export class HeaderFieldsComponent implements OnInit {
   onDebug() {
     console.log(this.headerForm);
   }
-  validate() {
-  }
-/*
+  validate() {}
+  /*
   // get data from Form
   getVauleFormForm() {
     const formArray: FormArray = this.headerForm.get('headers') as FormArray;
@@ -87,21 +92,20 @@ export class HeaderFieldsComponent implements OnInit {
       const sampleName = formGroup.get('sampleName').value;
       const chr = formGroup.get('chr').value;
       const startBp = formGroup.get('startBp').value;
-      const stopBp = formGroup.get('stopBp').value;
+      const endBp = formGroup.get('endBp').value;
       const cnvType = formGroup.get('cnvType').value;
       const cnvTool: ChosenHeader = {
         id: 1,
-        ownerId: 1,
+        userId: 1,
         cnvToolName: cnvToolName,
         sampleName: sampleName,
         chr: chr,
         startBp: startBp,
-        stopBp: stopBp,
+        endBp: endBp,
         cnvType: cnvType
       };
       this.chosenHeader.push(cnvTool);
     });
   }
 */
-
 }

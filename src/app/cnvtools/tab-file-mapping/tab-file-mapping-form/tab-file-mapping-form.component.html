@@ -1,0 +1,103 @@
+<mat-toolbar mat-dialog-title class="mat-accent m-0">
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <!--cnvToolName Column-->
+    <mat-form-field>
+      <input
+        fxFlex
+        formControlName="cnvToolName"
+        matInput
+        placeholder="CNV Tool Name"
+      />
+    </mat-form-field>
+    <h2>Header Field</h2>
+    <div
+      class="headerField"
+      formGroupName="headerField"
+      fxLayout="column"
+      fxLayoutAlign="start start"
+    >
+      <mat-form-field>
+        <input
+          fxFlex
+          formControlName="sampleName"
+          matInput
+          placeholder="Sample Name"
+        />
+      </mat-form-field>
+      <mat-form-field
+        ><input fxFlex formControlName="chr" matInput placeholder="Chromosome"
+      /></mat-form-field>
+      <mat-form-field>
+        <input
+          fxFlex
+          formControlName="startBp"
+          matInput
+          placeholder="Start Basepair"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          fxFlex
+          formControlName="endBp"
+          matInput
+          placeholder="End Basepair"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input fxFlex formControlName="cnvType" matInput placeholder="CNV Type"
+      /></mat-form-field>
+    </div>
+    <h2>Data Field</h2>
+    <div
+      class="dataField"
+      formGroupName="dataField"
+      fxLayout="column"
+      fxLayoutAlign="start start"
+    >
+      <mat-form-field>
+        <input
+          fxFlex
+          formControlName="chr22"
+          matInput
+          placeholder="Chromosome 22"
+        />
+      </mat-form-field>
+      <mat-form-field
+        ><input fxFlex formControlName="dup" matInput placeholder="Duplicate"
+      /></mat-form-field>
+      <mat-form-field>
+        <input fxFlex formControlName="del" matInput placeholder="Delete" />
+      </mat-form-field>
+    </div>
+  </form>
+  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button
+      *ngIf="action !== 'edit'"
+      mat-button
+      (click)="matDialogRef.close(form)"
+      [disabled]="form.invalid"
+      aria-label="SAVE"
+    >
+      ADD
+    </button>
+
+    <button
+      *ngIf="action === 'edit'"
+      mat-button
+      (click)="matDialogRef.close(['save', form])"
+      [disabled]="form.invalid"
+      aria-label="SAVE"
+    >
+      SAVE
+    </button>
+  </div>
+</div>

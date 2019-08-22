@@ -1,0 +1,76 @@
+<mat-card class="fileMappingcard">
+  <mat-card-header>
+    <mat-card-title>{{ fileMappingConfigured.cnvToolName }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content
+    fxLayout="row"
+    fxLayoutAlign="space-around stretch"
+    fxLayoutGap="0px"
+  >
+    <div class="header-file">
+      <mat-grid-list cols="5" rowHeight="50px">
+        <mat-grid-tile colspan="5" class="header-file__field"
+          ><mat-grid-tile-header
+            >Header Column</mat-grid-tile-header
+          ></mat-grid-tile
+        >
+
+        <mat-grid-tile class="header-file__field">SAMPLE NAME</mat-grid-tile>
+        <mat-grid-tile class="header-file__field">CHROMOSOME</mat-grid-tile>
+        <mat-grid-tile class="header-file__field">START BASEPAIR</mat-grid-tile>
+        <mat-grid-tile class="header-file__field">END BASEPAIR</mat-grid-tile>
+        <mat-grid-tile class="header-file__field">CNV TYPE</mat-grid-tile>
+      </mat-grid-list>
+      <mat-grid-list cols="5" rowHeight="50px">
+        <mat-grid-tile class="header-file__value">{{
+          fileMappingConfigured.headerField.sampleName
+        }}</mat-grid-tile>
+        <mat-grid-tile class="header-file__value">{{
+          fileMappingConfigured.headerField.chr
+        }}</mat-grid-tile>
+        <mat-grid-tile class="header-file__value">{{
+          fileMappingConfigured.headerField.startBp
+        }}</mat-grid-tile>
+        <mat-grid-tile class="header-file__value">{{
+          fileMappingConfigured.headerField.endBp
+        }}</mat-grid-tile>
+        <mat-grid-tile class="header-file__value">{{
+          fileMappingConfigured.headerField.cnvType
+        }}</mat-grid-tile>
+      </mat-grid-list>
+    </div>
+    <div class="data-file">
+      <mat-grid-list cols="3" rowHeight="50px">
+        <mat-grid-tile colspan="3" class="data-file__field"
+          ><mat-grid-tile-header
+            >Data Field</mat-grid-tile-header
+          ></mat-grid-tile
+        >
+
+        <mat-grid-tile class="data-file__field">CHROMOSOME 22</mat-grid-tile>
+        <mat-grid-tile class="data-file__field">DUPLICATE</mat-grid-tile>
+        <mat-grid-tile class="data-file__field">DELETE</mat-grid-tile>
+      </mat-grid-list>
+      <mat-grid-list cols="3" rowHeight="50px">
+        <mat-grid-tile class="data-file__value">{{
+          fileMappingConfigured.dataField.chr22
+        }}</mat-grid-tile>
+        <mat-grid-tile class="data-file__value">{{
+          fileMappingConfigured.dataField.dup
+        }}</mat-grid-tile>
+        <mat-grid-tile class="data-file__value">{{
+          fileMappingConfigured.dataField.del
+        }}</mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button (click)="onEditTabFileMappingConfigured(fileMappingConfigured)">
+      EDIT
+    </button>
+    <button mat-button (click)="onDeleteTabFileMappingConfigured(fileMappingConfigured)">
+      DELTE
+    </button>
+  </mat-card-actions>
+</mat-card>

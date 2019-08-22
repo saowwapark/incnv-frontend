@@ -1,15 +1,13 @@
-.my-dialog {
-  .mat-dialog-container {
-    padding: 0;
-  }
-  .mat-dialog-actions {
-    margin-bottom: 0;
-  }
-  .mat-dialog-content {
-    margin: 0
-  }
-  .mat-toolbar.mat-accent {
-     background: #039be5;
-     color: white;
-  }
+.mat-dialog-container {
+  padding: 0 !important;
+}
+.mat-dialog-actions {
+  margin-bottom: 0 !important;
+}
+.mat-dialog-content {
+  margin: 0 !important;
+}
+.mat-toolbar.mat-accent {
+  background: #039be5;
+  color: white !important;
 }

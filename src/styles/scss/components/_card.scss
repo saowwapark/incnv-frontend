@@ -1,0 +1,23 @@
+.mat-card {
+  padding: 0 !important;
+
+  .mat-card-header {
+    background-color: #00b0ff !important;
+    color: yellow !important;
+
+    .mat-card-title {
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+  }
+  .mat-card-content {
+    padding: 16px !important;
+    background-color: white !important;
+  }
+
+  .mat-card-actions {
+    margin: 0px !important;
+    padding: 16px !important;
+    background-color: white !important;
+  }
+}

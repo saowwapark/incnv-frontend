@@ -1,0 +1,26 @@
+<div class="page-box" fxLayout="column">
+  <h1>BED CNV Tools</h1>
+  <!-- SEARCH -->
+  <div class="search">
+    <mat-icon>search</mat-icon>
+    <input [formControl]="searchInput" placeholder="Search for a CNV Tool" />
+  </div>
+
+  <!-- / SEARCH -->
+
+  <!---- BED -->
+  <app-tab-file-mapping-list></app-tab-file-mapping-list>
+  <!-- / BED-->
+
+  <!-- ADD TabFileMapping Tool BUTTON -->
+  <button
+    mat-fab
+    class="accent"
+    id="add-tab-file-mapping-button"
+    aria-label="add tabFileMapping"
+    (click)="newTabFileMappingConfigured()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <!-- / ADD TabFileMapping Tool BUTTON -->
+</div>
