@@ -42,7 +42,7 @@ export class TabFileMappingComponent implements OnInit {
   /**
    * New upload
    */
-  newTabFileMappingConfigured(): void {
+  newTabFileMapping(): void {
     this.dialogRef = this._matDialog.open(TabFileMappingFormDialogComponent, {
       panelClass: 'contact-form-dialog',
       data: {
@@ -54,7 +54,7 @@ export class TabFileMappingComponent implements OnInit {
       if (!response) {
         return;
       }
-      this._fileMappingService.updateTabFileMappingConfigured(
+      this._fileMappingService.updateTabFileMapping(
         response.getRawValue()
       );
     });

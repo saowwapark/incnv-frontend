@@ -12,27 +12,27 @@ export class DataField {
   dup: string;
   del: string;
 }
-export class TabFileMappingConfigured {
+export class TabFileMapping {
   id: number;
   userId: number;
   cnvToolName: string;
   headerField: HeaderField;
   dataField: DataField;
 
-  constructor(tabFileMappingConfigured?) {
-    if (tabFileMappingConfigured) {
-      this.id = tabFileMappingConfigured.id;
-      this.userId = tabFileMappingConfigured.owerId;
-      this.cnvToolName = tabFileMappingConfigured.cnvToolName;
-      this.headerField = tabFileMappingConfigured.headerField;
-      this.dataField = tabFileMappingConfigured.dataField;
+  constructor(tabFileMapping?) {
+    if (tabFileMapping) {
+      this.id = tabFileMapping.id;
+      this.userId = tabFileMapping.owerId;
+      this.cnvToolName = tabFileMapping.cnvToolName;
+      this.headerField = tabFileMapping.headerField;
+      this.dataField = tabFileMapping.dataField;
     } else {
       this.headerField = new HeaderField();
       this.dataField = new DataField();
     }
   }
 }
-export const CODEX2: TabFileMappingConfigured = {
+export const CODEX2: TabFileMapping = {
   id: 1,
   userId: 1, // 0 = admin, 1 = userlevel1
   cnvToolName: 'CODEX2',
@@ -50,7 +50,7 @@ export const CODEX2: TabFileMappingConfigured = {
   }
 };
 
-export const CoNIFER: TabFileMappingConfigured = {
+export const CoNIFER: TabFileMapping = {
   id: 2,
   userId: 1, // 0 = admin, 1 = userlevel1
   cnvToolName: 'CoNIFER',
@@ -68,7 +68,7 @@ export const CoNIFER: TabFileMappingConfigured = {
   }
 };
 
-export const CONTRA: TabFileMappingConfigured = {
+export const CONTRA: TabFileMapping = {
   id: 3,
   userId: 1, // 0 = admin, 1 = userlevel1
   cnvToolName: 'CONTRA',

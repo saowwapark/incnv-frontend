@@ -71,7 +71,7 @@ const appRoutes: Routes = [
   {
     path: 'tabFileMapping',
     component: TabFileMappingComponent,
-    resolve: { tabFileMappingConfigureds: TabFileMappingService }
+    resolve: { tabFileMappings: TabFileMappingService }
   },
   { path: '**', component: PageNotFoundComponent }
 ];

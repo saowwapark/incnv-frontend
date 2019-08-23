@@ -27,15 +27,23 @@ export class Upload {
 
 export class UploadPost {
   userId: number; // userName
+  fileType: string;
+  assembly: string;
   fileName: string;
+  extraFileInfo: string;
   cnvToolName: string;
+  tabFileMappingId: number;
   samplesetId: number;
   tags: string[]; // can be null
   constructor(upload) {
     {
       this.userId = upload.userId;
+      this.fileType = upload.fileType || '';
+      this.assembly = upload.assembly || '';
       this.fileName = upload.fileName || '';
+      this.extraFileInfo = upload.extraFileInfo || '';
       this.cnvToolName = upload.cnvToolName || '';
+      this.tabFileMappingId = upload.tabFileMappingId;
       this.samplesetId = upload.samplesetId;
       this.tags = upload.tags;
     }

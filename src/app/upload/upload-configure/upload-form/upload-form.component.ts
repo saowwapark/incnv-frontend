@@ -1,5 +1,4 @@
-import { TabFileMappingConfigured } from '../../../cnvtools/tab-file-mapping/tab-file-mapping.model';
-import { TabFileMappingCardComponent } from '../../../cnvtools/tab-file-mapping/tab-file-mapping-list/tab-file-mapping-card/tab-file-mapping-card.component';
+import { TabFileMapping } from '../../../cnvtools/tab-file-mapping/tab-file-mapping.model';
 import { ConstantsService } from './../../../constants.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
@@ -33,7 +32,7 @@ export class UploadFormComponent implements OnInit {
   action: string;
   filePreview: string;
 
-  tabFileMappings: TabFileMappingConfigured[];
+  tabFileMappings: TabFileMapping[];
 
   samplesets: Sampleset[];
   samplesetNames: string[] = [];

@@ -1,6 +1,6 @@
-import { TabFileMappingConfigured } from '../cnvtools/tab-file-mapping/tab-file-mapping.model';
+import { TabFileMapping } from '../cnvtools/tab-file-mapping/tab-file-mapping.model';
 export class TabFileMappingsFakeDb {
-  public static TAB_MAPPING_CONFIGURED: TabFileMappingConfigured[] = [
+  public static TAB_MAPPING_CONFIGURED: TabFileMapping[] = [
     {
       id: 1,
       userId: 1, // 0 = admin, 1 = userlevel1

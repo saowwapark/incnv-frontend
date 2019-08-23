@@ -1,5 +1,5 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { TabFileMappingConfigured } from '../tab-file-mapping.model';
+import { TabFileMapping } from '../tab-file-mapping.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Component, OnInit, Inject } from '@angular/core';
@@ -9,7 +9,7 @@ import { Component, OnInit, Inject } from '@angular/core';
   styleUrls: ['./tab-file-mapping-form.component.scss']
 })
 export class TabFileMappingFormDialogComponent implements OnInit {
-  fileMappingConfigured: TabFileMappingConfigured;
+  fileMappingConfigured: TabFileMapping;
   form: FormGroup;
   dialogTitle: string;
   action: string;
@@ -28,12 +28,12 @@ export class TabFileMappingFormDialogComponent implements OnInit {
       this.fileMappingConfigured = this._data.fileMappingConfigured;
     } else {
       this.dialogTitle = 'New CNV Tool';
-      this.fileMappingConfigured = new TabFileMappingConfigured();
+      this.fileMappingConfigured = new TabFileMapping();
     }
-    this.form = this._createTabFileMappingConfiguredForm();
+    this.form = this._createTabFileMappingForm();
   }
 
-  private _createTabFileMappingConfiguredForm(): FormGroup {
+  private _createTabFileMappingForm(): FormGroup {
     return this._fb.group({
       cnvToolName: [
         this.fileMappingConfigured.cnvToolName,
@@ -69,8 +69,8 @@ export class TabFileMappingFormDialogComponent implements OnInit {
     });
   }
 
-  private _editTabFileMappingConfiguredForm(
-    fileMappingConfigured: TabFileMappingConfigured
+  private _editTabFileMappingForm(
+    fileMappingConfigured: TabFileMapping
   ): FormGroup {
     return this._fb.group({
       cnvToolName: [fileMappingConfigured.cnvToolName, Validators.required],

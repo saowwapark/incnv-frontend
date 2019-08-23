@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TabFileMappingConfigured } from '../tab-file-mapping.model';
+import { TabFileMapping } from '../tab-file-mapping.model';
 import { TabFileMappingService } from '../tab-file-mapping.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class TabFileMappingListComponent implements OnInit, OnDestroy {
   isLoading = false;
-  fileMappingConfigureds: TabFileMappingConfigured[];
+  fileMappingConfigureds: TabFileMapping[];
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -21,7 +21,7 @@ export class TabFileMappingListComponent implements OnInit, OnDestroy {
     this._unsubscribeAll = new Subject();
   }
   ngOnInit(): void {
-    this._fileMappingService.onTabFileMappingConfiguredsChanged
+    this._fileMappingService.onTabFileMappingsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(fileMappingConfigureds => {
         this.fileMappingConfigureds = fileMappingConfigureds;
