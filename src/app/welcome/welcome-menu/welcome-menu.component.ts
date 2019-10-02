@@ -16,7 +16,7 @@ import { AuthService } from 'src/app/auth/auth.service';
   styleUrls: ['./welcome-menu.component.scss']
 })
 export class WelcomeMenuComponent implements OnInit {
-  @Output() menuToggle = new EventEmitter();
+  @Output() menuToggled = new EventEmitter();
 
   // @ViewChild('collapsableArrow', { static: false }) collapsableArrow: MatIcon;
   // @ViewChild('children', { static: false }) children: ElementRef;
@@ -31,6 +31,7 @@ export class WelcomeMenuComponent implements OnInit {
   }
   onToggleNavigation() {
     console.log('Click Menu Toggle');
+    this.menuToggled.emit();
   }
   collapseToggle() {
     /*  console.log(this.collapsableArrow);

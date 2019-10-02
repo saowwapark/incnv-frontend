@@ -63,7 +63,7 @@ export class AuthService {
             now.getTime() + expiresInDuration * 1000
           );
           this.saveAuthData(token, expirationDate);
-          this._router.navigate(['/welcome']);
+          this._router.navigate(['/configurefile']);
         }
       });
   }

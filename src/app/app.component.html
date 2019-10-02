@@ -1,3 +1,9 @@
 <div class="layout1">
-  <app-toolbar></app-toolbar>
+  <ng-container *ngIf="userIsAuthenticated; else homeToolbarTemplate">
+    <app-welcome></app-welcome>
+  </ng-container>
+
+  <ng-template #homeToolbarTemplate>
+    <app-home></app-home>
+  </ng-template>
 </div>

@@ -25,10 +25,11 @@ import { TabFileMappingService } from './cnvtools/tab-file-mapping/tab-file-mapp
 import { SamplesetService } from './sampleset/sampleset.service';
 import { FileListComponent } from './analysis/choose-files/file-list/file-list.component';
 import { UploadFormComponent } from './upload/upload-configure/upload-form/upload-form.component';
+import { HomeContentComponent } from './home/home-content/home-content.component';
 
 const appRoutes: Routes = [
   // level1
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeContentComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'login', component: LoginComponent },
   { path: 'welcome', component: WelcomeComponent },

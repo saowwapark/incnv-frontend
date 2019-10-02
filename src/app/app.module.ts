@@ -16,8 +16,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ShortenPipe } from './common/shorten.pipe';
 
 /** Import Component **/
-import { WelcomeToolbarComponent } from './toolbar/welcome-toolbar/welcome-toolbar.component';
-import { HomeToolbarComponent } from './toolbar/home-toolbar/home-toolbar.component';
 import { ConfigureCNVtoolsComponent } from './configure-cnv-tools/configure-cnv-tools.component';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -43,7 +41,6 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { ItemComponent } from './navigation/item/item.component';
 import { GroupComponent } from './navigation/group/group.component';
 import { CollapsableComponent } from './navigation/collapsable/collapsable.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
 import { UploadConfigureComponent } from './upload/upload-configure/upload-configure.component';
 import { UploadHistoryComponent } from './upload/upload-history/upload-history.component';
 import { TabFileMappingCardComponent } from './cnvtools/tab-file-mapping/tab-file-mapping-list/tab-file-mapping-card/tab-file-mapping-card.component';
@@ -52,6 +49,7 @@ import { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.c
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { TabFileMappingFormDialogComponent } from './cnvtools/tab-file-mapping/tab-file-mapping-form/tab-file-mapping-form.component';
 import { SamplesetFormDialogComponent } from './sampleset/sampleset-form-dialog/sampleset-form-dialog.component';
+import { HomeMenuComponent } from './home/home-menu/home-menu.component';
 
 /** Import Services */
 import { FakeDbService } from './fake-db/fake-db.service';
@@ -66,21 +64,18 @@ import { FileListComponent } from './analysis/choose-files/file-list/file-list.c
 import { UploadReformatComponent } from './upload/upload-configure/upload-reformat/upload-reformat.component';
 import { SelectedBarComponent } from './sampleset/selected-bar/selected-bar.component';
 import { LayoutComponent } from './layout/layout.component';
-import { MenuComponent } from './menu/menu.component';
-import { HomeMenuComponent } from './menu/home-menu/home-menu.component';
 import { WelcomeMenuComponent } from './welcome/welcome-menu/welcome-menu.component';
+import { HomeContentComponent } from './home/home-content/home-content.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeToolbarComponent,
     LoginComponent,
     ConfigureCNVtoolsComponent,
     ChromosomeComponent,
     SignupComponent,
     HeaderFieldsComponent,
     HomeComponent,
-    WelcomeToolbarComponent,
     WelcomeComponent,
     ActivitiesComponent,
     AnalysisComponent,
@@ -99,7 +94,6 @@ import { WelcomeMenuComponent } from './welcome/welcome-menu/welcome-menu.compon
     ItemComponent,
     GroupComponent,
     CollapsableComponent,
-    ToolbarComponent,
     ConfirmDialogComponent,
     UploadConfigureComponent,
     UploadHistoryComponent,
@@ -113,9 +107,9 @@ import { WelcomeMenuComponent } from './welcome/welcome-menu/welcome-menu.compon
     UploadReformatComponent,
     SelectedBarComponent,
     LayoutComponent,
-    MenuComponent,
-    HomeMenuComponent,
-    WelcomeMenuComponent
+    WelcomeMenuComponent,
+    HomeContentComponent,
+    HomeMenuComponent
   ],
   imports: [
     BrowserModule,
