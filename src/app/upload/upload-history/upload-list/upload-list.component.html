@@ -1,75 +1,75 @@
-<mat-table [dataSource]="dataSource">
+<table mat-table [dataSource]="dataSource">
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-    <mat-cell *matCellDef="let upload">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let upload">
       <mat-checkbox (click)="$event.stopPropagation()"> </mat-checkbox>
-    </mat-cell>
+    </td>
   </ng-container>
 
   <!-- cnvToolName Column -->
   <ng-container matColumnDef="cnvToolName">
-    <mat-header-cell *matHeaderCellDef> CNV Tool </mat-header-cell>
-    <mat-cell *matCellDef="let upload"> {{ upload.cnvToolName }} </mat-cell>
+    <th mat-header-cell *matHeaderCellDef>CNV Tool</th>
+    <td mat-cell *matCellDef="let upload">{{ upload.cnvToolName }}</td>
   </ng-container>
   <!-- File Name Column -->
   <ng-container matColumnDef="fileName">
-    <mat-header-cell *matHeaderCellDef> File Name </mat-header-cell>
-    <mat-cell *matCellDef="let upload"> {{ upload.fileName }} </mat-cell>
+    <th mat-header-cell *matHeaderCellDef>File Name</th>
+    <td mat-cell *matCellDef="let upload">{{ upload.fileName }}</td>
   </ng-container>
   <!-- Sampleset Column -->
   <ng-container matColumnDef="samplesetName">
-    <mat-header-cell *matHeaderCellDef> Sample Set </mat-header-cell>
-    <mat-cell *matCellDef="let upload">
+    <th mat-header-cell *matHeaderCellDef>Sample Set</th>
+    <td mat-cell *matCellDef="let upload">
       {{ upload.samplesetName }}
-    </mat-cell>
+    </td>
   </ng-container>
   <!-- Tags Column -->
   <ng-container matColumnDef="tags">
-    <mat-header-cell *matHeaderCellDef> Tags </mat-header-cell>
-    <mat-cell *matCellDef="let upload">
+    <th mat-header-cell *matHeaderCellDef>Tags</th>
+    <td mat-cell *matCellDef="let upload">
       <mat-chip-list>
         <mat-chip *ngFor="let tag of upload.tags">
           {{ tag }}
         </mat-chip>
       </mat-chip-list>
-    </mat-cell>
+    </td>
   </ng-container>
   <!-- Date Column -->
   <ng-container matColumnDef="date">
-    <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
-    <mat-cell *matCellDef="let upload"> {{ upload.date | date }} </mat-cell>
+    <th mat-header-cell *matHeaderCellDef>Date</th>
+    <td mat-cell *matCellDef="let upload">{{ upload.date | date }}</td>
   </ng-container>
   <!-- Size Column -->
   <ng-container matColumnDef="size">
-    <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
-    <mat-cell *matCellDef="let upload"> {{ upload.size }} </mat-cell>
+    <th mat-header-cell *matHeaderCellDef>Size</th>
+    <td mat-cell *matCellDef="let upload">{{ upload.size }}</td>
   </ng-container>
   <!-- File Column -->
   <ng-container matColumnDef="file">
-    <mat-header-cell *matHeaderCellDef>File</mat-header-cell>
-    <mat-cell *matCellDef="let upload">
+    <th mat-header-cell *matHeaderCellDef>File</th>
+    <td mat-cell *matCellDef="let upload">
       <button mat-icon-button>
         <mat-icon>cloud_download</mat-icon>
       </button>
-    </mat-cell>
+    </td>
   </ng-container>
   <ng-container matColumnDef="edit">
-    <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
-    <mat-cell *matCellDef="let upload">
+    <th mat-header-cell *matHeaderCellDef>Edit</th>
+    <td mat-cell *matCellDef="let upload">
       <button mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button>
-    </mat-cell>
+    </td>
   </ng-container>
   <ng-container matColumnDef="delete">
-    <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
-    <mat-cell *matCellDef="let upload">
+    <th mat-header-cell *matHeaderCellDef>Delete</th>
+    <td mat-cell *matCellDef="let upload">
       <button mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
-    </mat-cell>
+    </td>
   </ng-container>
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-</mat-table>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

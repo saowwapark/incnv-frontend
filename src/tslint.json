@@ -1,17 +1,37 @@
 {
-    "extends": "../tslint.json",
-    "rules": {
-        "directive-selector": [
-            false,
-            "attribute",
-            "app",
-            "camelCase"
-        ],
-        "component-selector": [
-            false,
-            "element",
-            "app",
-            "kebab-case"
-        ]
+  "extends": "../tslint.json",
+  "rules": {
+    "directive-selector": [false, "attribute", "app", "camelCase"],
+    "component-selector": [false, "element", "app", "kebab-case"],
+    "rxjs-no-unsafe-takeuntil": {
+      "options": [
+        {
+          "allow": [
+            "count",
+            "defaultIfEmpty",
+            "endWith",
+            "every",
+            "finalize",
+            "finally",
+            "isEmpty",
+            "last",
+            "max",
+            "min",
+            "publish",
+            "publishBehavior",
+            "publishLast",
+            "publishReplay",
+            "reduce",
+            "share",
+            "shareReplay",
+            "skipLast",
+            "takeLast",
+            "throwIfEmpty",
+            "toArray"
+          ]
+        }
+      ],
+      "severity": "error"
     }
+  }
 }

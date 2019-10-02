@@ -9,7 +9,8 @@ import {
   OnDestroy
 } from '@angular/core';
 import { SelectionModel, DataSource } from '@angular/cdk/collections';
-import { MatPaginator, MatSort } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 import { SamplesetService } from 'src/app/sampleset/sampleset.service';
 import { mapIdToName } from 'src/app/common/map.utils';

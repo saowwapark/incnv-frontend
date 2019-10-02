@@ -1,6 +1,6 @@
 import { ConfirmDialogComponent } from '../../../common/confirm-dialog/confirm-dialog.component';
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DataSource } from '@angular/cdk/collections';
 import { takeUntil } from 'rxjs/operators';
 

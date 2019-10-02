@@ -1,6 +1,6 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TabFileMapping } from '../tab-file-mapping.model';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Component, OnInit, Inject } from '@angular/core';
 @Component({

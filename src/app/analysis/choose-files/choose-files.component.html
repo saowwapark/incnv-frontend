@@ -1,4 +1,4 @@
-<div class="page-box">
+<div class="page-layout">
   <h1>Choose CNV Results</h1>
 
   <mat-vertical-stepper linear="false" #stepper>
@@ -11,7 +11,7 @@
           >
             <mat-option
               *ngFor="let sampleset of this.samplesets"
-              [value]="sampleset.id"
+              [value]="sampleset.sampletsetId"
             >
               {{ sampleset.name }}
             </mat-option>

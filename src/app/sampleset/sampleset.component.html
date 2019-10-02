@@ -1,6 +1,41 @@
-<div class="page-box">
-  <h1>Sample Set</h1>
-  <sampleset-list></sampleset-list>
+<div id="sampleset" class="page-layout my-theme">
+  <!-- HEADER -->
+  <div class="header__container">
+    <div class="header__items" fxLayout="row" fxLayoutAlign="start">
+      <!-- APP TITLE -->
+      <span style="font-size: 2rem">Sample Set</span>
+      <!-- / APP TITLE -->
+
+      <!-- SEARCH -->
+      <mat-form-field>
+        <input matInput placeholder="Search samplesets" #searchInput />
+      </mat-form-field>
+      <!-- / SEARCH -->
+
+      <!-- FILTER -->
+      <mat-form-field>
+        <input matInput placeholder="Filter" #filterInput />
+      </mat-form-field>
+      <!-- / FILTER -->
+    </div>
+  </div>
+  <!-- / HEADER -->
+
+  <!-- SELECTED BAR -->
+  <app-selected-bar
+    *ngIf="hasSelectedSamplesets"
+    [@slideInTop]
+  ></app-selected-bar>
+  <!-- / SELECTED BAR -->
+
+  <!-- CONTENT -->
+  <div class="content__container">
+    <div class="content__scrollbar">
+      <app-sampleset-list class="content__items"></app-sampleset-list>
+    </div>
+  </div>
+
+  <!-- / CONTENT -->
 
   <!-- ADD SAMPLESET BUTTON -->
   <button
@@ -8,7 +43,7 @@
     class="accent"
     id="add-sampleset-button"
     aria-label="add sampleset"
-    (click)="newSampleset()"
+    (click)="onAddSampleset()"
   >
     <mat-icon>add</mat-icon>
   </button>

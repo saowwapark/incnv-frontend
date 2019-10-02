@@ -24,12 +24,74 @@ table {
 .mat-column-name {
   @include table-column(15%);
 }
-.mat-column-sampleNames {
-  @include table-column(70%);
+.mat-column-description {
+  @include table-column(40%);
+}
+.mat-column-createDate {
+  @include table-column(15%);
+}
+.mat-column-lastUpdated {
+  @include table-column(15%);
 }
 .mat-column-edit {
   @include table-column(5%);
 }
 .mat-column-delete {
   @include table-column(5%);
+}
+
+.expand-detail {
+  overflow: hidden;
+  display: flex;
+}
+.expand-detail-element {
+  padding: 16px;
+}
+
+.expand-detail-header {
+  opacity: 0.5;
+}
+
+tr.element-row td {
+  border-bottom-width: 0;
+}
+tr.detail-row {
+  height: 0;
+}
+tr.element-row:not(.expanded-row):hover {
+  background: #777;
+}
+
+tr.element-row:not(.expanded-row):active {
+  background: #efefef;
+}
+
+.spinner-container {
+  height: 360px;
+  width: 390px;
+  position: fixed;
+}
+
+.spinner-container mat-spinner {
+  margin: 130px auto 0 auto;
+}
+
+.page__container {
+  display: flex;
+  align-items: center;
+}
+
+.page-select {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  /*color: mat-color($foreground, secondary-text);*/
+
+  .label {
+    margin: 0 4px;
+  }
+}
+
+.description:first-letter {
+  text-transform: uppercase;
 }

@@ -9,53 +9,48 @@
 
 <div mat-dialog-content>
   <form [formGroup]="form" fxLayout="column" fxLayoutAlign="start start">
-    <!--Sampleset Name Column-->
+    <!--Name Column-->
     <mat-form-field>
       <input fxFlex formControlName="name" matInput placeholder="Set Name" />
     </mat-form-field>
-    <!--Sample Names Column-->
+    <!--Description Column-->
+    <mat-form-field>
+      <input
+        fxFlex
+        formControlName="description"
+        matInput
+        placeholder="Description"
+      />
+    </mat-form-field>
+    <!--Samples Column-->
     <mat-form-field style="width:400px">
-      <mat-chip-list #sampleNameList>
+      <mat-chip-list #sampleList>
         <mat-chip
-          *ngFor="
-            let sampleName of form.get('sampleNames').value;
-            let i = index
-          "
+          *ngFor="let sample of form.get('samples').value; let i = index"
           selectable="false"
           [removable]="true"
-          (removed)="onRemoveSampleName(i)"
+          (removed)="onRemoveSample(i)"
         >
-          {{ sampleName }}
+          {{ sample }}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
         <input
           placeholder="Sample Name"
-          [matChipInputFor]="sampleNameList"
+          [matChipInputFor]="sampleList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           matChipInputAddOnBlur="true"
-          (matChipInputTokenEnd)="onAddSampleName($event)"
+          (matChipInputTokenEnd)="onAddSample($event)"
         />
       </mat-chip-list>
     </mat-form-field>
   </form>
   <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
     <button
-      *ngIf="action !== 'edit'"
       mat-button
-      (click)="matDialogRef.close(form)"
+      (click)="onSave()"
       [disabled]="
-        form.get('name').invalid || form.get('sampleNames').value.length === 0
+        form.get('name').invalid || form.get('samples').value.length === 0
       "
-      aria-label="SAVE"
-    >
-      ADD
-    </button>
-
-    <button
-      *ngIf="action === 'edit'"
-      mat-button
-      (click)="matDialogRef.close(['save', form])"
-      [disabled]="form.invalid"
       aria-label="SAVE"
     >
       SAVE

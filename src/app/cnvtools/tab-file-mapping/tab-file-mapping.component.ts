@@ -1,6 +1,6 @@
 import { TabFileMappingService } from './tab-file-mapping.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl } from '@angular/forms';
 import { TabFileMappingFormDialogComponent } from './tab-file-mapping-form/tab-file-mapping-form.component';
 import { Subject } from 'rxjs';

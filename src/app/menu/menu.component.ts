@@ -1,25 +1,15 @@
-import { AuthService } from './../auth/auth.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'menu',
-  templateUrl: './menu.component.html'
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
-  private authListenerSubs: Subscription;
-  constructor(private authService: AuthService) {}
+export class MenuComponent implements OnInit {
+
+  constructor() { }
 
   ngOnInit() {
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
   }
 
-  ngOnDestroy(): void {
-    this.authListenerSubs.unsubscribe();
-  }
 }

@@ -1,6 +1,7 @@
+import { IdAndName } from './../types/common';
 import { TabFileMapping } from '../cnvtools/tab-file-mapping/tab-file-mapping.model';
 export class TabFileMappingsFakeDb {
-  public static TAB_MAPPING_CONFIGURED: TabFileMapping[] = [
+  public static TAB_MAPPINGS: TabFileMapping[] = [
     {
       id: 1,
       userId: 1, // 0 = admin, 1 = userlevel1
@@ -51,6 +52,21 @@ export class TabFileMappingsFakeDb {
         dup: 'gain',
         del: 'loss'
       }
+    }
+  ];
+
+  public static TAB_MAPPINGS_ID_NAME: IdAndName[] = [
+    {
+      id: 1,
+      name: 'CODEX2'
+    },
+    {
+      id: 2,
+      name: 'CoNIFER'
+    },
+    {
+      id: 3,
+      name: 'CONTRA'
     }
   ];
 }

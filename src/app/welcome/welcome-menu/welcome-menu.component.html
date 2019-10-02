@@ -1,6 +1,6 @@
-<mat-toolbar color="primary" class="menu">
+<mat-toolbar color="primary">
   <div>
-    <button mat-icon-button (click)="sidenav.toggle()">
+    <button mat-icon-button (click)="onToggleNavigation()">
       <mat-icon>menu</mat-icon>
     </button>
   </div>
@@ -20,15 +20,3 @@
     </ul>
   </div>
 </mat-toolbar>
-
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #sidenav role="navigation">
-    <div class="toolbar">
-      <app-navigation></app-navigation>
-    </div>
-  </mat-sidenav>
-
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>

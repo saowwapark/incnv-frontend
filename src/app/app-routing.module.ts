@@ -1,6 +1,6 @@
+import { LayoutComponent } from './layout/layout.component';
+import { UploadFormResolver } from './upload/upload-configure/upload-form/upload-form.resolver';
 import { UploadListComponent } from './upload/upload-history/upload-list/upload-list.component';
-import { TabFileMappingCardComponent } from './cnvtools/tab-file-mapping/tab-file-mapping-list/tab-file-mapping-card/tab-file-mapping-card.component';
-import { TabFileMappingListComponent } from './cnvtools/tab-file-mapping/tab-file-mapping-list/tab-file-mapping-list.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -24,6 +24,7 @@ import { TabFileMappingComponent } from './cnvtools/tab-file-mapping/tab-file-ma
 import { TabFileMappingService } from './cnvtools/tab-file-mapping/tab-file-mapping.service';
 import { SamplesetService } from './sampleset/sampleset.service';
 import { FileListComponent } from './analysis/choose-files/file-list/file-list.component';
+import { UploadFormComponent } from './upload/upload-configure/upload-form/upload-form.component';
 
 const appRoutes: Routes = [
   // level1
@@ -49,7 +50,7 @@ const appRoutes: Routes = [
   {
     path: 'sampleset',
     component: SamplesetComponent,
-    resolve: { samplesets: SamplesetService }
+    canActivate: [AuthGuard]
   },
   { path: 'sampleset/:id', component: SamplesetComponent },
 
@@ -57,8 +58,15 @@ const appRoutes: Routes = [
     path: 'configurefile',
     component: UploadConfigureComponent,
     // canActivate: [AuthGuard],
-    resolve: { uploads: UploadService, samplesets: SamplesetService }
+    resolve: { uploads: UploadService, uploadForm: UploadFormResolver }
   },
+
+  {
+    path: 'uploadform',
+    component: UploadFormComponent,
+    resolve: { uploads: UploadService, uploadForm: UploadFormResolver }
+  },
+
   {
     path: 'uploadlist',
     component: UploadListComponent,
@@ -69,9 +77,13 @@ const appRoutes: Routes = [
     component: UploadHistoryComponent
   },
   {
-    path: 'tabFileMapping',
+    path: 'tabfilemapping',
     component: TabFileMappingComponent,
     resolve: { tabFileMappings: TabFileMappingService }
+  },
+  {
+    path: 'layout',
+    component: LayoutComponent
   },
   { path: '**', component: PageNotFoundComponent }
 ];

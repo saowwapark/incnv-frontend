@@ -1,11 +1,12 @@
 import { Sampleset } from '../sampleset/sampleset.model';
+import { IdAndName } from '../types/common';
 export class SamplesetsFakeDb {
-  public static SAMPLE_SETS: Sampleset[] = [
+  public static SAMPLE_SETS = [
     {
       id: 1,
       userId: 1,
       name: 'NGS-data1-G',
-      sampleNames: [
+      samples: [
         'G2223.remdup.uniqMap.TS.bam',
         'G2227-PJ.remdup.uniqMap.TS.bam',
         'G2228-M.remdup.uniqMap.TS.bam',
@@ -22,7 +23,7 @@ export class SamplesetsFakeDb {
       id: 2,
       userId: 1,
       name: 'NGS-data2-NA',
-      sampleNames: [
+      samples: [
         'NA06994',
         'NA10847',
         'NA11840',
@@ -70,6 +71,17 @@ export class SamplesetsFakeDb {
         'NA19210',
         'NA19223'
       ]
+    }
+  ];
+
+  public static SAMPLE_SETS_ID_NAME: IdAndName[] = [
+    {
+      id: 1,
+      name: 'NGS-data1-G'
+    },
+    {
+      id: 2,
+      name: 'NGS-data2-NA'
     }
   ];
 }

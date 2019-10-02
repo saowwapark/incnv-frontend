@@ -9,6 +9,7 @@ import {
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { TabFileMapping } from './tab-file-mapping.model';
+import { UploadFormService } from 'src/app/upload/upload-configure/upload-form/upload-form.service';
 
 @Injectable()
 export class TabFileMappingService implements Resolve<any> {
@@ -18,7 +19,10 @@ export class TabFileMappingService implements Resolve<any> {
   onTabFileMappingsChanged: BehaviorSubject<any>;
   onSearchTextChanged: Subject<any>;
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(
+    private _httpClient: HttpClient,
+    private _uploadFormService: UploadFormService
+  ) {
     this.onTabFileMappingsChanged = new BehaviorSubject([]);
     this.onSearchTextChanged = new Subject();
   }
@@ -30,9 +34,6 @@ export class TabFileMappingService implements Resolve<any> {
   /**
    * Resolver
    *
-   * @param {ActivatedRouteSnapshot} route
-   * @param {RouterStateSnapshot} state
-   * @returns {Observable<any> | Promise<any> | any}
    */
   resolve(
     route: ActivatedRouteSnapshot,
@@ -53,15 +54,16 @@ export class TabFileMappingService implements Resolve<any> {
    * Update tabFileMapping configured
    *
    */
-  updateTabFileMapping(
-    fileMappingConfigured: TabFileMapping
-  ): Promise<any> {
+  updateTabFileMapping(fileMappingConfigured: TabFileMapping): Promise<any> {
     return new Promise((resolve, reject) => {
       this._httpClient
-        .post('api/fileMappings/' + fileMappingConfigured.id, {
+        .post('api/tab-fileMappings/' + fileMappingConfigured.id, {
           ...fileMappingConfigured
         })
         .subscribe(response => {
+          this._uploadFormService.onTapFileMappingChanged.next(
+            'TabFileMapping triggers to uploadForm.'
+          );
           this.getTabFileMapping();
           resolve(response);
         });
@@ -71,7 +73,6 @@ export class TabFileMappingService implements Resolve<any> {
   /**
    * Delete TabFileMapping Configured
    *
-   * @param contact
    */
   deleteTabFileMapping(fileMappingConfigured): void {
     const fileMappingIndex = this.fileMappingConfigureds.indexOf(
@@ -82,17 +83,19 @@ export class TabFileMappingService implements Resolve<any> {
   }
   getTabFileMapping(): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get('api/fileMappings').subscribe((response: any) => {
-        this.fileMappingConfigureds = response;
-        if (this.searchText && this.searchText !== '') {
-          this.fileMappingConfigureds = SearchUtils.filterArrayByString(
-            this.fileMappingConfigureds,
-            this.searchText
-          );
-        }
-        this.onTabFileMappingsChanged.next(this.fileMappingConfigureds);
-        resolve(this.fileMappingConfigureds);
-      }, reject);
+      this._httpClient
+        .get('api/tab-fileMappings')
+        .subscribe((response: any) => {
+          this.fileMappingConfigureds = response;
+          if (this.searchText && this.searchText !== '') {
+            this.fileMappingConfigureds = SearchUtils.filterArrayByString(
+              this.fileMappingConfigureds,
+              this.searchText
+            );
+          }
+          this.onTabFileMappingsChanged.next(this.fileMappingConfigureds);
+          resolve(this.fileMappingConfigureds);
+        }, reject);
     });
   }
 }

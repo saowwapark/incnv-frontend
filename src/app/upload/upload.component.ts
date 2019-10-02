@@ -1,6 +1,6 @@
 import { UploadService } from './upload.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UploadFormComponent } from './upload-configure/upload-form/upload-form.component';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';

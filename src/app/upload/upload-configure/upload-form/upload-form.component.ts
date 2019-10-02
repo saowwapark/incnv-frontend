@@ -1,3 +1,4 @@
+import { UploadFormService } from './upload-form.service';
 import { TabFileMapping } from '../../../cnvtools/tab-file-mapping/tab-file-mapping.model';
 import { ConstantsService } from './../../../constants.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -11,32 +12,30 @@ import {
   FormControl,
   Validators
 } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 
-import { Upload, UploadPost } from '../../upload.model';
-import { SamplesetService } from 'src/app/sampleset/sampleset.service';
+import { UploadPost } from '../../upload.model';
 import { UploadService } from '../../upload.service';
-import { Sampleset } from 'src/app/sampleset/sampleset.model';
 import { filterIncluded } from '../../../common/map.utils';
 import { CustomValidators } from '../../../configure-cnv-tools/custom.validators';
+import { IdAndName } from 'src/app/types/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'upload-form',
+  selector: 'app-upload-form',
   templateUrl: './upload-form.component.html',
   styleUrls: ['./upload-form.component.scss']
 })
 export class UploadFormComponent implements OnInit {
   uploadPost: any;
   form: FormGroup;
-  dialogTitle: string;
-  action: string;
   filePreview: string;
 
-  tabFileMappings: TabFileMapping[];
+  tabFileMappings$: Observable<IdAndName[]>;
+  tabFileMappings: IdAndName[];
 
-  samplesets: Sampleset[];
-  samplesetNames: string[] = [];
-  samplesetForm: FormControl;
+  samplesets$: Observable<IdAndName[]>;
+  samplesets: IdAndName[];
 
   tags: string[] = [];
   @Output()
@@ -48,25 +47,17 @@ export class UploadFormComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   // Auto Complete
-  filteredSamplesetNames: Observable<string[]>;
+  filteredSamplesets$: Observable<IdAndName[]>;
+  filteredTabFileMappings$: Observable<IdAndName[]>;
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _samplesetService: SamplesetService,
     private _uploadFileService: UploadService,
+    private _uploadFormService: UploadFormService,
     private _router: Router,
+    private route: ActivatedRoute,
     private _constant: ConstantsService
   ) {
-    this.action = 'new';
-
-    if (this.action === 'edit') {
-      this.dialogTitle = 'Edit CNV Tool';
-      // this.upload = _data.upload;
-    } else {
-      this.dialogTitle = 'New CNV Tool';
-      this.uploadPost = new UploadPost({});
-    }
-
     this.form = this._createUploadForm();
     this._unsubscribeAll = new Subject();
   }
@@ -76,30 +67,56 @@ export class UploadFormComponent implements OnInit {
   // -----------------------------------------------------------------------------------------------------
 
   ngOnInit() {
-    this.dialogTitle = 'New CNV Tool';
-
-    this._samplesetService.onSamplesetsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(samplesets => {
-        this.samplesets = samplesets;
-        this.samplesetNames = this.getSamplesetNames();
-      });
-    this.filteredSamplesetNames = this._createFilteredSampleset();
+    console.log('upload-form.component.ts');
     this.form = this._createUploadForm();
+    const uploadForm$ = this.route.snapshot.data['uploadForm'];
+
+    this.samplesets$ = uploadForm$.pipe(map(data => data[0]));
+    this.samplesets$.subscribe(sampleset => {
+      this.samplesets = sampleset;
+    });
+
+    this.tabFileMappings$ = uploadForm$.pipe(map(data => data[1]));
+    this.tabFileMappings$.subscribe(tabFileMappings => {
+      this.tabFileMappings = tabFileMappings;
+    });
+
+    // this._uploadFormService.onSamplesetsChanged
+    //   .pipe(takeUntil(this._unsubscribeAll))
+    //   .subscribe(logMessage => {
+    //     this.samplesets$ = this._uploadFormService.getSamplesets();
+    //     this.samplesets$.subscribe(sampleset => {
+    //       this.samplesets = sampleset;
+    //     });
+    //   });
+
+    // this._uploadFormService.onTapFileMappingChanged
+    //   .pipe(takeUntil(this._unsubscribeAll))
+    //   .subscribe(logMessage => {
+    //     this.tabFileMappings$ = this._uploadFormService.getTapFileMappings();
+    //     this.tabFileMappings$.subscribe(tabFileMappings => {
+    //       this.tabFileMappings = tabFileMappings;
+    //     });
+    //   });
+
+    this.filteredSamplesets$ = this.form.get('sampleset').valueChanges.pipe(
+      startWith(''),
+      map(value => filterIncluded(value, this.samplesets))
+    );
+    this.filteredTabFileMappings$ = this.form
+      .get('tabFileMapping')
+      .valueChanges.pipe(
+        startWith(''),
+        map(value => filterIncluded(value, this.tabFileMappings))
+      );
   }
 
   // -----------------------------------------------------------------------------------------------------
   // @ Private methods
   // -----------------------------------------------------------------------------------------------------
 
-  getSamplesetNames(): string[] {
-    const samplesetNames: string[] = [];
-    this.samplesets.forEach(sampleset => {
-      samplesetNames.push(sampleset.name);
-    });
-    return samplesetNames;
-  }
   private _createUploadForm(): FormGroup {
+    this.uploadPost = new UploadPost({});
     return this._formBuilder.group({
       fileType: [],
       assembly: [],
@@ -107,24 +124,15 @@ export class UploadFormComponent implements OnInit {
       uploadedFile: [this.uploadPost.uploadedFile, Validators.required],
       extraFileInfo: [],
       tabFileMapping: [],
-      cnvToolName: [this.uploadPost.cnvToolName, Validators.required],
+      cnvToolName: [null, Validators.required],
       sampleset: [
-        this.uploadPost.sampleset,
+        null,
         Validators.required
         // cannot use because error
         // CustomValidators.notHaveInList(this.samplesetNames)
       ],
-      tags: [this.uploadPost.tags, Validators.required]
+      tags: [null, Validators.required]
     });
-  }
-
-  /** Sample Set */
-  private _createFilteredSampleset() {
-    this.samplesetForm = this.form.get('sampleset') as FormControl;
-    return this.samplesetForm.valueChanges.pipe(
-      startWith(''),
-      map(value => filterIncluded(value, this.samplesetNames))
-    );
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -171,7 +179,7 @@ export class UploadFormComponent implements OnInit {
   }
   onSaveUpload() {
     const uploadData = new UploadPost({
-      userId: this._constant.userId,
+      userId: 1,
       fileName: this.form.get('fileName').value,
       cnvToolName: this.form.get('cnvToolName').value,
       samplesetId: this.form.get('sampleset').value,
@@ -189,6 +197,12 @@ export class UploadFormComponent implements OnInit {
   onLoadSamplesetPage() {
     this._router.navigate([]).then(result => {
       window.open('/sampleset', '_blank');
+    });
+  }
+
+  onLoadTabFileMappingPage() {
+    this._router.navigate([]).then(result => {
+      window.open('/tabfilemapping', '_blank');
     });
   }
 }

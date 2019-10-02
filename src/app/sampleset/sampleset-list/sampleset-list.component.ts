@@ -1,30 +1,70 @@
 import { Sampleset } from './../sampleset.model';
-import { SamplesetFormDialogComponent } from './../sampleset-form/sampleset-form.component';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
-import { DataSource } from '@angular/cdk/collections';
+import { SamplesetFormDialogComponent } from '../sampleset-form-dialog/sampleset-form-dialog.component';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { takeUntil } from 'rxjs/operators';
 
-import { Observable, Subject } from 'rxjs';
-import { ConfirmDialogComponent } from 'src/app/common/confirm-dialog/confirm-dialog.component';
+import { Subject, Observable } from 'rxjs';
 import { SamplesetService } from '../sampleset.service';
-import { FormGroup } from '@angular/forms';
+import { SamplesetsDataSource } from '../samplesets.datasource';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate
+} from '@angular/animations';
+import { Action } from '../sampleset-form-dialog/dialog.action.model';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
-  selector: 'sampleset-list',
+  selector: 'app-sampleset-list',
   templateUrl: './sampleset-list.component.html',
-  styleUrls: ['./sampleset-list.component.scss']
+  styleUrls: ['./sampleset-list.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      )
+    ])
+  ]
 })
-export class SamplesetListComponent implements OnInit, OnDestroy {
-  samplesets: any;
-  dataSource: FilesDataSource | null;
-  displayedColumns = ['select', 'name', 'sampleNames', 'edit', 'delete'];
-  selectedContacts: any[];
-  selects: {};
-  dialogRef: any;
-  confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
+export class SamplesetListComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  samplesets: Sampleset;
+  dataSource: SamplesetsDataSource | null;
+  displayedColumns = [
+    'select',
+    'name',
+    'description',
+    'createDate',
+    'lastUpdated',
+    'edit'
+  ];
 
-  // Private
+  selection = new SelectionModel<Sampleset>(true, []);
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  dialogRef: MatDialogRef<SamplesetFormDialogComponent>;
+
+  expandedElement: string | null;
+
+  totalRecords$: Observable<number>;
+  jumpPage$: Observable<number>;
+  jumpPages$: Observable<number[]>;
   private _unsubscribeAll: Subject<any>;
 
   constructor(
@@ -42,14 +82,25 @@ export class SamplesetListComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
-    this.dataSource = new FilesDataSource(this._samplesetService);
-    this._samplesetService.onSamplesetsChanged
+    this.dataSource = new SamplesetsDataSource(
+      this._samplesetService,
+      this.paginator,
+      this.sort
+    );
+
+    this.totalRecords$ = this.dataSource.totalRecords$;
+    this.jumpPage$ = this.dataSource.jumpPage$;
+    this.jumpPages$ = this.dataSource.jumpPages$;
+
+    this._samplesetService.onSelectedSamplesetsChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(samplesets => {
-        this.samplesets = samplesets;
+        if (!samplesets || samplesets.length < 1) {
+          this.selection.clear();
+        }
       });
   }
-
+  ngAfterViewInit() {}
   /**
    * On destroy
    */
@@ -59,85 +110,82 @@ export class SamplesetListComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
+  // -----------------------------------------------------------------------------------------------------
+  // @ Public methods
+  // -----------------------------------------------------------------------------------------------------
+
+  updateJumpPage(goToPage: number) {
+    this.dataSource.updateJumpPage(goToPage);
+  }
+
+  clearJumpPage() {
+    this.dataSource.clearJumpPage();
+  }
+
   /**
    * Edit Sampleset
    *
    * @param contact
    */
   onEditSampleset(sampleset: Sampleset): void {
+    // Original data
     this.dialogRef = this._matDialog.open(SamplesetFormDialogComponent, {
-      panelClass: 'contact-form-dialog',
+      panelClass: 'sampleset-form-dialog',
       data: {
         sampleset: sampleset,
-        action: 'edit'
+        action: Action.Edit
       }
     });
 
+    // Updated data
     this.dialogRef.afterClosed().subscribe(response => {
       if (!response) {
         return;
       }
-      const actionType: string = response[0];
-      const formData: FormGroup = response[1];
+      const UpdatedSampleset: Sampleset = response;
 
-      switch (actionType) {
-        /**
-         * Save
-         */
-        case 'save':
-          this._samplesetService.updateSampleset(formData.getRawValue());
-
-          break;
-        /**
-         * Delete
-         */
-        case 'delete':
-          this.onDeleteSampleset(sampleset);
-
-          break;
-      }
+      this._samplesetService
+        .editSampleset(UpdatedSampleset)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(() => {
+          this.dataSource.loadData();
+        });
     });
   }
 
-  /**
-   * Delete TabFileMapping Configured
-   */
-  onDeleteSampleset(sampleset): void {
-    this.confirmDialogRef = this._matDialog.open(ConfirmDialogComponent, {
-      disableClose: false
-    });
-
-    this.confirmDialogRef.componentInstance.confirmMessage =
-      'Are you sure you want to delete?';
-
-    this.confirmDialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this._samplesetService.deleteSampleset(sampleset);
-      }
-      this.confirmDialogRef = null;
-    });
-  }
-}
-
-export class FilesDataSource extends DataSource<any> {
-  /**
-   * Constructor
-   *
-   */
-  constructor(private _samplesetService: SamplesetService) {
-    super();
+  /************************* Collapse ************************/
+  onSampleset(element) {
+    if (this.expandedElement === element) {
+      this.expandedElement = null;
+    } else {
+      this.expandedElement = element;
+    }
   }
 
-  /**
-   * Connect function called by the table to retrieve one stream containing the data to render.
-   *
-   */
-  connect(): Observable<any[]> {
-    return this._samplesetService.onSamplesetsChanged;
+  /************************* Select **************************/
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
   }
 
-  /**
-   * Disconnect
-   */
-  disconnect(): void {}
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach(sampleset =>
+          this.selection.select(sampleset)
+        );
+    this._samplesetService.onSelectedSamplesetsChanged.next(
+      this.selection.selected
+    );
+  }
+
+  toggleSampleset(sampleset: Sampleset) {
+    this.selection.toggle(sampleset);
+    this._samplesetService.onSelectedSamplesetsChanged.next(
+      this.selection.selected
+    );
+  }
 }

@@ -1,7 +1,12 @@
+@import '~@angular/material/theming';
 
-.menu {
-  width: 100%
+mat-sidenav-content.mat-drawer-content {
+  overflow-y: hidden !important;
 }
+// .menu {
+//   position: static;
+//   @include mat-elevation(4);
+// }
 
 .menu__logo {
   float: left;
@@ -35,6 +40,5 @@
     a:active {
       color: lightgray;
     }
-
   }
 }

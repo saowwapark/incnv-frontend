@@ -1,30 +1,32 @@
-import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  Renderer2
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from 'src/app/auth/auth.service';
 
-
-
 @Component({
-  selector: 'welcome-menu',
-  templateUrl: './welcome-menu.component.html',
-  styleUrls: ['./welcome-menu.component.scss']
+  selector: 'app-welcome-toolbar',
+  templateUrl: './welcome-toolbar.component.html',
+  styleUrls: ['./welcome-toolbar.component.scss']
 })
-export class WelcomeMenuComponent implements OnInit {
-
-  @ViewChild('collapsableArrow') collapsableArrow: MatIcon;
-  @ViewChild('children') children: ElementRef;
+export class WelcomeToolbarComponent implements OnInit {
+  @ViewChild('collapsableArrow', { static: false }) collapsableArrow: MatIcon;
+  @ViewChild('children', { static: false }) children: ElementRef;
 
   opened = false;
-  constructor(private renderer: Renderer2, private authService: AuthService) { }
+  constructor(private renderer: Renderer2, private authService: AuthService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onLogout() {
     this.authService.logout();
   }
   collapseToggle() {
-   /*  console.log(this.collapsableArrow);
+    /*  console.log(this.collapsableArrow);
     console.log(this.children);
     if (this.opened) {
 
@@ -43,6 +45,4 @@ export class WelcomeMenuComponent implements OnInit {
       this.opened = true;
     }*/
   }
-
-
 }

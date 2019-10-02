@@ -18,10 +18,10 @@ export const mapNameToId = (value: string, list: IdAndName[]): number => {
     }
   });
   return id;
- };
+};
 
- /******** change data ********/
- export const turnListToLowerCase = (list: string[]): string[] => {
+/******** change data ********/
+export const turnListToLowerCase = (list: string[]): string[] => {
   const newList: string[] = [];
   list.forEach(element => {
     newList.push(element.toLowerCase());
@@ -29,8 +29,11 @@ export const mapNameToId = (value: string, list: IdAndName[]): number => {
   return newList;
 };
 
- /********** filter *********/
- export const filterIncluded = (value: string, list: string[]): string[] => {
+/********** filter *********/
+export const filterIncluded = (
+  value: string,
+  list: IdAndName[]
+): IdAndName[] => {
   value = value.toLowerCase();
-  return list.filter(option => option.toLowerCase().includes(value));
+  return list.filter(option => option.name.toLowerCase().includes(value));
 };

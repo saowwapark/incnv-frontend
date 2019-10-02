@@ -6,53 +6,28 @@
   margin-top: -20vh;
 }
 
-.header {
-  height: 95vh;
-  background-image: linear-gradient(
-    to right bottom,
-    #7ed56fce,
-    #28b485bb),
-    url(../../assets/static/images/beach.jpg);
-  background-size: cover;
-  background-position: top;
-  position: relative;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+// .btn {
+//   &:link,
+//   &:visited {
+//     text-decoration: none;
+//     padding: 15px 40px;
+//     display: inline-block;
+//     border-radius: 100px;
+//     transform: all 0.2s;
+//   }
 
-  &__text-box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-  }
-}
+//   &:hover {
+//     transform: translateY(-3px);
+//     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+//   }
 
-.btn {
-  &:link,
-  &:visited {
-    text-decoration: none;
-    padding: 15px 40px;
-    display: inline-block;
-    border-radius: 100px;
-    transform: all .2s;
-  }
+//   &:active {
+//     transform: translateY(-1px);
+//     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+//   }
 
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,.2);
-  }
-
-  &:active {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
-  }
-
-  &--white {
-    background-color: #fff;
-    color: #777;
-  }
-}
-
-
-
-
+//   &--white {
+//     background-color: #fff;
+//     color: #777;
+//   }
+// }

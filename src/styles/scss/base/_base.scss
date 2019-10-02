@@ -1,7 +1,9 @@
+@import '../theme';
+@import '~@angular/material/theming';
+
 *,
 *::after,
-*::before
-{
+*::before {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
@@ -11,11 +13,63 @@
 html {
   // This defines what 1rem is
   font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
+  height: 100%;
+  width: 100;
 }
 body {
-  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  width: 100;
 }
 
-.page-box {
-  padding: 2rem;
+app-root {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.layout1 {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  .menu {
+    position: relative;
+    @include mat-elevation(4);
+  }
+  .page-layout {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: calc(100% - 64px);
+
+    > .header__container {
+      position: relative;
+      background-color: mat-color($primary, lighter);
+      color: white;
+      width: 100%;
+      > .header__items {
+        padding: 3rem;
+      }
+    }
+    > .content__container {
+      overflow: hidden;
+      display: flex;
+      > .content__scrollbar {
+        position: relative;
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: auto;
+        > .content__items {
+          margin: 3rem;
+          flex: 1 1 auto;
+        }
+      }
+    }
+  }
 }

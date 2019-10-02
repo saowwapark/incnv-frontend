@@ -62,34 +62,34 @@
           >required</mat-error
         >
       </mat-form-field>
-      <!--sampleset Column-->
+      <!--tabFileMapping Column-->
       <div class="data" fxLayout="row" fxLayoutGap="5px">
         <mat-form-field style="width:400px">
           <input
             type="text"
             placeholder="Choose TAB File Mapping..."
             matInput
-            [matAutocomplete]="auto"
+            [matAutocomplete]="autoTabFileMapping"
             formControlName="tabFileMapping"
-            #sampleset
+            #tabFileMapping
           />
-          <mat-autocomplete #auto="matAutocomplete">
+          <mat-autocomplete #autoTabFileMapping="matAutocomplete">
             <mat-option
-              *ngFor="let samplesetName of filteredSamplesetNames | async"
-              [value]="samplesetName"
+              *ngFor="let tabFileMapping of filteredTabFileMappings$ | async"
+              [value]="tabFileMapping.name"
             >
-              {{ samplesetName }}
+              {{ tabFileMapping.name }}
             </mat-option>
           </mat-autocomplete>
-          <mat-error *ngIf="form.get('sampleset').hasError('required')"
+          <mat-error *ngIf="form.get('tabFileMapping').hasError('required')"
             >required</mat-error
           >
-          <mat-error *ngIf="form.get('sampleset').hasError('notHave')"
+          <mat-error *ngIf="form.get('tabFileMapping').hasError('notHave')"
             >not have</mat-error
           >
         </mat-form-field>
         <button mat-icon-button>
-          <mat-icon (click)="onLoadSamplesetPage()">add</mat-icon>
+          <mat-icon (click)="onLoadTabFileMappingPage()">add</mat-icon>
         </button>
       </div>
       <!--sampleset Column-->
@@ -100,16 +100,15 @@
             placeholder="Choose Sample Set"
             aria-label="Number"
             matInput
-            [matAutocomplete]="auto"
+            [matAutocomplete]="autoSampleset"
             formControlName="sampleset"
-            #sampleset
           />
-          <mat-autocomplete #auto="matAutocomplete">
+          <mat-autocomplete #autoSampleset="matAutocomplete">
             <mat-option
-              *ngFor="let samplesetName of filteredSamplesetNames | async"
-              [value]="samplesetName"
+              *ngFor="let sampleset of filteredSamplesets$ | async"
+              [value]="sampleset.name"
             >
-              {{ samplesetName }}
+              {{ sampleset.name }}
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="form.get('sampleset').hasError('required')"

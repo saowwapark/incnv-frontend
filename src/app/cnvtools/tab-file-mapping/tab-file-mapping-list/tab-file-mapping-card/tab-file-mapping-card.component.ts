@@ -2,7 +2,7 @@ import { ConfirmDialogComponent } from '../../../../common/confirm-dialog/confir
 import { TabFileMappingService } from '../../tab-file-mapping.service';
 import { Component, Input } from '@angular/core';
 import { TabFileMapping, CODEX2 } from '../../tab-file-mapping.model';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TabFileMappingFormDialogComponent } from '../../tab-file-mapping-form/tab-file-mapping-form.component';
 import { FormGroup } from '@angular/forms';
 
@@ -27,13 +27,10 @@ export class TabFileMappingCardComponent {
   // -----------------------------------------------------------------------------------------------------
 
   /**
-   * Edit contact
+   * Edit tabfilemapping
    *
-   * @param contact
    */
-  onEditTabFileMapping(
-    fileMappingConfigured: TabFileMapping
-  ): void {
+  onEditTabFileMapping(fileMappingConfigured: TabFileMapping): void {
     this.dialogRef = this._matDialog.open(TabFileMappingFormDialogComponent, {
       panelClass: 'contact-form-dialog',
       data: {
@@ -54,9 +51,7 @@ export class TabFileMappingCardComponent {
          * Save
          */
         case 'save':
-          this._fileMappingService.updateTabFileMapping(
-            formData.getRawValue()
-          );
+          this._fileMappingService.updateTabFileMapping(formData.getRawValue());
 
           break;
         /**
@@ -82,9 +77,7 @@ export class TabFileMappingCardComponent {
 
     this.confirmDialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this._fileMappingService.deleteTabFileMapping(
-          fileMappingConfigured
-        );
+        this._fileMappingService.deleteTabFileMapping(fileMappingConfigured);
       }
       this.confirmDialogRef = null;
     });

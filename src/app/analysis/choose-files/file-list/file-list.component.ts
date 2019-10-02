@@ -8,7 +8,8 @@ import {
 import { SamplesetService } from 'src/app/sampleset/sampleset.service';
 import { UploadService } from 'src/app/upload/upload.service';
 import { Subject, fromEvent, Observable, merge, BehaviorSubject } from 'rxjs';
-import { MatSort, MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {
   trigger,
   state,
@@ -78,10 +79,10 @@ export class FileListComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<ChooseFileInfo>(true, []);
 
   expandElem_sampleset: ChooseFileInfo | null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  @ViewChild('filter')
+  @ViewChild('filter', { static: false })
   filter: ElementRef;
 
   // Private
@@ -129,14 +130,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  getSampleNames(samplesetId: number) {
-    let sampleNames: string[];
+  getSamples(samplesetId: number) {
+    let samples: string[];
     this.samplesets.forEach(sampleset => {
-      if (sampleset.id === samplesetId) {
-        sampleNames = sampleset.sampleNames;
+      if (sampleset.samplesetId === samplesetId) {
+        samples = sampleset.samples;
       }
     });
-    return sampleNames;
+    return samples;
   }
 
   /************************* Collapse ************************/
@@ -245,8 +246,6 @@ export class FilesDataSource extends DataSource<any> {
   /**
    * Filter data
    *
-   * @param data
-   * @returns {any}
    */
   filterData(data): any {
     if (!this.filter) {

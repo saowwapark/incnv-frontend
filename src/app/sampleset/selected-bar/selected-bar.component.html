@@ -1,0 +1,27 @@
+<div fxFlex fxLayout="row" fxLayoutAlign="start center">
+  <div class="close-button-wrapper" fxFlex="0 1 auto" (click)="deselectAll()">
+    <button mat-button fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon>arrow_back</mat-icon>
+      <span class="text-uppercase">Back</span>
+    </button>
+  </div>
+
+  <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+    <div>
+      <span class="selected-contacts-count">
+        <span>{{ selectedSamplesets.length }}</span>
+        <span>selected</span>
+      </span>
+    </div>
+
+    <div class="multi-select-actions">
+      <button
+        mat-icon-button
+        (click)="onDeleteSelectedSamplesets()"
+        aria-label="delete selected"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

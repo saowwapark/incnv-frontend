@@ -6,7 +6,7 @@ export class SearchUtils {
    * @param searchText
    * @returns {any}
    */
-  public static filterArrayByString(mainArr, searchText): any {
+  public static filterArrayByString(mainArr, searchText: string): any {
     if (searchText === '') {
       return mainArr;
     }
@@ -25,7 +25,7 @@ export class SearchUtils {
    * @param searchText
    * @returns {boolean}
    */
-  public static searchInObj(itemObj, searchText): boolean {
+  public static searchInObj(itemObj, searchText: string): boolean {
     for (const prop in itemObj) {
       if (!itemObj.hasOwnProperty(prop)) {
         continue;

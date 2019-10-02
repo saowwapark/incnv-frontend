@@ -36,8 +36,6 @@ export class UploadService implements Resolve<any> {
 
   constructor(
     private _httpClient: HttpClient,
-    private _samplesetService: SamplesetService,
-    private router: Router,
     private _constant: ConstantsService
   ) {
     // Set the defaults
