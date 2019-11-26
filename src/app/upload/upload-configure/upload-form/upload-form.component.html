@@ -4,20 +4,12 @@
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="form">
-      <!--file type-->
+      <!--reference genome-->
       <div>
-        <label>File Type: </label>
-        <mat-radio-group>
-          <mat-radio-button value="1">TAB</mat-radio-button>
-          <mat-radio-button value="2">VCF</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <!--assembly-->
-      <div>
-        <label>Assembly: </label>
-        <mat-radio-group>
-          <mat-radio-button value="1">GRCh37/hg19</mat-radio-button>
-          <mat-radio-button value="2">GRCh38/hg38</mat-radio-button>
+        <mat-label>Reference Genome: </mat-label>
+        <mat-radio-group formControlName="referenceGenome">
+          <mat-radio-button value="hg19">GRCh37/hg19</mat-radio-button>
+          <mat-radio-button value="hg38">GRCh38/hg38</mat-radio-button>
         </mat-radio-group>
       </div>
 
@@ -36,16 +28,16 @@
         <input type="file" #filePicker (change)="onFilePicked($event)" />
       </div>
 
-      <!--extraFileInfo-->
+      <!--fileInfo-->
       <div>
         <mat-form-field style="width:400px">
           <input
             fxFlex
-            formControlName="extraFileInfo"
+            formControlName="fileInfo"
             matInput
-            placeholder="Specify Extra File Info..."
+            placeholder="Specify File Info..."
           />
-          <mat-error *ngIf="form.get('extraFileInfo').hasError('required')"
+          <mat-error *ngIf="form.get('fileInfo').hasError('required')"
             >required</mat-error
           >
         </mat-form-field>
@@ -62,73 +54,49 @@
           >required</mat-error
         >
       </mat-form-field>
-      <!--tabFileMapping Column-->
+      <!--tabFileMapping Id Column-->
       <div class="data" fxLayout="row" fxLayoutGap="5px">
         <mat-form-field style="width:400px">
-          <input
-            type="text"
-            placeholder="Choose TAB File Mapping..."
-            matInput
-            [matAutocomplete]="autoTabFileMapping"
+          <app-filtered-select
+            placeholder="Choose Tab File Mapping..."
             formControlName="tabFileMapping"
-            #tabFileMapping
-          />
-          <mat-autocomplete #autoTabFileMapping="matAutocomplete">
-            <mat-option
-              *ngFor="let tabFileMapping of filteredTabFileMappings$ | async"
-              [value]="tabFileMapping.name"
-            >
-              {{ tabFileMapping.name }}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="form.get('tabFileMapping').hasError('required')"
-            >required</mat-error
+            [options]="tabFileMappings"
           >
-          <mat-error *ngIf="form.get('tabFileMapping').hasError('notHave')"
-            >not have</mat-error
-          >
+          </app-filtered-select>
         </mat-form-field>
         <button mat-icon-button>
           <mat-icon (click)="onLoadTabFileMappingPage()">add</mat-icon>
         </button>
       </div>
+
       <!--sampleset Column-->
       <div class="data" fxLayout="row" fxLayoutGap="5px">
         <mat-form-field style="width:400px">
-          <input
-            type="text"
-            placeholder="Choose Sample Set"
-            aria-label="Number"
-            matInput
-            [matAutocomplete]="autoSampleset"
+          <app-filtered-select
+            placeholder="Choose Sampleset..."
             formControlName="sampleset"
-          />
-          <mat-autocomplete #autoSampleset="matAutocomplete">
-            <mat-option
-              *ngFor="let sampleset of filteredSamplesets$ | async"
-              [value]="sampleset.name"
-            >
-              {{ sampleset.name }}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="form.get('sampleset').hasError('required')"
+            [options]="samplesets"
+          >
+          </app-filtered-select>
+          <!-- <mat-error *ngIf="form.get('samplesetId').hasError('required')"
             >required</mat-error
           >
-          <mat-error *ngIf="form.get('sampleset').hasError('notHave')"
+          <mat-error *ngIf="form.get('samplesetId').hasError('notHave')"
             >not have</mat-error
-          >
+          > -->
         </mat-form-field>
+
         <button mat-icon-button>
           <mat-icon (click)="onLoadSamplesetPage()">add</mat-icon>
         </button>
       </div>
 
-      <!--tags Column-->
+      <!--Tag Descriptions Column-->
       <div class="data" fxLayoutGap="5px">
         <mat-form-field style="width:400px">
           <mat-chip-list #tagList>
             <mat-chip
-              *ngFor="let tag of tags"
+              *ngFor="let tag of tagDescriptions"
               selectable="false"
               [removable]="true"
               (removed)="onRemoveTag(tag)"
@@ -137,7 +105,7 @@
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
             <input
-              formControlName="tags"
+              formControlName="tagDescriptions"
               placeholder="Define Tag Description ..."
               [matChipInputFor]="tagList"
               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"

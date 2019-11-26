@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NavigationItem } from 'src/app/types/navigation';
+import { NavigationItem } from 'src/app/navigation/navigation.model';
 
 import { NavigationService } from '../navigation.service';
 

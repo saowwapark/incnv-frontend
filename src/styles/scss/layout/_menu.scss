@@ -1,0 +1,36 @@
+@import '~@angular/material/theming';
+
+.menu__logo {
+  float: left;
+}
+.menu__logo-box--home {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+}
+.menu__logo-img {
+  height: 35px;
+}
+
+.menu__buttons {
+  list-style: none;
+  float: right;
+  li {
+    display: inline-block;
+    margin-left: 30px;
+    &:last-child {
+      margin-right: 0;
+    }
+    a {
+      color: $color-text-dark;
+    }
+    a:link {
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    a:hover,
+    a:active {
+      color: lightgray;
+    }
+  }
+}

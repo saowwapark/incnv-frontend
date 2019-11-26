@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { NavigationItem } from 'src/app/types/navigation';
+import { NavigationItem } from 'src/app/navigation/navigation.model';
 import { Subject, merge } from 'rxjs';
 import { NavigationService } from '../navigation.service';
 import { takeUntil } from 'rxjs/operators';

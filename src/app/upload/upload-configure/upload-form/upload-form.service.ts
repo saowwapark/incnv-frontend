@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Resolve } from '@angular/router';
-import { IdAndName } from './../../../types/common';
+import { IdAndName } from '../../../shared/models/id-and-name.model';
 import { HttpClient } from '@angular/common/http';
 import { ConstantsService } from 'src/app/constants.service';
-import { observable, Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { UploadCnvToolResult } from '../../upload-cnv-tool-result.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,26 +12,27 @@ import { observable, Observable, Subject, BehaviorSubject } from 'rxjs';
 export class UploadFormService {
   samplesets: IdAndName[];
   tapfileMapping: IdAndName[];
+  baseRouteUrl: string;
 
-  onSamplesetsChanged: BehaviorSubject<string>;
-  onTapFileMappingChanged: BehaviorSubject<string>;
-  constructor(
-    private _httpClient: HttpClient,
-    private _constant: ConstantsService
-  ) {
-    this.onSamplesetsChanged = new BehaviorSubject('trigger message');
-    this.onTapFileMappingChanged = new BehaviorSubject('trigger message');
+  constructor(private _http: HttpClient, private _constant: ConstantsService) {
+    this.baseRouteUrl = `${this._constant.baseAppUrl}/api/upload-cnv-tool-result`;
   }
 
-  getSamplesets(): Observable<IdAndName[]> {
-    return this._httpClient.get('api/samplesets-id-name') as Observable<
-      IdAndName[]
-    >;
+  addUploadCnvToolResult(
+    uploadCnvToolResult: UploadCnvToolResult,
+    file: File
+  ): Observable<number> {
+    console.log('addUpload');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('uploadCnvToolResult', JSON.stringify(uploadCnvToolResult));
+
+    return this._http
+      .post(`${this.baseRouteUrl}`, formData)
+      .pipe(map(res => res['payload'])); // return 'let uploadCnvToolResultId: number'
   }
 
-  getTapFileMappings(): Observable<IdAndName[]> {
-    return this._httpClient.get('api/tab-fileMappings-id-name') as Observable<
-      IdAndName[]
-    >;
+  deleteUploadCnvToolResult(uploadCnvToolResultId: number) {
+    return this._http.delete(`${this.baseRouteUrl}/${uploadCnvToolResultId}`);
   }
 }

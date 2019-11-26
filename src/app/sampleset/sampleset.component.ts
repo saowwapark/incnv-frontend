@@ -17,7 +17,9 @@ import {
   MatDialogConfig
 } from '@angular/material/dialog';
 import { SamplesetFormDialogComponent } from './sampleset-form-dialog/sampleset-form-dialog.component';
-import { Action } from './sampleset-form-dialog/dialog.action.model';
+import { Action } from '../shared/models/dialog.action.model';
+import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-sampleset',
@@ -26,21 +28,19 @@ import { Action } from './sampleset-form-dialog/dialog.action.model';
   animations: myAnimations
 })
 export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('searchInput', { static: false })
-  searchInput: ElementRef;
-
-  @ViewChild('filterInput', { static: true })
+  @ViewChild('filterInput', { static: false })
   filterInput: ElementRef;
 
   dialogRef: MatDialogRef<SamplesetFormDialogComponent>;
-
-  hasSelectedSamplesets = false;
-
+  samplesets: Sampleset[];
+  selectedSamplesets: Sampleset[];
+  confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
   private _unsubscribeAll: Subject<any>;
 
   constructor(
-    private _samplesetService: SamplesetService,
-    public _matDialog: MatDialog
+    public samplesetService: SamplesetService,
+    public _matDialog: MatDialog,
+    private route: ActivatedRoute
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -50,33 +50,23 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
   // -----------------------------------------------------------------------------------------------------
 
   ngOnInit(): void {
-    this._samplesetService.onSelectedSamplesetsChanged
+    this.samplesets = this.route.snapshot.data['samplesets'];
+    this.samplesetService.onTriggerDataChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(selectedSampleset => {
-        if (selectedSampleset && selectedSampleset.length > 0) {
-          this.hasSelectedSamplesets = true;
-        } else {
-          this.hasSelectedSamplesets = false;
-        }
-        console.log(
-          'this.hasSelectedSamplesets: ' + this.hasSelectedSamplesets
-        );
+      .subscribe(() => {
+        this.samplesetService.getSamplesets().subscribe(updatedSamplesets => {
+          this.samplesets = updatedSamplesets;
+        });
+      });
+
+    this.samplesetService.onSelectedChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(selectedSamplesets => {
+        this.selectedSamplesets = selectedSamplesets;
       });
   }
 
   ngAfterViewInit() {
-    fromEvent(this.searchInput.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-        takeUntil(this._unsubscribeAll)
-      )
-      .subscribe(() => {
-        this._samplesetService.onSearchTextChanged.next(
-          this.searchInput.nativeElement.value
-        );
-      });
-
     fromEvent(this.filterInput.nativeElement, 'keyup')
       .pipe(
         debounceTime(400),
@@ -85,10 +75,18 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe(() => {
         const filterValue = this.filterInput.nativeElement.value;
-        this._samplesetService.onFilterChanged.next(
+        this.samplesetService.onSearchTextChanged.next(
           filterValue.trim().toLowerCase()
         );
       });
+  }
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -103,7 +101,7 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Original data
     this.dialogRef = this._matDialog.open(SamplesetFormDialogComponent, {
-      panelClass: 'samplset-form-dialog',
+      panelClass: 'dialog-default',
       data: {
         action: Action.New,
         sampleset: new Sampleset()
@@ -113,24 +111,46 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Updated data
     this.dialogRef.afterClosed().subscribe(response => {
-      console.log('create new sampleset');
-      console.log(response);
       if (!response) {
         return;
       }
       const updatedSampleset: Sampleset = response;
 
-      this._samplesetService
-        .addSampleset(updatedSampleset)
-        .subscribe(() => this._samplesetService.isDataChanged.next());
+      this.samplesetService.addSampleset(updatedSampleset).subscribe();
     });
   }
-  /**
-   * On destroy
-   */
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
+  onDelselectedAll() {
+    this.samplesetService.onSelectedChanged.next([]);
+  }
+  onSubmitAllSelected(selectedSamplesets) {
+    this.confirmDialogRef = this._matDialog.open(ConfirmDialogComponent, {
+      panelClass: 'dialog-warning',
+      disableClose: false
+    });
+
+    let rowNames = '';
+    selectedSamplesets.forEach((selectedSampleset, index) => {
+      if (index === 0) {
+        rowNames += selectedSampleset.samplesetName;
+      } else {
+        rowNames += `, ${selectedSampleset.samplesetName}`;
+      }
+    });
+    this.confirmDialogRef.componentInstance.confirmMessage =
+      'Are you sure you want to delete?' + rowNames;
+
+    this.confirmDialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        selectedSamplesets.forEach(selectedRow => {
+          this.samplesetService
+            .deleteSampleset(selectedRow.samplesetId)
+            .subscribe(() => {
+              this.samplesetService.onSelectedChanged.next([]);
+              this.samplesetService.onTriggerDataChanged.next();
+            });
+        });
+      }
+      this.confirmDialogRef = null;
+    });
   }
 }

@@ -10,7 +10,6 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./tab-file-mapping-list.component.scss']
 })
 export class TabFileMappingListComponent implements OnInit, OnDestroy {
-  isLoading = false;
   fileMappingConfigureds: TabFileMapping[];
 
   // Private

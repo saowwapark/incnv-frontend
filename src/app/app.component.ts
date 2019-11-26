@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { AuthService } from './auth/auth.service';
+import { AuthenService } from './authen/authen.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,15 +13,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthenService) {}
 
   ngOnInit() {
     this.authService.autoAuthUser();
-    this.authListenerSubs = this.authService
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
+    this.authListenerSubs = this.authService.isAuthen$.subscribe(
+      isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
-      });
+      }
+    );
   }
 
   ngOnDestroy(): void {

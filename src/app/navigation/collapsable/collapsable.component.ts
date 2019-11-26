@@ -9,7 +9,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { NavigationItem } from 'src/app/types/navigation';
+import { NavigationItem } from 'src/app/navigation/navigation.model';
 import { Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { myAnimations } from 'src/app/animations';

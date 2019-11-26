@@ -1,0 +1,44 @@
+<div class="page-layout">
+  <!-- HEADER -->
+  <div class="header__container">
+    <div class="header__items" fxLayout="row" fxLayoutAlign="start">
+      <!-- APP TITLE -->
+      <span style="font-size: 2rem">Configure CNV Tool Files</span>
+      <!-- / APP TITLE -->
+    </div>
+  </div>
+
+  <mat-horizontal-stepper>
+    <mat-step label="Configure Header Fields">
+      <app-header-fields></app-header-fields>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext mat-raised-button color="primary">
+          Next
+        </button>
+      </div>
+    </mat-step>
+    <mat-step label="Configure Data Fields">
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button
+          mat-button
+          matStepperNext
+          mat-raised-button
+          color="primary"
+          (click)="onHeaderFieldNext()"
+        >
+          Next
+        </button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      You are now done.
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="submit()">Submit</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

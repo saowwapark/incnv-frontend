@@ -1,20 +1,15 @@
-import { Sampleset } from './../sampleset.model';
-import { SamplesetFormDialogComponent } from '../sampleset-form-dialog/sampleset-form-dialog.component';
 import {
   Component,
   OnInit,
   OnDestroy,
   ViewChild,
-  AfterViewInit
+  Input,
+  OnChanges
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { takeUntil } from 'rxjs/operators';
-
-import { Subject, Observable } from 'rxjs';
-import { SamplesetService } from '../sampleset.service';
-import { SamplesetsDataSource } from '../samplesets.datasource';
+import { Subject } from 'rxjs';
 import {
   trigger,
   state,
@@ -22,8 +17,14 @@ import {
   transition,
   animate
 } from '@angular/animations';
-import { Action } from '../sampleset-form-dialog/dialog.action.model';
 import { SelectionModel } from '@angular/cdk/collections';
+
+import { Action } from '../../shared/models/dialog.action.model';
+import { SamplesetService } from 'src/app/sampleset/sampleset.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatTableDataSource } from '@angular/material/table';
+import { Sampleset } from '../sampleset.model';
+import { SamplesetFormDialogComponent } from '../sampleset-form-dialog/sampleset-form-dialog.component';
 
 @Component({
   selector: 'app-sampleset-list',
@@ -40,13 +41,12 @@ import { SelectionModel } from '@angular/cdk/collections';
     ])
   ]
 })
-export class SamplesetListComponent
-  implements OnInit, OnDestroy, AfterViewInit {
-  samplesets: Sampleset;
-  dataSource: SamplesetsDataSource | null;
+export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() samplesets: Sampleset[];
+  dataSource: MatTableDataSource<Sampleset>;
   displayedColumns = [
     'select',
-    'name',
+    'samplesetName',
     'description',
     'createDate',
     'lastUpdated',
@@ -54,23 +54,20 @@ export class SamplesetListComponent
   ];
 
   selection = new SelectionModel<Sampleset>(true, []);
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) matSort: MatSort;
 
   dialogRef: MatDialogRef<SamplesetFormDialogComponent>;
 
   expandedElement: string | null;
 
-  totalRecords$: Observable<number>;
-  jumpPage$: Observable<number>;
-  jumpPages$: Observable<number[]>;
   private _unsubscribeAll: Subject<any>;
 
   constructor(
     private _samplesetService: SamplesetService,
     public _matDialog: MatDialog
   ) {
+    this.dataSource = new MatTableDataSource();
     this._unsubscribeAll = new Subject();
   }
 
@@ -82,25 +79,27 @@ export class SamplesetListComponent
    * On init
    */
   ngOnInit(): void {
-    this.dataSource = new SamplesetsDataSource(
-      this._samplesetService,
-      this.paginator,
-      this.sort
-    );
+    this.dataSource.sort = this.matSort;
 
-    this.totalRecords$ = this.dataSource.totalRecords$;
-    this.jumpPage$ = this.dataSource.jumpPage$;
-    this.jumpPages$ = this.dataSource.jumpPages$;
-
-    this._samplesetService.onSelectedSamplesetsChanged
+    this._samplesetService.onSelectedChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(samplesets => {
-        if (!samplesets || samplesets.length < 1) {
+      .subscribe(selectedSamplesets => {
+        if (!selectedSamplesets || selectedSamplesets.length < 1) {
           this.selection.clear();
         }
       });
+
+    this._samplesetService.onSearchTextChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((filterValue: string) => {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+      });
   }
-  ngAfterViewInit() {}
+
+  ngOnChanges() {
+    this.dataSource.data = this.samplesets;
+  }
+
   /**
    * On destroy
    */
@@ -114,23 +113,16 @@ export class SamplesetListComponent
   // @ Public methods
   // -----------------------------------------------------------------------------------------------------
 
-  updateJumpPage(goToPage: number) {
-    this.dataSource.updateJumpPage(goToPage);
-  }
-
-  clearJumpPage() {
-    this.dataSource.clearJumpPage();
-  }
-
   /**
    * Edit Sampleset
    *
    * @param contact
    */
   onEditSampleset(sampleset: Sampleset): void {
+    this._samplesetService.onSelectedChanged.next([]);
     // Original data
     this.dialogRef = this._matDialog.open(SamplesetFormDialogComponent, {
-      panelClass: 'sampleset-form-dialog',
+      panelClass: 'dialog-default',
       data: {
         sampleset: sampleset,
         action: Action.Edit
@@ -142,14 +134,11 @@ export class SamplesetListComponent
       if (!response) {
         return;
       }
-      const UpdatedSampleset: Sampleset = response;
+      const updatedSampleset: Sampleset = response;
 
-      this._samplesetService
-        .editSampleset(UpdatedSampleset)
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(() => {
-          this.dataSource.loadData();
-        });
+      this._samplesetService.editSampleset(updatedSampleset).subscribe(() => {
+        this._samplesetService.onTriggerDataChanged.next();
+      });
     });
   }
 
@@ -174,18 +163,12 @@ export class SamplesetListComponent
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.data.forEach(sampleset =>
-          this.selection.select(sampleset)
-        );
-    this._samplesetService.onSelectedSamplesetsChanged.next(
-      this.selection.selected
-    );
+      : this.dataSource.data.forEach(row => this.selection.select(row));
+    this._samplesetService.onSelectedChanged.next(this.selection.selected);
   }
 
   toggleSampleset(sampleset: Sampleset) {
     this.selection.toggle(sampleset);
-    this._samplesetService.onSelectedSamplesetsChanged.next(
-      this.selection.selected
-    );
+    this._samplesetService.onSelectedChanged.next(this.selection.selected);
   }
 }

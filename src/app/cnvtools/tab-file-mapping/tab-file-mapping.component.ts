@@ -2,7 +2,7 @@ import { TabFileMappingService } from './tab-file-mapping.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl } from '@angular/forms';
-import { TabFileMappingFormDialogComponent } from './tab-file-mapping-form/tab-file-mapping-form.component';
+import { TabFileMappingFormDialogComponent } from './tab-file-mapping-form-dialog/tab-file-mapping-form-dialog.component';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
@@ -42,9 +42,9 @@ export class TabFileMappingComponent implements OnInit {
   /**
    * New upload
    */
-  newTabFileMapping(): void {
+  onAddTabFileMapping(): void {
     this.dialogRef = this._matDialog.open(TabFileMappingFormDialogComponent, {
-      panelClass: 'contact-form-dialog',
+      panelClass: 'dialog-default',
       data: {
         action: 'new'
       }
@@ -54,9 +54,7 @@ export class TabFileMappingComponent implements OnInit {
       if (!response) {
         return;
       }
-      this._fileMappingService.updateTabFileMapping(
-        response.getRawValue()
-      );
+      this._fileMappingService.addTabFileMapping(response.getRawValue());
     });
   }
 }

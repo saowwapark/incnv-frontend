@@ -1,9 +1,9 @@
-import { ConfirmDialogComponent } from '../../../../common/confirm-dialog/confirm-dialog.component';
+import { TabFileMapping } from './../../tab-file-mapping.model';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TabFileMappingService } from '../../tab-file-mapping.service';
 import { Component, Input } from '@angular/core';
-import { TabFileMapping, CODEX2 } from '../../tab-file-mapping.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TabFileMappingFormDialogComponent } from '../../tab-file-mapping-form/tab-file-mapping-form.component';
+import { TabFileMappingFormDialogComponent } from '../../tab-file-mapping-form-dialog/tab-file-mapping-form-dialog.component';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -32,7 +32,7 @@ export class TabFileMappingCardComponent {
    */
   onEditTabFileMapping(fileMappingConfigured: TabFileMapping): void {
     this.dialogRef = this._matDialog.open(TabFileMappingFormDialogComponent, {
-      panelClass: 'contact-form-dialog',
+      panelClass: 'dialog-default',
       data: {
         fileMappingConfigured: fileMappingConfigured,
         action: 'edit'
@@ -51,7 +51,11 @@ export class TabFileMappingCardComponent {
          * Save
          */
         case 'save':
-          this._fileMappingService.updateTabFileMapping(formData.getRawValue());
+          const updatedTabFileMapping = {
+            tabFileMappingId: fileMappingConfigured.tabFileMappingId,
+            ...formData.getRawValue()
+          };
+          this._fileMappingService.updateTabFileMapping(updatedTabFileMapping);
 
           break;
         /**
@@ -67,8 +71,9 @@ export class TabFileMappingCardComponent {
   /**
    * Delete TabFileMapping Configured
    */
-  onDeleteTabFileMapping(fileMappingConfigured): void {
+  onDeleteTabFileMapping(fileMappingConfigured: TabFileMapping): void {
     this.confirmDialogRef = this._matDialog.open(ConfirmDialogComponent, {
+      panelClass: 'dialog-warning',
       disableClose: false
     });
 
@@ -77,7 +82,9 @@ export class TabFileMappingCardComponent {
 
     this.confirmDialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this._fileMappingService.deleteTabFileMapping(fileMappingConfigured);
+        this._fileMappingService.deleteTabFileMapping(
+          fileMappingConfigured.tabFileMappingId
+        );
       }
       this.confirmDialogRef = null;
     });

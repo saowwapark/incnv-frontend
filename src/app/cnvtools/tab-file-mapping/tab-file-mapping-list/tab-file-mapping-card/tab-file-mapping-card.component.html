@@ -1,6 +1,8 @@
-<mat-card class="fileMappingcard">
+<mat-card class="fileMappingcard" *ngIf="fileMappingConfigured">
   <mat-card-header>
-    <mat-card-title>{{ fileMappingConfigured.cnvToolName }}</mat-card-title>
+    <mat-card-title>{{
+      fileMappingConfigured.tabFileMappingName
+    }}</mat-card-title>
   </mat-card-header>
   <mat-card-content
     fxLayout="row"
@@ -11,7 +13,7 @@
       <mat-grid-list cols="5" rowHeight="50px">
         <mat-grid-tile colspan="5" class="header-file__field"
           ><mat-grid-tile-header
-            >Header Column</mat-grid-tile-header
+            >Header Column Mapping</mat-grid-tile-header
           ></mat-grid-tile
         >
 
@@ -23,19 +25,19 @@
       </mat-grid-list>
       <mat-grid-list cols="5" rowHeight="50px">
         <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerField.sampleName
+          fileMappingConfigured.headerColumnMapping.sampleName
         }}</mat-grid-tile>
         <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerField.chr
+          fileMappingConfigured.headerColumnMapping.chromosome
         }}</mat-grid-tile>
         <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerField.startBp
+          fileMappingConfigured.headerColumnMapping.startBasepair
         }}</mat-grid-tile>
         <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerField.endBp
+          fileMappingConfigured.headerColumnMapping.endBasepair
         }}</mat-grid-tile>
         <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerField.cnvType
+          fileMappingConfigured.headerColumnMapping.cnvType
         }}</mat-grid-tile>
       </mat-grid-list>
     </div>
@@ -43,23 +45,23 @@
       <mat-grid-list cols="3" rowHeight="50px">
         <mat-grid-tile colspan="3" class="data-file__field"
           ><mat-grid-tile-header
-            >Data Field</mat-grid-tile-header
+            >Data Field Mapping</mat-grid-tile-header
           ></mat-grid-tile
         >
 
         <mat-grid-tile class="data-file__field">CHROMOSOME 22</mat-grid-tile>
-        <mat-grid-tile class="data-file__field">DUPLICATE</mat-grid-tile>
-        <mat-grid-tile class="data-file__field">DELETE</mat-grid-tile>
+        <mat-grid-tile class="data-file__field">DUPLICATION</mat-grid-tile>
+        <mat-grid-tile class="data-file__field">DELETION</mat-grid-tile>
       </mat-grid-list>
       <mat-grid-list cols="3" rowHeight="50px">
         <mat-grid-tile class="data-file__value">{{
-          fileMappingConfigured.dataField.chr22
+          fileMappingConfigured.dataFieldMapping.chromosome22
         }}</mat-grid-tile>
         <mat-grid-tile class="data-file__value">{{
-          fileMappingConfigured.dataField.dup
+          fileMappingConfigured.dataFieldMapping.duplication
         }}</mat-grid-tile>
         <mat-grid-tile class="data-file__value">{{
-          fileMappingConfigured.dataField.del
+          fileMappingConfigured.dataFieldMapping.deletion
         }}</mat-grid-tile>
       </mat-grid-list>
     </div>

@@ -1,27 +1,52 @@
-<h1>Configure Files</h1>
+<div class="page-layout">
+  <!-- HEADER -->
+  <div class="header__container">
+    <div class="header__items">
+      <!-- APP TITLE -->
+      <h2>Configure Files</h2>
+    </div>
+  </div>
 
-<mat-vertical-stepper #stepper>
-  <mat-step label="Upload File">
-    <app-upload-form
-      fxLayout="column"
-      fxLayoutAlign="space-between center"
-      (confirmClicked)="goForward(stepper)"
-    ></app-upload-form>
-  </mat-step>
-  <mat-step label="Reformat File">
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext mat-raised-button color="primary">
-        Next
-      </button>
-    </div>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    You are now done.
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button>Submit</button>
-    </div>
-  </mat-step>
-</mat-vertical-stepper>
+  <!-- CONTENT -->
+  <div>
+    <mat-vertical-stepper #stepper>
+      <mat-step label="Upload File">
+        <app-upload-form
+          fxLayout="column"
+          fxLayoutAlign="space-between center"
+          (confirmClicked)="goToNexStep()"
+        ></app-upload-form>
+      </mat-step>
+      <mat-step label="Reformat File">
+        <app-upload-reformat></app-upload-reformat>
+        <div>
+          <button mat-button matStepperNext mat-raised-button color="primary">
+            Confirm
+          </button>
+          <button
+            mat-button
+            matStepperPrevious
+            (click)="deleteUploadConfigure()"
+          >
+            Cancle
+          </button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        You are now done.
+        <div>
+          <button
+            mat-button
+            mat-raised-button
+            color="primary"
+            (click)="uploadAgain()"
+          >
+            Upload again
+          </button>
+          <button mat-button>Go to analysis</button>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+</div>

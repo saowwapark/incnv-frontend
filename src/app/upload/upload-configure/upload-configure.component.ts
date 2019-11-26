@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { UploadConfigureService } from './upload-configure.service';
+import { Component, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({
@@ -7,7 +8,20 @@ import { MatStepper } from '@angular/material/stepper';
   styleUrls: ['./upload-configure.component.scss']
 })
 export class UploadConfigureComponent {
-  goForward(stepper: MatStepper) {
-    stepper.next();
+  constructor(private _uploadConfigureService: UploadConfigureService) {}
+
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
+
+  goToNexStep() {
+    this.stepper.next();
+  }
+
+  deleteUploadConfigure() {
+    this._uploadConfigureService.deleteUploadConfigure();
+  }
+
+  uploadAgain() {
+    this._uploadConfigureService.clearDataBefore();
+    this.stepper.reset();
   }
 }

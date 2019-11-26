@@ -1,0 +1,66 @@
+<h2>Sample Set</h2>
+
+<!-- CONTENT -->
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-form-field>
+    <input
+      matInput
+      (keyup)="applyFilter($event.target.value)"
+      placeholder="Filter"
+    />
+  </mat-form-field>
+  <div>
+    <button mat-raised-button (click)="goToPreviousStep()">Back</button>
+    <button mat-raised-button color="primary" (click)="goToNextStep()">
+      Next
+    </button>
+  </div>
+</div>
+<table mat-table [dataSource]="dataSource" matSort>
+  <!-- Radio Column -->
+  <ng-container matColumnDef="choose">
+    <th mat-header-cell *matHeaderCellDef>Choose</th>
+    <td mat-cell *matCellDef="let sampleset" class="choose">
+      <mat-radio-button
+        [value]="sampleset"
+        #chosenSampleset
+        (change)="chooseSampleset($event.value)"
+      ></mat-radio-button>
+    </td>
+  </ng-container>
+
+  <!-- Sampleset Name Column -->
+  <ng-container matColumnDef="samplesetName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Set Name</th>
+    <td mat-cell *matCellDef="let sampleset" class="samplesetName">
+      {{ sampleset.samplesetName }}
+    </td>
+  </ng-container>
+
+  <!-- Description Column -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+    <td mat-cell *matCellDef="let sampleset" class="description">
+      {{ sampleset.description }}
+    </td>
+  </ng-container>
+
+  <!-- Tags Column -->
+  <ng-container matColumnDef="samples">
+    <th mat-header-cell *matHeaderCellDef>samples</th>
+    <td mat-cell *matCellDef="let sampleset" class="samples">
+      <mat-chip-list>
+        <mat-chip
+          *ngFor="let sample of sampleset.samples"
+          color="accent"
+          selected
+        >
+          {{ sample }}
+        </mat-chip>
+      </mat-chip-list>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

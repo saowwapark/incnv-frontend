@@ -1,4 +1,4 @@
-import { Navigation } from '../types/navigation';
+import { Navigation } from './navigation.model';
 
 export const navigationData: Navigation[] = [
   {
@@ -51,7 +51,7 @@ export const navigationData: Navigation[] = [
             id: 'tabFileMapping',
             title: 'File Mapping',
             type: 'item',
-            url: '/tabFileMapping'
+            url: '/tabfilemapping'
           }
         ]
       },

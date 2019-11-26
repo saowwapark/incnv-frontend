@@ -7,27 +7,16 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2015",
-    //"noEmitOnError": true,
-    //"strictNullChecks": true,
-    //"noUnusedParameters": true,
-    //"noUnusedLocals": true,
-    //"noImplicitAny": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "noEmitOnError": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
     "paths": {
-      "core-js/es7/reflect": [
-        "node_modules/core-js/proposals/reflect-metadata"
-      ]
+      "core-js/es7/reflect": ["node_modules/core-js/proposals/reflect-metadata"]
     }
   }
 }

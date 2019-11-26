@@ -1,16 +1,21 @@
-<div fxLayout="column">
-  <h1>BED CNV Tools</h1>
-  <!-- SEARCH -->
-  <div class="search">
-    <mat-icon>search</mat-icon>
-    <input [formControl]="searchInput" placeholder="Search for a CNV Tool" />
+<div class="page-layout">
+  <!-- HEADER -->
+  <div class="header__container">
+    <div class="header__items" fxLayout="row" fxLayoutAlign="start">
+      <h2>Tab File Mapping</h2>
+      <!-- SEARCH -->
+      <div class="search">
+        <mat-icon>search</mat-icon>
+        <input
+          [formControl]="searchInput"
+          placeholder="Search for a CNV Tool"
+        />
+      </div>
+    </div>
   </div>
 
-  <!-- / SEARCH -->
-
-  <!---- BED -->
+  <!---- TAB FILE MAPPING -->
   <app-tab-file-mapping-list></app-tab-file-mapping-list>
-  <!-- / BED-->
 
   <!-- ADD TabFileMapping Tool BUTTON -->
   <button
@@ -18,7 +23,7 @@
     class="accent"
     id="add-tab-file-mapping-button"
     aria-label="add tabFileMapping"
-    (click)="newTabFileMapping()"
+    (click)="onAddTabFileMapping()"
   >
     <mat-icon>add</mat-icon>
   </button>

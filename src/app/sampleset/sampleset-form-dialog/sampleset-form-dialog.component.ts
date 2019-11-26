@@ -6,7 +6,7 @@ import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 
 import { Component, OnInit, Inject } from '@angular/core';
 
-import { Action } from './dialog.action.model';
+import { Action } from '../../shared/models/dialog.action.model';
 
 @Component({
   selector: 'sampleset-form-dialog',
@@ -45,7 +45,7 @@ export class SamplesetFormDialogComponent implements OnInit {
   private _createSamplesetForm(sampleset: Sampleset): FormGroup {
     return this._fb.group({
       samplesetId: [sampleset.samplesetId],
-      name: [sampleset.name, Validators.required],
+      samplesetName: [sampleset.samplesetName, Validators.required],
       description: [sampleset.description],
       samples: [sampleset.samples]
     });

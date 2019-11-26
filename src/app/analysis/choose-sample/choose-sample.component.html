@@ -1,0 +1,12 @@
+<mat-form-field>
+  <mat-label>Choose Sample...</mat-label>
+  <app-filtered-select [options]="samples" [(ngModel)]="selectedSample">
+  </app-filtered-select>
+</mat-form-field>
+
+<div>
+  <button mat-raised-button (click)="goToPreviousStep()">Back</button>
+  <button mat-raised-button color="primary" (click)="goToNextStep()">
+    Next
+  </button>
+</div>

@@ -1,88 +1,88 @@
 /*************************** Front End *****************************/
 
-export class HeaderField {
+export class HeaderColumnMapping {
   sampleName: string;
-  chr: string;
-  startBp: string;
-  endBp: string;
+  chromosome: string;
+  startBasepair: string;
+  endBasepair: string;
   cnvType: string;
 }
-export class DataField {
-  chr22: string;
-  dup: string;
-  del: string;
+export class DataFieldMapping {
+  chromosome22: string;
+  duplication: string;
+  deletion: string;
 }
 export class TabFileMapping {
-  id: number;
+  tabFileMappingId: number;
   userId: number;
-  cnvToolName: string;
-  headerField: HeaderField;
-  dataField: DataField;
+  tabFileMappingName: string;
+  headerColumnMapping: HeaderColumnMapping;
+  dataFieldMapping: DataFieldMapping;
 
   constructor(tabFileMapping?) {
     if (tabFileMapping) {
-      this.id = tabFileMapping.id;
+      this.tabFileMappingId = tabFileMapping.id;
       this.userId = tabFileMapping.owerId;
-      this.cnvToolName = tabFileMapping.cnvToolName;
-      this.headerField = tabFileMapping.headerField;
-      this.dataField = tabFileMapping.dataField;
+      this.tabFileMappingName = tabFileMapping.cnvToolName;
+      this.headerColumnMapping = tabFileMapping.headerColumnMapping;
+      this.dataFieldMapping = tabFileMapping.dataFieldMapping;
     } else {
-      this.headerField = new HeaderField();
-      this.dataField = new DataField();
+      this.headerColumnMapping = new HeaderColumnMapping();
+      this.dataFieldMapping = new DataFieldMapping();
     }
   }
 }
 export const CODEX2: TabFileMapping = {
-  id: 1,
+  tabFileMappingId: 1,
   userId: 1, // 0 = admin, 1 = userlevel1
-  cnvToolName: 'CODEX2',
-  headerField: {
+  tabFileMappingName: 'CODEX2',
+  headerColumnMapping: {
     sampleName: 'sample_name',
-    chr: 'chr',
-    startBp: 'st_bp',
-    endBp: 'ed_bp',
+    chromosome: 'chr',
+    startBasepair: 'st_bp',
+    endBasepair: 'ed_bp',
     cnvType: 'cnv'
   },
-  dataField: {
-    chr22: 'chr22',
-    dup: 'dup',
-    del: 'del'
+  dataFieldMapping: {
+    chromosome22: 'chr22',
+    duplication: 'dup',
+    deletion: 'del'
   }
 };
 
 export const CoNIFER: TabFileMapping = {
-  id: 2,
+  tabFileMappingId: 2,
   userId: 1, // 0 = admin, 1 = userlevel1
-  cnvToolName: 'CoNIFER',
-  headerField: {
+  tabFileMappingName: 'CoNIFER',
+  headerColumnMapping: {
     sampleName: 'sampleID',
-    chr: 'chromosome',
-    startBp: 'start',
-    endBp: 'stop',
+    chromosome: 'chromosome',
+    startBasepair: 'start',
+    endBasepair: 'stop',
     cnvType: 'state'
   },
-  dataField: {
-    chr22: 'chr22',
-    dup: 'dup',
-    del: 'del'
+  dataFieldMapping: {
+    chromosome22: 'chr22',
+    duplication: 'dup',
+    deletion: 'del'
   }
 };
 
 export const CONTRA: TabFileMapping = {
-  id: 3,
+  tabFileMappingId: 3,
   userId: 1, // 0 = admin, 1 = userlevel1
-  cnvToolName: 'CONTRA',
-  headerField: {
+  tabFileMappingName: 'CONTRA',
+  headerColumnMapping: {
     sampleName: 'Target.Region.ID',
-    chr: 'chr',
-    startBp: 'OriStrCoordinate',
-    endBp: 'OriEndCoordinate',
+    chromosome: 'chr',
+    startBasepair: 'OriStrCoordinate',
+    endBasepair: 'OriEndCoordinate',
     cnvType: 'gain.loss'
   },
-  dataField: {
-    chr22: 'chr22',
-    dup: 'gain',
-    del: 'loss'
+  dataFieldMapping: {
+    chromosome22: 'chr22',
+    duplication: 'gain',
+    deletion: 'loss'
   }
 };
 

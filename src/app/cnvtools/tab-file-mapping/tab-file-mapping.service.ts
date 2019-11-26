@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SearchUtils } from '../../common/search.utils';
+import { SearchUtils } from '../../utils/search.utils';
 import {
   ActivatedRouteSnapshot,
   Resolve,
@@ -10,21 +10,28 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { TabFileMapping } from './tab-file-mapping.model';
 import { UploadFormService } from 'src/app/upload/upload-configure/upload-form/upload-form.service';
+import { ConstantsService } from 'src/app/constants.service';
+import { map } from 'rxjs/operators';
+import { IdAndName } from 'src/app/shared/models/id-and-name.model';
 
 @Injectable()
 export class TabFileMappingService implements Resolve<any> {
   fileMappingConfigureds: TabFileMapping[];
   searchText: string;
-
+  onTriggerDataChanged: BehaviorSubject<void>;
   onTabFileMappingsChanged: BehaviorSubject<any>;
   onSearchTextChanged: Subject<any>;
+  baseRouteUrl: string;
 
   constructor(
-    private _httpClient: HttpClient,
-    private _uploadFormService: UploadFormService
+    private _http: HttpClient,
+    private _uploadFormService: UploadFormService,
+    private _constant: ConstantsService
   ) {
+    this.onTriggerDataChanged = new BehaviorSubject(null);
     this.onTabFileMappingsChanged = new BehaviorSubject([]);
     this.onSearchTextChanged = new Subject();
+    this.baseRouteUrl = `${this._constant.baseAppUrl}/api/tab-file-mapping`;
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -51,19 +58,35 @@ export class TabFileMappingService implements Resolve<any> {
   }
 
   /**
+   * Add tabFileMapping configured
+   *
+   */
+  addTabFileMapping(fileMappingConfigured: TabFileMapping): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._http
+        .post(`${this.baseRouteUrl}`, {
+          ...fileMappingConfigured
+        })
+        .subscribe(response => {
+          this.onTriggerDataChanged.next();
+          this.getTabFileMapping();
+          resolve(response);
+        });
+    });
+  }
+
+  /**
    * Update tabFileMapping configured
    *
    */
   updateTabFileMapping(fileMappingConfigured: TabFileMapping): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._httpClient
-        .post('api/tab-fileMappings/' + fileMappingConfigured.id, {
+      this._http
+        .put(`${this.baseRouteUrl}/${fileMappingConfigured.tabFileMappingId}`, {
           ...fileMappingConfigured
         })
         .subscribe(response => {
-          this._uploadFormService.onTapFileMappingChanged.next(
-            'TabFileMapping triggers to uploadForm.'
-          );
+          this.onTriggerDataChanged.next();
           this.getTabFileMapping();
           resolve(response);
         });
@@ -74,19 +97,23 @@ export class TabFileMappingService implements Resolve<any> {
    * Delete TabFileMapping Configured
    *
    */
-  deleteTabFileMapping(fileMappingConfigured): void {
-    const fileMappingIndex = this.fileMappingConfigureds.indexOf(
-      fileMappingConfigured
-    );
-    this.fileMappingConfigureds.splice(fileMappingIndex, 1);
-    this.onTabFileMappingsChanged.next(this.fileMappingConfigureds);
+  deleteTabFileMapping(tabFileMappingId: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._http
+        .delete(`${this.baseRouteUrl}/${tabFileMappingId}`)
+        .subscribe(response => {
+          this.onTriggerDataChanged.next();
+          this.getTabFileMapping();
+          resolve(response);
+        });
+    });
   }
   getTabFileMapping(): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      this._httpClient
-        .get('api/tab-fileMappings')
+      this._http
+        .get(`${this.baseRouteUrl}/get-mappings`)
         .subscribe((response: any) => {
-          this.fileMappingConfigureds = response;
+          this.fileMappingConfigureds = response['payload'];
           if (this.searchText && this.searchText !== '') {
             this.fileMappingConfigureds = SearchUtils.filterArrayByString(
               this.fileMappingConfigureds,
@@ -97,5 +124,11 @@ export class TabFileMappingService implements Resolve<any> {
           resolve(this.fileMappingConfigureds);
         }, reject);
     });
+  }
+
+  getIdAndNames(): Observable<IdAndName[]> {
+    return this._http
+      .get(`${this._constant.baseAppUrl}/api/tab-file-mapping/id-name`)
+      .pipe(map(res => res['payload']));
   }
 }

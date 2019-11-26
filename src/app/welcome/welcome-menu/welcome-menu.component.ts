@@ -8,7 +8,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthenService } from 'src/app/authen/authen.service';
 
 @Component({
   selector: 'app-welcome-menu',
@@ -22,7 +22,10 @@ export class WelcomeMenuComponent implements OnInit {
   // @ViewChild('children', { static: false }) children: ElementRef;
 
   // opened = false;
-  constructor(private renderer: Renderer2, private authService: AuthService) {}
+  constructor(
+    private renderer: Renderer2,
+    private authService: AuthenService
+  ) {}
 
   ngOnInit() {}
 

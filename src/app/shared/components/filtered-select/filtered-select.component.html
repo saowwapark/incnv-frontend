@@ -1,0 +1,23 @@
+<div [formGroup]="filterSelectGroup">
+  <mat-select [(value)]="selectedOption" formControlName="selectControl">
+    <mat-optgroup *ngIf="filteredOptions">
+      <input matInput type="text" placeholder="Filter..." #input />
+      <mat-option *ngFor="let option of filteredOptions" [value]="option">
+        <ng-container
+          *ngIf="
+            option.name;
+            then showOptionWithName;
+            else showOptionWithOption
+          "
+        ></ng-container>
+        <ng-template #showOptionWithName>
+          {{ option.name }}
+        </ng-template>
+
+        <ng-template #showOptionWithOption>
+          {{ option }}
+        </ng-template>
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+</div>

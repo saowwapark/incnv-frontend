@@ -1,0 +1,20 @@
+@import './../../../../styles/scss/theme';
+:host {
+  background-color: mat-color($primary);
+  color: mat-color($background, text);
+  flex: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 120px;
+  @include mat-elevation(3);
+}
+
+.delete {
+  background-color: mat-color($warn);
+}
+
+.use {
+  background-color: mat-color($accent);
+}
