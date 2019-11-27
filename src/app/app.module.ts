@@ -15,6 +15,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 /** Import Utilities **/
 import { ShortenPipe } from './utils/shorten.pipe';
 
+// Import KonvaModule
+import { KonvaModule } from 'ng2-konva';
+
 /** Import Component **/
 // import { ConfigureCNVtoolsComponent } from './configure-cnv-tools/configure-cnv-tools.component';
 // import { ConfigureHeaderFieldsComponent } from './configure-cnv-tools/configure-header-fields/configure-header-fields.component';
@@ -132,7 +135,8 @@ import { CompareResultComponent } from './analysis/compare-result/compare-result
     CustomMaterialModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    KonvaModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthenInterceptor, multi: true },
