@@ -15,9 +15,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 /** Import Utilities **/
 import { ShortenPipe } from './utils/shorten.pipe';
 
-// Import KonvaModule
-import { KonvaModule } from 'ng2-konva';
-
 /** Import Component **/
 // import { ConfigureCNVtoolsComponent } from './configure-cnv-tools/configure-cnv-tools.component';
 // import { ConfigureHeaderFieldsComponent } from './configure-cnv-tools/configure-header-fields/configure-header-fields.component';
@@ -75,6 +72,10 @@ import { ChooseSamplesetResolver } from './analysis/choose-sampleset/choose-samp
 import { ChooseSampleComponent } from './analysis/choose-sample/choose-sample.component';
 import { ChooseFileComponent } from './analysis/choose-file/choose-file.component';
 import { CompareResultComponent } from './analysis/compare-result/compare-result.component';
+import { ResultBarComponent } from './analysis/result-bar/result-bar.component';
+import { UploadReformatListComponent } from './upload/upload-configure/upload-reformat/upload-reformat-list/upload-reformat-list.component';
+import { UploadHistoryReformatconvtoolresultComponent } from './upload/upload-history/upload-history-reformatconvtoolresult/upload-history-reformatconvtoolresult.component';
+import { UploadReformatDialogComponent } from './upload/upload-configure/upload-reformat/upload-reformat-dialog/upload-reformat-dialog.component';
 
 @NgModule({
   declarations: [
@@ -125,7 +126,11 @@ import { CompareResultComponent } from './analysis/compare-result/compare-result
     ChooseSamplesetComponent,
     ChooseSampleComponent,
     ChooseFileComponent,
-    CompareResultComponent
+    CompareResultComponent,
+    ResultBarComponent,
+    UploadReformatListComponent,
+    UploadHistoryReformatconvtoolresultComponent,
+    UploadReformatDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -135,8 +140,7 @@ import { CompareResultComponent } from './analysis/compare-result/compare-result
     CustomMaterialModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule,
-    KonvaModule
+    HttpClientModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthenInterceptor, multi: true },
@@ -153,7 +157,8 @@ import { CompareResultComponent } from './analysis/compare-result/compare-result
     ConfirmDialogComponent,
     ErrorDialogComponent,
     SamplesetFormDialogComponent,
-    UploadFormComponent
+    UploadFormComponent,
+    UploadReformatDialogComponent
   ]
 })
 export class AppModule {}

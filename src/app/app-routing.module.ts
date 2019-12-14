@@ -1,3 +1,4 @@
+import { UploadHistoryReformatconvtoolresultComponent } from './upload/upload-history/upload-history-reformatconvtoolresult/upload-history-reformatconvtoolresult.component';
 import { CompareResultComponent } from './analysis/compare-result/compare-result.component';
 import { ChooseSamplesetResolver } from './analysis/choose-sampleset/choose-sampleset.resolver';
 import { AnalysisComponent } from './analysis/analysis.component';
@@ -27,6 +28,7 @@ import { TabFileMappingService } from './cnvtools/tab-file-mapping/tab-file-mapp
 import { SamplesetService } from './sampleset/sampleset.service';
 import { UploadFormComponent } from './upload/upload-configure/upload-form/upload-form.component';
 import { HomeContentComponent } from './home/home-content/home-content.component';
+import { ResultBarComponent } from './analysis/result-bar/result-bar.component';
 
 const appRoutes: Routes = [
   // level1
@@ -73,6 +75,10 @@ const appRoutes: Routes = [
     component: UploadHistoryUploadcnvtoolresultComponent
   },
   {
+    path: 'reformat/:id',
+    component: UploadHistoryReformatconvtoolresultComponent
+  },
+  {
     path: 'analysis',
     component: AnalysisComponent,
     resolve: { samplesets: ChooseSamplesetResolver }
@@ -80,6 +86,10 @@ const appRoutes: Routes = [
   {
     path: 'compare',
     component: CompareResultComponent
+  },
+  {
+    path: 'result-bar',
+    component: ResultBarComponent
   },
   {
     path: 'layout',

@@ -9,28 +9,21 @@
 
   <!-- CONTENT -->
   <div>
-    <mat-vertical-stepper #stepper>
+    <mat-horizontal-stepper #stepper linear="false">
       <mat-step label="Upload File">
         <app-upload-form
           fxLayout="column"
           fxLayoutAlign="space-between center"
-          (confirmClicked)="goToNexStep()"
+          (confirmClicked)="goToReformatStep($event)"
         ></app-upload-form>
       </mat-step>
       <mat-step label="Reformat File">
-        <app-upload-reformat></app-upload-reformat>
-        <div>
-          <button mat-button matStepperNext mat-raised-button color="primary">
-            Confirm
-          </button>
-          <button
-            mat-button
-            matStepperPrevious
-            (click)="deleteUploadConfigure()"
-          >
-            Cancle
-          </button>
-        </div>
+        <app-upload-reformat
+          *ngIf="uploadCnvToolResultId"
+          [uploadCnvToolResultId]="uploadCnvToolResultId"
+          (previousStep)="goToUploadStep()"
+          (nextStep)="goToSuccessStep()"
+        ></app-upload-reformat>
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Done</ng-template>
@@ -47,6 +40,6 @@
           <button mat-button>Go to analysis</button>
         </div>
       </mat-step>
-    </mat-vertical-stepper>
+    </mat-horizontal-stepper>
   </div>
 </div>

@@ -19,9 +19,8 @@ import {
 } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
 
-import { Action } from '../../shared/models/dialog.action.model';
+import { DialogAction } from '../../shared/models/dialog.action.model';
 import { SamplesetService } from 'src/app/sampleset/sampleset.service';
-import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sampleset } from '../sampleset.model';
 import { SamplesetFormDialogComponent } from '../sampleset-form-dialog/sampleset-form-dialog.component';
@@ -113,11 +112,6 @@ export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
   // @ Public methods
   // -----------------------------------------------------------------------------------------------------
 
-  /**
-   * Edit Sampleset
-   *
-   * @param contact
-   */
   onEditSampleset(sampleset: Sampleset): void {
     this._samplesetService.onSelectedChanged.next([]);
     // Original data
@@ -125,7 +119,7 @@ export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
       panelClass: 'dialog-default',
       data: {
         sampleset: sampleset,
-        action: Action.Edit
+        action: DialogAction.Edit
       }
     });
 

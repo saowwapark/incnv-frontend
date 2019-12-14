@@ -1,0 +1,69 @@
+.reformat-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.reformat-item {
+  height: 100%;
+  width: 70%;
+}
+
+.table-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.table-name {
+}
+.header-right .mat-sort-header-container {
+  display: flex !important;
+  justify-content: flex-end !important;
+  text-align: right;
+  padding-right: 40px;
+}
+
+.data-right {
+  text-align: right;
+  padding-right: 58px !important;
+}
+
+@mixin table-column($size) {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  width: $size !important;
+  flex: 0 0 $size !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-no {
+  @include table-column(10%);
+}
+.mat-column-sampleName {
+  @include table-column(20%);
+}
+.mat-column-chromosome {
+  @include table-column(10%);
+}
+.mat-column-startBasepair {
+  @include table-column(25%);
+}
+.mat-column-endBasepair {
+  @include table-column(25%);
+}
+.mat-column-cnvType {
+  @include table-column(10%);
+}

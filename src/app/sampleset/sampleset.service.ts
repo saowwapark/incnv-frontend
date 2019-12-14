@@ -60,33 +60,4 @@ export class SamplesetService {
       .get(`${this._constant.baseAppUrl}/api/sampleset`)
       .pipe(map(res => res['payload']));
   }
-
-  // countRecords(search = ''): Observable<number> {
-  //   return this._http
-  //     .get(`${this.baseRouteUrl}/count-samplesets`, {
-  //       params: new HttpParams().set('search', search)
-  //     })
-  //     .pipe(map(res => res['payload']));
-  // }
-
-  // findData(
-  //   search = '',
-  //   sortOrder = 'asc',
-  //   pageNumber = 0,
-  //   pageSize = 10
-  // ): Observable<Sampleset[]> {
-  //   console.log('search: ' + search);
-  //   console.log('sortOrder: ' + sortOrder);
-  //   console.log('pageNumber: ' + pageNumber);
-  //   console.log('pageSize: ' + pageSize);
-  //   return this._http
-  //     .get(`${this.baseRouteUrl}/find-samplesets`, {
-  //       params: new HttpParams()
-  //         .set('search', search)
-  //         .set('sortOrder', sortOrder)
-  //         .set('pageNumber', pageNumber.toString())
-  //         .set('pageSize', pageSize.toString())
-  //     })
-  //     .pipe(map(res => res['payload']));
-  // }
 }

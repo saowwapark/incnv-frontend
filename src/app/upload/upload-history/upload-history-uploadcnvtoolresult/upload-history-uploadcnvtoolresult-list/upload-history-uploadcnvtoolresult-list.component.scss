@@ -2,6 +2,9 @@ table {
   width: 100%;
 }
 
+.active {
+  color: green;
+}
 @mixin table-column($size) {
   word-wrap: break-word !important;
   white-space: unset !important;

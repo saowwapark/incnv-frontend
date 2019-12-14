@@ -1,5 +1,4 @@
 import { TabFileMappingService } from './../../../cnvtools/tab-file-mapping/tab-file-mapping.service';
-import { UploadConfigureService } from './../upload-configure.service';
 import { UploadFormService } from './upload-form.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
@@ -56,7 +55,6 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
     private _samplesetService: SamplesetService,
     private _tabFileMappingService: TabFileMappingService,
     private _uploadFormService: UploadFormService,
-    private _uploadConfigureService: UploadConfigureService,
     private _router: Router
   ) {
     this._unsubscribeAll = new Subject();
@@ -92,12 +90,6 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
     // this._tabFileMappingService.getIdAndNames().subscribe(tabFileMappings => {
     //   this.tabFileMappings = tabFileMappings;
     // });
-
-    this._uploadConfigureService.onUploadReformatsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        this._clearUploadForm();
-      });
   }
 
   ngAfterViewInit(): void {}
@@ -174,7 +166,6 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onConfirm() {
-    this.confirmClicked.emit();
     this.onSaveUpload();
   }
   onSaveUpload() {
@@ -194,7 +185,11 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
       tagDescriptions: this.tagDescriptions
     });
 
-    this._uploadConfigureService.addUploadForm(uploadCnvToolResult, file);
+    this._uploadFormService
+      .addUploadCnvToolResult(uploadCnvToolResult, file)
+      .subscribe(uploadCnvToolResultId => {
+        this.confirmClicked.emit(uploadCnvToolResultId);
+      });
   }
 
   onReset() {

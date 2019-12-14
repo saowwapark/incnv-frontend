@@ -6,7 +6,7 @@ import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 
 import { Component, OnInit, Inject } from '@angular/core';
 
-import { Action } from '../../shared/models/dialog.action.model';
+import { DialogAction } from '../../shared/models/dialog.action.model';
 
 @Component({
   selector: 'sampleset-form-dialog',
@@ -30,12 +30,12 @@ export class SamplesetFormDialogComponent implements OnInit {
     this.form = this._createSamplesetForm(sampleset);
 
     switch (action) {
-      case Action.New:
+      case DialogAction.New:
         this.dialogTitle = 'New Sample Set';
         break;
 
-      case Action.Edit:
-        this.dialogTitle = 'New Sample Set';
+      case DialogAction.Edit:
+        this.dialogTitle = 'Edit Sample Set';
         break;
     }
   }

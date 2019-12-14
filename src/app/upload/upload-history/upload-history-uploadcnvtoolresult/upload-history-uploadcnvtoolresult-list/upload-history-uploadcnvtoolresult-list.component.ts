@@ -34,7 +34,7 @@ export class UploadHistoryUploadCnvToolResultListComponent
     'samplesetName',
     'tagDescriptions',
     'createDate',
-    'download'
+    'detail'
   ];
 
   dialogRef: any;
@@ -92,6 +92,10 @@ export class UploadHistoryUploadCnvToolResultListComponent
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
+
+  // -----------------------------------------------------------------------------------------------------
+  // @ Methods
+  // -----------------------------------------------------------------------------------------------------
 
   /************************* Select **************************/
   /** Whether the number of selected elements matches the total number of rows. */

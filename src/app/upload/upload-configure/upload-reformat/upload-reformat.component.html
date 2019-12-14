@@ -1,69 +1,64 @@
-<div class="reformat-container">
-  <div class="reformat-item">
-    <span class="table-name">File Preview</span>
-    <div class="table-container  mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" matSort>
-        <!-- No. Column -->
-        <ng-container matColumnDef="no">
-          <th mat-header-cell *matHeaderCellDef>No.</th>
-          <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
-        </ng-container>
+<!-- HEADER -->
 
-        <!-- Sample Name Column -->
-        <ng-container matColumnDef="sampleName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Sample Name</th>
-          <td mat-cell *matCellDef="let row">{{ row.sampleName }}</td>
-        </ng-container>
-        <!-- Chromosome Column -->
-        <ng-container matColumnDef="chromosome">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Chromosome
-          </th>
-          <td mat-cell *matCellDef="let row">
-            {{ row.chromosome }}
-          </td>
-        </ng-container>
+<div fxLayout="column" fxLayoutAlign="start">
+  <!-- APP TITLE -->
+  <span style="font-size: 2rem">Reformat File</span>
 
-        <!-- Start Basepair Column -->
-        <ng-container matColumnDef="startBasepair">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="header-right"
-          >
-            Start Basepair
-          </th>
-          <td mat-cell class="data-right" *matCellDef="let row">
-            {{ row.startBasepair | number }}
-          </td>
-        </ng-container>
-        <!-- End Basepair Column -->
-        <ng-container matColumnDef="endBasepair">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="header-right"
-          >
-            End Basepair
-          </th>
-          <td mat-cell class="data-right" *matCellDef="let row">
-            {{ row.endBasepair | number }}
-          </td>
-        </ng-container>
-        <!-- CNV Type Column -->
-        <ng-container matColumnDef="cnvType">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Type</th>
-          <td mat-cell *matCellDef="let row">{{ row.cnvType }}</td>
-        </ng-container>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <!-- Filter -->
+    <mat-form-field>
+      <input matInput placeholder="Filter..." #filterInput />
+    </mat-form-field>
 
-        <tr
-          mat-header-row
-          *matHeaderRowDef="displayedColumns; sticky: true"
-        ></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+    <div>
+      <button
+        mat-raised-button
+        mat-raised-button
+        color="primary"
+        (click)="goToNextStep()"
+      >
+        Confirm
+      </button>
+      <button mat-button (click)="goToPreviousStep()">
+        Cancel
+      </button>
     </div>
   </div>
 </div>
+
+<!-- / HEADER -->
+
+<!-- SELECTED BAR -->
+<app-selected-bar
+  *ngIf="selectedResults.length > 0"
+  [selectedData]="selectedResults"
+  [selectedBarType]="2"
+  (submitEmitter)="onSubmitAllSelected($event)"
+  (deselectAllEmitter)="onDelselectedAll()"
+  [@slideInTop]
+>
+</app-selected-bar>
+<!-- / SELECTED BAR -->
+
+<!-- CONTENT -->
+<div class="content__container--scrollbar ">
+  <div class="content__items">
+    <app-upload-reformat-list
+      [reformatCnvToolResults]="reformatCnvToolResults"
+    ></app-upload-reformat-list>
+  </div>
+</div>
+
+<!-- / CONTENT -->
+
+<!-- ADD SAMPLESET BUTTON -->
+<button
+  mat-fab
+  class="accent"
+  id="add-sampleset-button"
+  aria-label="add data"
+  (click)="onAddData()"
+>
+  <mat-icon>add</mat-icon>
+</button>
+<!-- / ADD SAMPLESET BUTTON -->

@@ -17,7 +17,7 @@ import {
   MatDialogConfig
 } from '@angular/material/dialog';
 import { SamplesetFormDialogComponent } from './sampleset-form-dialog/sampleset-form-dialog.component';
-import { Action } from '../shared/models/dialog.action.model';
+import { DialogAction } from '../shared/models/dialog.action.model';
 import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 
@@ -103,7 +103,7 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dialogRef = this._matDialog.open(SamplesetFormDialogComponent, {
       panelClass: 'dialog-default',
       data: {
-        action: Action.New,
+        action: DialogAction.New,
         sampleset: new Sampleset()
       },
       disableClose: true

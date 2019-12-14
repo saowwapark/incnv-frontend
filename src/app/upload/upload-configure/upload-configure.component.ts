@@ -1,6 +1,8 @@
-import { UploadConfigureService } from './upload-configure.service';
 import { Component, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
+import { UploadReformatService } from './upload-reformat/upload-reformat.service';
+import { UploadFormService } from './upload-form/upload-form.service';
+import { merge, Observable } from 'rxjs';
 
 @Component({
   selector: 'upload-configure',
@@ -8,20 +10,41 @@ import { MatStepper } from '@angular/material/stepper';
   styleUrls: ['./upload-configure.component.scss']
 })
 export class UploadConfigureComponent {
-  constructor(private _uploadConfigureService: UploadConfigureService) {}
+  uploadCnvToolResultId: number;
+  constructor(
+    private _uploadReformatService: UploadReformatService,
+    private _uploadFormService: UploadFormService
+  ) {}
 
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
-  goToNexStep() {
+  goToReformatStep(uploadCnvToolResultId) {
+    this.uploadCnvToolResultId = uploadCnvToolResultId;
     this.stepper.next();
   }
 
-  deleteUploadConfigure() {
-    this._uploadConfigureService.deleteUploadConfigure();
+  goToUploadStep() {
+    this.deleteConfigure().subscribe(() => {
+      this.stepper.previous();
+    });
+  }
+
+  goToSuccessStep() {
+    this.stepper.next();
+  }
+
+  deleteConfigure(): Observable<any> {
+    const deleteUpload$ = this._uploadFormService.deleteUploadCnvToolResult(
+      this.uploadCnvToolResultId
+    );
+    const deleteReformat$ = this._uploadReformatService.deleteReformatCnvToolResults(
+      this.uploadCnvToolResultId
+    );
+    return merge(deleteUpload$, deleteReformat$);
   }
 
   uploadAgain() {
-    this._uploadConfigureService.clearDataBefore();
+    this.uploadCnvToolResultId = undefined;
     this.stepper.reset();
   }
 }
