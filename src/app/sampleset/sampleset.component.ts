@@ -1,6 +1,6 @@
 import { Sampleset } from './sampleset.model';
 import { SamplesetService } from './sampleset.service';
-import { myAnimations } from 'src/app/animations';
+import { myAnimations } from 'src/app/shared/animations';
 import {
   Component,
   OnInit,
@@ -141,13 +141,13 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.confirmDialogRef.afterClosed().subscribe(result => {
       if (result) {
-        selectedSamplesets.forEach(selectedRow => {
-          this.samplesetService
-            .deleteSampleset(selectedRow.samplesetId)
-            .subscribe(() => {
-              this.samplesetService.onSelectedChanged.next([]);
-              this.samplesetService.onTriggerDataChanged.next();
-            });
+        const samplesetIds = [];
+        for (const selectedRow of selectedSamplesets) {
+          samplesetIds.push(selectedRow.samplesetId);
+        }
+        this.samplesetService.deleteSamplesets(samplesetIds).subscribe(() => {
+          this.samplesetService.onSelectedChanged.next([]);
+          this.samplesetService.onTriggerDataChanged.next();
         });
       }
       this.confirmDialogRef = null;

@@ -55,4 +55,4 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatRadioModule
   ]
 })
-export class CustomMaterialModule {}
+export class MaterialModule {}

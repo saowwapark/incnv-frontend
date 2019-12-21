@@ -1,7 +1,7 @@
 import { Sampleset } from './sampleset.model';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { ConstantsService } from '../constants.service';
 import { map, tap } from 'rxjs/operators';
 import { IdAndName } from '../shared/models/id-and-name.model';
@@ -17,11 +17,12 @@ export class SamplesetService {
   baseRouteUrl: string;
 
   constructor(private _http: HttpClient, private _constant: ConstantsService) {
+    console.log('SamplesetService loaded.');
     this.onSelectedChanged = new BehaviorSubject([]);
     this.onSamplesetsChanged = new BehaviorSubject([]);
     this.onSearchTextChanged = new Subject();
     this.onTriggerDataChanged = new BehaviorSubject(null);
-    this.baseRouteUrl = `${this._constant.baseAppUrl}/api/sampleset`;
+    this.baseRouteUrl = `${this._constant.baseAppUrl}/api/samplesets`;
   }
 
   /**
@@ -44,20 +45,26 @@ export class SamplesetService {
       .pipe(tap(() => this.onTriggerDataChanged.next()));
   }
 
-  deleteSampleset(samplesetId: number) {
-    const url = `${this.baseRouteUrl}/${samplesetId}`;
-    return this._http.delete(url);
+  deleteSamplesets(samplesetIds: number[]) {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: {
+        samplesetIds: samplesetIds
+      }
+    };
+    return this._http.delete(this.baseRouteUrl, options);
   }
-
   getIdAndNames(): Observable<IdAndName[]> {
     return this._http
-      .get(`${this._constant.baseAppUrl}/api/sampleset/id-name`)
+      .get(`${this.baseRouteUrl}/id-names`)
       .pipe(map(res => res['payload']));
   }
 
   getSamplesets(): Observable<Sampleset[]> {
     return this._http
-      .get(`${this._constant.baseAppUrl}/api/sampleset`)
+      .get(`${this.baseRouteUrl}`)
       .pipe(map(res => res['payload']));
   }
 }

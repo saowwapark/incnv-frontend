@@ -10,6 +10,8 @@ import { error } from '@angular/compiler/src/util';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenService {
+  private baseRouteUrl: string;
+
   private token: string;
   private tokenTimer: any;
   private isAuthenSubject = new BehaviorSubject<boolean>(false);
@@ -19,7 +21,9 @@ export class AuthenService {
     private _http: HttpClient,
     private _router: Router,
     private _constant: ConstantsService
-  ) {}
+  ) {
+    this.baseRouteUrl = `${this._constant.baseAppUrl}/api/users`;
+  }
 
   getToken() {
     return this.token;
@@ -27,10 +31,7 @@ export class AuthenService {
 
   addUser(email: string, password: string) {
     const authData: AuthenReq = { email: email, password: password };
-    return this._http.post(
-      `${this._constant.baseAppUrl}/api/user/signup`,
-      authData
-    );
+    return this._http.post(`${this.baseRouteUrl}/signup`, authData);
   }
 
   signUp(email: string, password: string) {
@@ -48,21 +49,19 @@ export class AuthenService {
 
   login(email: string, password: string) {
     const authReq: AuthenReq = { email: email, password: password };
-    return this._http
-      .post<any>(`${this._constant.baseAppUrl}/api/user/login`, authReq)
-      .pipe(
-        map(res => res['payload']),
-        tap((authenRes: AuthenRes) => {
-          console.log('authservice');
-          console.log(authenRes);
-          const token = authenRes.token;
-          const expiresInDuration = authenRes.expiresIn;
-          const authData = this.createAuthData(token, expiresInDuration);
-          this.saveAuthData(authData.token, authData.expirationDate);
-          this.token = token;
-          this.isAuthenSubject.next(true);
-        })
-      );
+    return this._http.post<any>(`${this.baseRouteUrl}/login`, authReq).pipe(
+      map(res => res['payload']),
+      tap((authenRes: AuthenRes) => {
+        console.log('authservice');
+        console.log(authenRes);
+        const token = authenRes.token;
+        const expiresInDuration = authenRes.expiresIn;
+        const authData = this.createAuthData(token, expiresInDuration);
+        this.saveAuthData(authData.token, authData.expirationDate);
+        this.token = token;
+        this.isAuthenSubject.next(true);
+      })
+    );
   }
   autoAuthUser() {
     const authInformation = this.getAuthData();

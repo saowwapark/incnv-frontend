@@ -51,13 +51,13 @@
 
 //   getIdAndNames(): Observable<IdAndName[]> {
 //     return this._http
-//       .get(`${this._constant.baseAppUrl}/api/sampleset/id-name`)
+//       .get(`${this._constant.baseAppUrl}/api/samplesets/id-names`)
 //       .pipe(map(res => res['payload']));
 //   }
 
 //   getSamplesets(): Observable<Sampleset[]> {
 //     return this._http
-//       .get(`${this._constant.baseAppUrl}/api/sampleset`)
+//       .get(`${this._constant.baseAppUrl}/api/samplesets`)
 //       .pipe(map(res => res['payload']));
 //   }
 

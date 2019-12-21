@@ -1,4 +1,4 @@
-import { NavigationService } from './../navigation.service';
+import { NavigationService } from '../navigation.service';
 import {
   Component,
   OnInit,
@@ -12,7 +12,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { NavigationItem } from 'src/app/navigation/navigation.model';
 import { Subject, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { myAnimations } from 'src/app/animations';
+import { myAnimations } from 'src/app/shared/animations';
 
 @Component({
   selector: 'nav-collapsable',
