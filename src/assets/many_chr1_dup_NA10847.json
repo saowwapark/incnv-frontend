@@ -1,0 +1,220 @@
+[
+  {
+    "name": "conifer",
+    "data": [
+      {
+        "chromosome": "1",
+        "startBasepair": "12820673",
+        "endBasepair": "13142698",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13216668",
+        "endBasepair": "13424332",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13521935",
+        "endBasepair": "13646355",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13668883",
+        "endBasepair": "13716440",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      }
+    ]
+  },
+  {
+    "name": "codex2",
+    "data": [
+      {
+        "chromosome": "1",
+        "startBasepair": 13052706,
+        "endBasepair": 13910627,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 32522427,
+        "endBasepair": 32548095,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 32557409,
+        "endBasepair": 32629238,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 38295907,
+        "endBasepair": 38301855,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 43707980,
+        "endBasepair": 43762660,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 44171846,
+        "endBasepair": 44249524,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 52146538,
+        "endBasepair": 52148816,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 69403302,
+        "endBasepair": 69434260,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 103219085,
+        "endBasepair": 103268286,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 124357448,
+        "endBasepair": 124376819,
+        "cnvType": "dup"
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": 196743985,
+        "endBasepair": 196796166,
+        "cnvType": "dup"
+      }
+    ]
+  },
+  {
+    "name": "test1",
+    "data": [
+      {
+        "chromosome": "1",
+        "startBasepair": "12820673",
+        "endBasepair": "13142698",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13216668",
+        "endBasepair": "13424332",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13521935",
+        "endBasepair": "13646355",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13668883",
+        "endBasepair": "13716440",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      }
+    ]
+  },
+  {
+    "name": "test2",
+    "data": [
+      {
+        "chromosome": "1",
+        "startBasepair": "12820673",
+        "endBasepair": "13142698",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13216668",
+        "endBasepair": "13424332",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13521935",
+        "endBasepair": "13646355",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      },
+      {
+        "chromosome": "1",
+        "startBasepair": "13668883",
+        "endBasepair": "13716440",
+        "cnvType": "dup",
+        "annotation": {
+          "dvg": "dvg detail",
+          "clinvar": "clinvar detail",
+          "ensembl": "ensembl detail"
+        }
+      }
+    ]
+  }
+]

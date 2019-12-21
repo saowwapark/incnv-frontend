@@ -108,7 +108,7 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
           tooltip.style('display', 'none');
         })
         .on('mousemove', function(d) {
-          console.log(this);
+          // console.log(this);
           const mousePosition = d3.mouse(this);
 
           const xPosition = mousePosition[0];
