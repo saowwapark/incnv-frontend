@@ -3,9 +3,9 @@
     "name": "conifer",
     "data": [
       {
-        "chromosome": "1",
-        "startBasepair": "12820673",
-        "endBasepair": "13142698",
+        "chr": "1",
+        "start": "12820673",
+        "end": "13142698",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -14,9 +14,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13216668",
-        "endBasepair": "13424332",
+        "chr": "1",
+        "start": "13216668",
+        "end": "13424332",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -25,9 +25,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13521935",
-        "endBasepair": "13646355",
+        "chr": "1",
+        "start": "13521935",
+        "end": "13646355",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -36,9 +36,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13668883",
-        "endBasepair": "13716440",
+        "chr": "1",
+        "start": "13668883",
+        "end": "13716440",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -52,69 +52,69 @@
     "name": "codex2",
     "data": [
       {
-        "chromosome": "1",
-        "startBasepair": 13052706,
-        "endBasepair": 13910627,
+        "chr": "1",
+        "start": 13052706,
+        "end": 13910627,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 32522427,
-        "endBasepair": 32548095,
+        "chr": "1",
+        "start": 32522427,
+        "end": 32548095,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 32557409,
-        "endBasepair": 32629238,
+        "chr": "1",
+        "start": 32557409,
+        "end": 32629238,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 38295907,
-        "endBasepair": 38301855,
+        "chr": "1",
+        "start": 38295907,
+        "end": 38301855,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 43707980,
-        "endBasepair": 43762660,
+        "chr": "1",
+        "start": 43707980,
+        "end": 43762660,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 44171846,
-        "endBasepair": 44249524,
+        "chr": "1",
+        "start": 44171846,
+        "end": 44249524,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 52146538,
-        "endBasepair": 52148816,
+        "chr": "1",
+        "start": 52146538,
+        "end": 52148816,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 69403302,
-        "endBasepair": 69434260,
+        "chr": "1",
+        "start": 69403302,
+        "end": 69434260,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 103219085,
-        "endBasepair": 103268286,
+        "chr": "1",
+        "start": 103219085,
+        "end": 103268286,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 124357448,
-        "endBasepair": 124376819,
+        "chr": "1",
+        "start": 124357448,
+        "end": 124376819,
         "cnvType": "dup"
       },
       {
-        "chromosome": "1",
-        "startBasepair": 196743985,
-        "endBasepair": 196796166,
+        "chr": "1",
+        "start": 196743985,
+        "end": 196796166,
         "cnvType": "dup"
       }
     ]
@@ -123,9 +123,9 @@
     "name": "test1",
     "data": [
       {
-        "chromosome": "1",
-        "startBasepair": "12820673",
-        "endBasepair": "13142698",
+        "chr": "1",
+        "start": "12820673",
+        "end": "13142698",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -134,9 +134,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13216668",
-        "endBasepair": "13424332",
+        "chr": "1",
+        "start": "13216668",
+        "end": "13424332",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -145,9 +145,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13521935",
-        "endBasepair": "13646355",
+        "chr": "1",
+        "start": "13521935",
+        "end": "13646355",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -156,9 +156,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13668883",
-        "endBasepair": "13716440",
+        "chr": "1",
+        "start": "13668883",
+        "end": "13716440",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -172,9 +172,9 @@
     "name": "test2",
     "data": [
       {
-        "chromosome": "1",
-        "startBasepair": "12820673",
-        "endBasepair": "13142698",
+        "chr": "1",
+        "start": "12820673",
+        "end": "13142698",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -183,9 +183,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13216668",
-        "endBasepair": "13424332",
+        "chr": "1",
+        "start": "13216668",
+        "end": "13424332",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -194,9 +194,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13521935",
-        "endBasepair": "13646355",
+        "chr": "1",
+        "start": "13521935",
+        "end": "13646355",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",
@@ -205,9 +205,9 @@
         }
       },
       {
-        "chromosome": "1",
-        "startBasepair": "13668883",
-        "endBasepair": "13716440",
+        "chr": "1",
+        "start": "13668883",
+        "end": "13716440",
         "cnvType": "dup",
         "annotation": {
           "dvg": "dvg detail",

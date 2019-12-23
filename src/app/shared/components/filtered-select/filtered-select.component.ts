@@ -123,6 +123,9 @@ export class FilteredSelectComponent
     return selectControl;
   }
   set value(option: any | null) {
+    if (option === undefined) {
+      option = '';
+    }
     this.filterSelectGroup.setValue({ selectControl: option });
     this.stateChanges.next();
   }

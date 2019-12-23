@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ConstantsService } from 'src/app/constants.service';
+import { ConstantsService } from 'src/app/shared/services/constants.service';
 import { map } from 'rxjs/operators';
 import { ReformatCnvToolResult } from './reformat-cnv-tool-result.model';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';

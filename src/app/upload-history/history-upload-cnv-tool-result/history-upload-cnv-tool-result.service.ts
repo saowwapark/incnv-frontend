@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UploadCnvToolResult } from '../../shared/models/upload-cnv-tool-result.model';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ConstantsService } from 'src/app/constants.service';
+import { ConstantsService } from 'src/app/shared/services/constants.service';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 

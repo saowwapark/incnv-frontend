@@ -10,11 +10,11 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-loading',
-  templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.scss']
+  selector: 'app-nav-loading',
+  templateUrl: './nav-loading.component.html',
+  styleUrls: ['./nav-loading.component.scss']
 })
-export class LoadingComponent implements OnInit {
+export class NavLoadingComponent implements OnInit {
   loading$: Observable<boolean>;
   constructor(private router: Router) {}
 

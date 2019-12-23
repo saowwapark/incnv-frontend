@@ -2,7 +2,7 @@ import { Sampleset } from './sampleset.model';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { ConstantsService } from '../constants.service';
+import { ConstantsService } from '../shared/services/constants.service';
 import { map, tap } from 'rxjs/operators';
 import { IdAndName } from '../shared/models/id-and-name.model';
 

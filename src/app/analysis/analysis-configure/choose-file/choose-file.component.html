@@ -1,14 +1,7 @@
-<!-- SELECTED BAR -->
-<app-selected-bar
-  *ngIf="selectedFiles && selectedFiles.length > 0"
-  [selectedData]="selectedFiles"
-  [selectedBarType]="1"
-  (submitEmitter)="onSubmitAllSelected($event)"
-  (deselectAllEmitter)="onDelselectedAll()"
-  [@slideInTop]
->
-</app-selected-bar>
-
+<!--
+<div class="example-loading-shade"  *ngIf="isLoadingResults" >
+  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</div> -->
 <!-- CONTENT -->
 <table mat-table [dataSource]="dataSource" matSort>
   <!-- Checkbox Column -->
@@ -69,3 +62,10 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+
+<div>
+  <button mat-raised-button (click)="goToPreviousStep()">Back</button>
+  <button mat-raised-button color="primary" (click)="goToNextStep()">
+    Next
+  </button>
+</div>

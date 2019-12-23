@@ -28,14 +28,12 @@ import { AuthenInterceptor } from './authen/authen-interceptor';
 
 import { LayoutComponent } from './layout/layout.component';
 
-import { LoadingComponent } from './shared/components/loading/loading.component';
-
 /** Services or Resolvers */
-import { ConstantsService } from './constants.service';
+import { ConstantsService } from './shared/services/constants.service';
 import { TabFileMappingService } from './tab-file-mapping/tab-file-mapping.service';
 import { UploadHistoryModule } from './upload-history/ีupload-history.module';
 import { SamplesetService } from './sampleset/sampleset.service';
-import { ErrorInterceptor } from './error.interceptor';
+import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 
 /** Entry Components */
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
@@ -44,6 +42,7 @@ import { ErrorDialogComponent } from './shared/components/error-dialog/error-dia
 import { environment } from 'src/environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UIService } from './shared/services/ui.service';
 
 @NgModule({
   declarations: [
@@ -58,7 +57,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
     ConfirmDialogComponent,
     ErrorDialogComponent,
-    LoadingComponent,
 
     LayoutComponent,
     WelcomeMenuComponent,
@@ -82,11 +80,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     TabFileMappingService,
     ConstantsService,
-    SamplesetService
+    SamplesetService,
+    UIService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmDialogComponent, ErrorDialogComponent]

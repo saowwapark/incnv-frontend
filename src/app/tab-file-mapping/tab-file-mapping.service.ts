@@ -10,7 +10,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { TabFileMapping } from './tab-file-mapping.model';
 import { UploadFormService } from 'src/app/upload-configure/configure-upload-cnv-tool-result/upload-form/upload-form.service';
-import { ConstantsService } from 'src/app/constants.service';
+import { ConstantsService } from 'src/app/shared/services/constants.service';
 import { map } from 'rxjs/operators';
 import { IdAndName } from 'src/app/shared/models/id-and-name.model';
 

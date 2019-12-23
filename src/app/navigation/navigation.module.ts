@@ -1,3 +1,4 @@
+import { NavLoadingComponent } from './nav-loading/nav-loading.component';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -9,11 +10,12 @@ import { CollapsableComponent } from './collapsable/collapsable.component';
 @NgModule({
   declarations: [
     NavigationComponent,
+    NavLoadingComponent,
     ItemComponent,
     GroupComponent,
     CollapsableComponent
   ],
   imports: [SharedModule, RouterModule],
-  exports: [NavigationComponent]
+  exports: [NavigationComponent, NavLoadingComponent]
 })
 export class NavigationModule {}

@@ -7,7 +7,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { throwError } from 'rxjs';
-import { ErrorDialogComponent } from './shared/components/error-dialog/error-dialog.component';
+import { ErrorDialogComponent } from '../components/error-dialog/error-dialog.component';
 import { Injectable } from '@angular/core';
 
 @Injectable()

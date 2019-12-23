@@ -11,7 +11,7 @@
   <mat-vertical-stepper #stepper linear="false">
     <mat-step label="Choose Reference Genome">
       <mat-label>Reference Genome: </mat-label>
-      <mat-radio-group [(ngModel)]="referenceGenome">
+      <mat-radio-group [(ngModel)]="chosenReferenceGenome">
         <mat-radio-button value="grch37" checked>GRCh37/hg19</mat-radio-button>
         <mat-radio-button value="grch38">GRCh38/hg38</mat-radio-button>
       </mat-radio-group>
@@ -25,22 +25,66 @@
     <mat-step label="Choose Sample Set">
       <app-choose-sampleset
         (previousStep)="goToPreviousStep()"
-        (nextStep)="goToChooseSample($event)"
+        (nextStep)="setSamplesetAndNextStep($event)"
       ></app-choose-sampleset>
     </mat-step>
     <mat-step label="Choose Sample">
       <app-choose-sample
-        [samples]="sampleset.samples"
+        [samples]="chosenSampleset.samples"
         (previousStep)="goToPreviousStep()"
-        (nextStep)="goToChooseFile($event)"
+        (nextStep)="setSampleAndNextStep($event)"
       ></app-choose-sample>
     </mat-step>
     <mat-step label="Choose Files">
       <app-choose-file
-        [samplesetId]="sampleset.samplesetId"
-        [referenceGenome]="referenceGenome"
+        [samplesetId]="chosenSampleset.samplesetId"
+        [referenceGenome]="chosenReferenceGenome"
+        (nextStep)="setUploadFilesAndNextStep($event)"
       >
       </app-choose-file>
     </mat-step>
+    <mat-step label="Choose CNV Type">
+      <mat-label>CNV Type: </mat-label>
+      <mat-radio-group [(ngModel)]="chosenCnvType">
+        <mat-radio-button value="dup" checked>duplication</mat-radio-button>
+        <mat-radio-button value="del">deletion</mat-radio-button>
+      </mat-radio-group>
+    </mat-step>
+    <mat-step label="Choose Chromosome">
+      <mat-form-field>
+        <mat-label>Choose Chromosome...</mat-label>
+        <app-filtered-select [options]="chrs" [(ngModel)]="chosenChr">
+        </app-filtered-select>
+      </mat-form-field>
+    </mat-step>
+
+    <mat-step label="Done">
+      <p>Conclusion</p>
+      <p>Reference Genome: {{ chosenReferenceGenome }}</p>
+      <p>
+        Sampleset: {{ chosenSampleset.samplesetName }}, Sample:
+        {{ chosenSample }}
+      </p>
+      <div *ngFor="let chosenFile of chosenFiles">
+        <p>
+          File name: {{ chosenFile.fileName }}, File Info.:
+          {{ chosenFile.fileInfo }}, CNV Tool.: {{ chosenFile.cnvToolName }}
+        </p>
+      </div>
+
+      <p>Chromosome: {{ chosenChr }}</p>
+      <p>CNV Type: {{ chosenCnvType }}</p>
+      Go to Analysis Process
+    </mat-step>
   </mat-vertical-stepper>
+  <div>
+    <button
+      mat-button
+      mat-raised-button
+      color="primary"
+      [routerLink]="['/analysis/analysis-process']"
+    >
+      Confirm
+    </button>
+  </div>
 </div>

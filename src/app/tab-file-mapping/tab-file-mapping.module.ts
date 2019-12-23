@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { TabFileMappingRoutingModule } from './tab-file-mapping-routing.module';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -13,7 +14,7 @@ import { TabFileMappingComponent } from './tab-file-mapping.component';
     TabFileMappingFormDialogComponent,
     TabFileMappingComponent
   ],
-  imports: [SharedModule, TabFileMappingRoutingModule],
+  imports: [ReactiveFormsModule, SharedModule, TabFileMappingRoutingModule],
   entryComponents: [TabFileMappingFormDialogComponent]
 })
 export class TabFileMappingModule {}

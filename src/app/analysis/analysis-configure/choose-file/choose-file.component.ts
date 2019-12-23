@@ -5,18 +5,18 @@ import {
   AfterViewInit,
   ViewChild,
   Input,
-  OnChanges
+  OnChanges,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 import { MatSort } from '@angular/material/sort';
 import { Subject } from 'rxjs';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs/operators';
 import { AnalysisConfigureService } from '../analysis-configure.service';
 import { myAnimations } from 'src/app/shared/animations';
-import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-choose-file',
@@ -28,7 +28,9 @@ export class ChooseFileComponent
   implements OnChanges, OnInit, OnDestroy, AfterViewInit {
   @Input() samplesetId: number;
   @Input() referenceGenome: string;
-  uploads: any;
+  @Output()
+  previousStep = new EventEmitter<any>();
+  @Output() nextStep = new EventEmitter<UploadCnvToolResult[]>();
   displayedColumns = [
     'select',
     'fileName',
@@ -38,54 +40,19 @@ export class ChooseFileComponent
     'createDate'
   ];
 
-  dialogRef: any;
-
   dataSource: MatTableDataSource<UploadCnvToolResult>;
   selection = new SelectionModel<UploadCnvToolResult>(true, []);
   selectedFiles: UploadCnvToolResult[];
+  isLoadingResults = true;
 
   @ViewChild(MatSort, { static: true }) matSort: MatSort;
 
   // Private
   private _unsubscribeAll: Subject<any>;
 
-  constructor(
-    private _service: AnalysisConfigureService,
-    public _matDialog: MatDialog
-  ) {
+  constructor(private _service: AnalysisConfigureService) {
     this.selectedFiles = [];
     this._unsubscribeAll = new Subject();
-  }
-
-  onDelselectedAll() {
-    this.selectedFiles = [];
-  }
-  onSubmitAllSelected(selectedUploadCnvToolResults) {
-    let confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
-    confirmDialogRef = this._matDialog.open(ConfirmDialogComponent, {
-      panelClass: 'dialog-warning',
-      disableClose: false
-    });
-
-    let rowNames = '';
-    selectedUploadCnvToolResults.forEach(
-      (uploadCnvToolResult: UploadCnvToolResult, index) => {
-        if (index === 0) {
-          rowNames += uploadCnvToolResult.fileName;
-        } else {
-          rowNames += `, ${uploadCnvToolResult.fileName}`;
-        }
-      }
-    );
-    confirmDialogRef.componentInstance.confirmMessage =
-      'Are you sure you want to submit?' + rowNames;
-
-    confirmDialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.selectedFiles = [];
-      }
-      confirmDialogRef = null;
-    });
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -117,6 +84,14 @@ export class ChooseFileComponent
     this._unsubscribeAll.complete();
   }
 
+  /** Stepper */
+  goToNextStep() {
+    this.nextStep.emit(this.selectedFiles);
+  }
+
+  goToPreviousStep() {
+    this.previousStep.next();
+  }
   /************************* Select **************************/
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {

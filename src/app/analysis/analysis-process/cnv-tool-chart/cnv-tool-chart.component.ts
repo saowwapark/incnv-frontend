@@ -143,30 +143,30 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
           let chosenStartBp: number;
           let chosenEndBp: number;
           if (
-            d.endBasepair - this.regionStartBp > 0 &&
-            this.regionStartBp - d.startBasepair >= 0
+            d.end - this.regionStartBp > 0 &&
+            this.regionStartBp - d.start >= 0
           ) {
             chosenStartBp = this.regionStartBp;
-            chosenEndBp = d.endBasepair;
+            chosenEndBp = d.end;
             return x(chosenEndBp) - x(chosenStartBp);
           } else if (
-            this.regionEndBp - d.startBasepair > 0 &&
-            d.endBasepair - this.regionEndBp >= 0
+            this.regionEndBp - d.start > 0 &&
+            d.end - this.regionEndBp >= 0
           ) {
-            chosenStartBp = d.startBasepair;
+            chosenStartBp = d.start;
             chosenEndBp = this.regionEndBp;
             return x(chosenEndBp) - x(chosenStartBp);
           } else if (
-            d.startBasepair - this.regionStartBp > 0 &&
-            this.regionEndBp - d.endBasepair > 0
+            d.start - this.regionStartBp > 0 &&
+            this.regionEndBp - d.end > 0
           ) {
-            chosenStartBp = d.startBasepair;
-            chosenEndBp = d.endBasepair;
+            chosenStartBp = d.start;
+            chosenEndBp = d.end;
             return x(chosenEndBp) - x(chosenStartBp);
           }
         })
 
-        .attr('x', d => x(d.startBasepair))
+        .attr('x', d => x(d.start))
         .attr('height', y.bandwidth)
         .attr('y', function(d) {
           const parentData = d3.select(this.parentNode).datum() as Bar;

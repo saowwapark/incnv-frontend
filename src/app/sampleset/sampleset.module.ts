@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 
@@ -13,7 +14,7 @@ import { SamplesetResolver } from './sampleset.resolver';
     SamplesetFormDialogComponent,
     SamplesetListComponent
   ],
-  imports: [SharedModule, SamplesetRoutingModule],
+  imports: [ReactiveFormsModule, SharedModule, SamplesetRoutingModule],
   providers: [SamplesetResolver],
   entryComponents: [SamplesetFormDialogComponent]
 })

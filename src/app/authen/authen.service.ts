@@ -1,4 +1,4 @@
-import { ConstantsService } from '../constants.service';
+import { ConstantsService } from '../shared/services/constants.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';

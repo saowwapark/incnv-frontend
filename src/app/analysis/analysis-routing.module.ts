@@ -1,9 +1,8 @@
-import { AnalysisProcessComponent } from './analysis-process/anlaysis-process.component';
+import { AnalysisProcessComponent } from './analysis-process/analaysis-process.component';
 import { ChooseSamplesetResolver } from './analysis-configure/choose-sampleset/choose-sampleset.resolver';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AnalysisConfigureComponent } from './analysis-configure/analysis-configure.component';
-import { CompareResultComponent } from './analysis-configure/compare-result/compare-result.component';
 
 const routes: Routes = [
   {
@@ -12,12 +11,8 @@ const routes: Routes = [
     resolve: { samplesets: ChooseSamplesetResolver }
   },
   {
-    path: 'analysis/process',
+    path: 'analysis/analysis-process',
     component: AnalysisProcessComponent
-  },
-  {
-    path: 'compare',
-    component: CompareResultComponent
   }
 ];
 @NgModule({

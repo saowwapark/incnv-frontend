@@ -1,7 +1,7 @@
 export class CnvToolResult {
-  chromosome: string;
-  startBasepair: number;
-  endBasepair: number;
+  chr: string;
+  start: number;
+  end: number;
   cnvType: string;
   annotation: any;
 }

@@ -1,3 +1,4 @@
+import { UploadCnvToolResult } from './../../shared/models/upload-cnv-tool-result.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Sampleset } from '../../sampleset/sampleset.model';
@@ -9,29 +10,48 @@ import { Sampleset } from '../../sampleset/sampleset.model';
 })
 export class AnalysisConfigureComponent implements OnInit {
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
-  referenceGenome: string;
-  sampleset: Sampleset;
-  sample: string;
+  chosenReferenceGenome: string;
+  chosenSampleset: Sampleset;
+  chosenSample: string;
+  chosenFiles: UploadCnvToolResult[];
+  chosenCnvType: string;
+  chosenChr: string;
+  chrs: string[];
+
   constructor() {
-    this.sampleset = new Sampleset();
+    this.chosenSampleset = new Sampleset();
+    this.chosenChr = '';
+    this.chrs = [];
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.createAllChrs();
+  }
 
+  createAllChrs() {
+    for (let i = 1; i < 23; i++) {
+      this.chrs.push(String(i));
+    }
+    this.chrs.push('x');
+    this.chrs.push('y');
+  }
   goToNexStep() {
     this.stepper.next();
   }
 
-  goToChooseSample(sampleset: Sampleset) {
-    this.sampleset = sampleset;
+  setSamplesetAndNextStep(sampleset: Sampleset) {
+    this.chosenSampleset = sampleset;
     this.goToNexStep();
   }
   goToPreviousStep() {
     this.stepper.previous();
   }
-  goToChooseFile(sample: string) {
-    this.sample = sample;
-    console.log(sample);
+  setSampleAndNextStep(sample: string) {
+    this.chosenSample = sample;
+    this.goToNexStep();
+  }
+  setUploadFilesAndNextStep(files: UploadCnvToolResult[]) {
+    this.chosenFiles = files;
     this.goToNexStep();
   }
 }
