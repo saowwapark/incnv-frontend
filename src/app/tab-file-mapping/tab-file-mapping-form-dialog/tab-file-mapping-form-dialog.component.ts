@@ -40,8 +40,8 @@ export class TabFileMappingFormDialogComponent implements OnInit {
         Validators.required
       ],
       headerColumnMapping: this._fb.group({
-        sampleName: [
-          this.fileMappingConfigured.headerColumnMapping.sampleName,
+        sample: [
+          this.fileMappingConfigured.headerColumnMapping.sample,
           Validators.required
         ],
         chromosome: [
@@ -87,8 +87,8 @@ export class TabFileMappingFormDialogComponent implements OnInit {
         Validators.required
       ],
       headerColumnMapping: this._fb.group({
-        sampleName: [
-          fileMappingConfigured.headerColumnMapping.sampleName,
+        sample: [
+          fileMappingConfigured.headerColumnMapping.sample,
           Validators.required
         ],
         chromosome: [

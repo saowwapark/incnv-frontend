@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { AnalysisProcessService } from './analysis-process.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { Sampleset } from 'src/app/sampleset/sampleset.model';
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 
@@ -16,7 +17,7 @@ import {
   templateUrl: './analysis-process.component.html',
   styleUrls: ['./analysis-process.component.scss']
 })
-export class AnalysisProcessComponent {
+export class AnalysisProcessComponent implements OnInit {
   @Input() chosenReferenceGenome: string;
   @Input() chosenSampleset: Sampleset;
   @Input() chosenSample: string;
@@ -24,7 +25,7 @@ export class AnalysisProcessComponent {
   @Input() chosenCnvType: string;
   @Input() chosenChr: string;
 
-  constructor() {
+  constructor(private analyisService: AnalysisProcessService) {
     // mock data
     this.chosenReferenceGenome = chosenReferenceGenome;
     this.chosenSampleset = chosenSampleset;
@@ -32,5 +33,17 @@ export class AnalysisProcessComponent {
     this.chosenFiles = chosenFiles;
     this.chosenCnvType = chosenCnvType;
     this.chosenChr = chosenChr;
+  }
+
+  ngOnInit() {
+    this.analyisService
+      .getAllCnvToolDetails(
+        this.chosenReferenceGenome,
+        this.chosenFiles,
+        this.chosenSample,
+        this.chosenChr,
+        this.chosenCnvType
+      )
+      .subscribe(data => console.log(data));
   }
 }

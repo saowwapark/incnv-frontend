@@ -22,7 +22,7 @@
 //       id: null,
 //       userId: null,
 //       cnvToolName: null,
-//       sampleName: null,
+//       sample: null,
 //       chr: null,
 //       startBp: null,
 //       endBp: null,

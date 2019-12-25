@@ -46,8 +46,10 @@
     <mat-step label="Choose CNV Type">
       <mat-label>CNV Type: </mat-label>
       <mat-radio-group [(ngModel)]="chosenCnvType">
-        <mat-radio-button value="dup" checked>duplication</mat-radio-button>
-        <mat-radio-button value="del">deletion</mat-radio-button>
+        <mat-radio-button value="duplication" checked
+          >duplication</mat-radio-button
+        >
+        <mat-radio-button value="deletion">deletion</mat-radio-button>
       </mat-radio-group>
     </mat-step>
     <mat-step label="Choose Chromosome">

@@ -17,7 +17,7 @@
 //   displayedColumns: string[] = [
 //     'no',
 //     'cnvToolName',
-//     'sampleName',
+//     'sample',
 //     'chr',
 //     'startBp',
 //     'endBp',
@@ -50,7 +50,7 @@
 //               )
 //             ]
 //           ),
-//           sampleName: new FormControl(
+//           sample: new FormControl(
 //             { value: null, disabled: this.isDisabled },
 //             [Validators.required]
 //           ),
@@ -89,7 +89,7 @@
 //     const formArray: FormArray = this.headerForm.get('headers') as FormArray;
 //     formArray.controls.forEach((formGroup) => {
 //       const cnvToolName = formGroup.get('cnvToolName').value;
-//       const sampleName = formGroup.get('sampleName').value;
+//       const sample = formGroup.get('sample').value;
 //       const chr = formGroup.get('chr').value;
 //       const startBp = formGroup.get('startBp').value;
 //       const endBp = formGroup.get('endBp').value;
@@ -98,7 +98,7 @@
 //         id: 1,
 //         userId: 1,
 //         cnvToolName: cnvToolName,
-//         sampleName: sampleName,
+//         sample: sample,
 //         chr: chr,
 //         startBp: startBp,
 //         endBp: endBp,

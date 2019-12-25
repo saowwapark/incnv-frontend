@@ -39,7 +39,7 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns = [
     'select',
     'no',
-    'sampleName',
+    'sample',
     'chromosome',
     'startBasepair',
     'endBasepair',

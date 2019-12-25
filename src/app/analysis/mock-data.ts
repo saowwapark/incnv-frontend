@@ -91,6 +91,6 @@ export const chosenFiles = [
   }
 ];
 
-export const chosenCnvType = 'dup';
+export const chosenCnvType = 'duplication';
 
 export const chosenChr = '1';

@@ -75,7 +75,7 @@ table {
 .mat-column-no {
   @include table-column(10%);
 }
-.mat-column-sampleName {
+.mat-column-sample {
   @include table-column(20%);
 }
 .mat-column-chromosome {
