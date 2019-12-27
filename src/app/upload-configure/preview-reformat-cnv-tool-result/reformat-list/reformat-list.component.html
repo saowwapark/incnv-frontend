@@ -59,7 +59,7 @@
           </ng-container>
 
           <!-- Start Basepair Column -->
-          <ng-container matColumnDef="startBasepair">
+          <ng-container matColumnDef="startBp">
             <th
               mat-header-cell
               *matHeaderCellDef
@@ -69,11 +69,11 @@
               Start Basepair
             </th>
             <td mat-cell class="data-right" *matCellDef="let row">
-              {{ row.startBasepair | number }}
+              {{ row.startBp | number }}
             </td>
           </ng-container>
           <!-- End Basepair Column -->
-          <ng-container matColumnDef="endBasepair">
+          <ng-container matColumnDef="endBp">
             <th
               mat-header-cell
               *matHeaderCellDef
@@ -83,7 +83,7 @@
               End Basepair
             </th>
             <td mat-cell class="data-right" *matCellDef="let row">
-              {{ row.endBasepair | number }}
+              {{ row.endBp | number }}
             </td>
           </ng-container>
           <!-- CNV Type Column -->

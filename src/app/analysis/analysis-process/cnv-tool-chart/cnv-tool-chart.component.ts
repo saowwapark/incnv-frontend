@@ -4,11 +4,26 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  OnChanges
+  OnChanges,
+  Input
 } from '@angular/core';
 import * as d3 from 'd3';
 import { Bar } from './chart.model';
 import { color } from 'd3';
+
+class CnvToolAnnotation {
+  toolIdentity?: string; // cnv tool name and parameter.
+  toolAnnotations?: CnvFragmentAnnotation[]; // annotation for a given cnv tool.
+}
+class CnvFragmentAnnotation {
+  chromosome?: string;
+  cnvType?: string;
+  startBp?: number;
+  endBp?: number;
+  dgv?: string[]; // dgv.variant_accession
+  ensembl?: string[]; // ensembl.gene_id
+  clinvar;
+}
 
 @Component({
   selector: 'app-cnv-tool-chart',
@@ -16,11 +31,8 @@ import { color } from 'd3';
   styleUrls: ['./cnv-tool-chart.component.scss']
 })
 export class CnvToolChartComponent implements OnInit, OnChanges {
-  // @Input() data: CnvToolResult[];
-  // @Input() startRegion: number;
-  // @Input() stopRegion: number;
+  @Input() cnvTools: CnvToolAnnotation[];
 
-  // data: CnvToolResult[];
   regionStartBp = 12000000;
   regionEndBp = 14000000;
 
@@ -29,14 +41,13 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
 
   constructor() {}
   ngOnChanges(): void {
-    // if (!this.data) {
-    //   return;
-    // }
-    // this.createChart();
-  }
-  ngOnInit() {
+    console.log(this.cnvTools);
+    if (!this.cnvTools) {
+      return;
+    }
     this.createChart();
   }
+  ngOnInit() {}
   private createChart(): void {
     // select the svg container
     const element = this.chartContainer.nativeElement;
@@ -76,123 +87,120 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
     const xAxis = d3.axisTop(x);
     xAxisGroup.call(xAxis);
 
-    d3.json('assets/many_chr1_dup_NA10847.json').then((barDatas: Bar[]) => {
-      // create scale on y
-      const y = d3
-        .scaleBand()
-        .domain(barDatas.map(item => item.name))
-        .range([0, contentHeight])
-        .paddingInner(0.3);
+    // create scale on y
+    const y = d3
+      .scaleBand()
+      .domain(this.cnvTools.map(tool => tool.toolIdentity))
+      .range([0, contentHeight])
+      .paddingInner(0.3);
 
-      const colors = d3
-        .scaleOrdinal()
-        .domain(barDatas.map(item => item.name))
-        .range(d3.schemeCategory10);
-      // generate yAxis
-      const yAxis = d3.axisLeft(y);
-      yAxisGroup.call(yAxis);
+    // define color for each bar
+    const colors = d3
+      .scaleOrdinal()
+      .domain(this.cnvTools.map(tool => tool.toolIdentity))
+      .range(d3.schemeCategory10);
 
-      // generate bars
-      const bars = graph
-        .selectAll('g.bar')
-        .data(barDatas)
-        .enter()
-        .append('g')
-        .attr('class', 'bar')
-        .attr('y', d => y(d.name))
-        .attr('fill', d => colors(d.name) as string)
-        .on('mouseover', function() {
-          tooltip.style('display', null);
-        })
-        .on('mouseout', function() {
-          tooltip.style('display', 'none');
-        })
-        .on('mousemove', function(d) {
-          // console.log(this);
-          const mousePosition = d3.mouse(this);
+    // generate yAxis
+    const yAxis = d3.axisLeft(y);
+    yAxisGroup.call(yAxis);
 
-          const xPosition = mousePosition[0];
+    // generate bars
+    const bars = graph
+      .selectAll('g.bar')
+      .data(this.cnvTools)
+      .enter()
+      .append('g')
+      .attr('class', 'bar')
+      .attr('y', d => y(d.toolIdentity))
+      .attr('fill', d => colors(d.toolIdentity) as string);
 
-          const xTooltipPosition = mousePosition[0];
-          const yTooltipPosition = mousePosition[1];
-          tooltip.attr(
-            'transform',
-            'translate(' + xTooltipPosition + ',' + yTooltipPosition + ')'
-          );
-          tooltip.select('text').text(Math.round(x.invert(xPosition)));
-        });
-      // generate bar background
-      const barBackground = bars
-        .insert('rect', ':first-child')
-        .attr('height', y.bandwidth)
-        .attr('y', d => y(d.name))
-        .attr('x', '1')
-        .attr('width', contentWidth)
-        .attr('fill-opacity', '0.5')
-        .style('fill', '#F5F5F5')
-        .attr('class', 'bar--background');
+    // generate bar background
+    const barBackground = bars
+      .insert('rect', ':first-child')
+      .attr('height', y.bandwidth)
+      .attr('y', d => y(d.toolIdentity))
+      .attr('x', '1')
+      .attr('width', contentWidth)
+      .attr('fill-opacity', '0.5')
+      .style('fill', '#F5F5F5')
+      .attr('class', 'bar--background');
 
-      // generate sub bars
-      const subbars = bars
-        .selectAll('rect.subbar')
-        .data(d => d.data)
-        .enter()
-        .append('rect')
-        .attr('class', 'subbar')
-        .attr('width', d => {
-          let chosenStartBp: number;
-          let chosenEndBp: number;
-          if (
-            d.end - this.regionStartBp > 0 &&
-            this.regionStartBp - d.start >= 0
-          ) {
-            chosenStartBp = this.regionStartBp;
-            chosenEndBp = d.end;
-            return x(chosenEndBp) - x(chosenStartBp);
-          } else if (
-            this.regionEndBp - d.start > 0 &&
-            d.end - this.regionEndBp >= 0
-          ) {
-            chosenStartBp = d.start;
-            chosenEndBp = this.regionEndBp;
-            return x(chosenEndBp) - x(chosenStartBp);
-          } else if (
-            d.start - this.regionStartBp > 0 &&
-            this.regionEndBp - d.end > 0
-          ) {
-            chosenStartBp = d.start;
-            chosenEndBp = d.end;
-            return x(chosenEndBp) - x(chosenStartBp);
-          }
-        })
+    // generate sub bars
+    const subbars = bars
+      .selectAll('rect.subbar')
+      .data(d => d.toolAnnotations)
+      .enter()
+      .append('rect')
+      .attr('class', 'subbar')
+      .attr('width', d => {
+        let chosenStartBp: number;
+        let chosenEndBp: number;
+        if (
+          d.endBp - this.regionStartBp > 0 &&
+          this.regionStartBp - d.startBp >= 0
+        ) {
+          chosenStartBp = this.regionStartBp;
+          chosenEndBp = d.endBp;
+          return x(chosenEndBp) - x(chosenStartBp);
+        } else if (
+          this.regionEndBp - d.startBp > 0 &&
+          d.endBp - this.regionEndBp >= 0
+        ) {
+          chosenStartBp = d.startBp;
+          chosenEndBp = this.regionEndBp;
+          return x(chosenEndBp) - x(chosenStartBp);
+        } else if (
+          d.startBp - this.regionStartBp > 0 &&
+          this.regionEndBp - d.endBp > 0
+        ) {
+          chosenStartBp = d.startBp;
+          chosenEndBp = d.endBp;
+          return x(chosenEndBp) - x(chosenStartBp);
+        }
+      })
 
-        .attr('x', d => x(d.start))
-        .attr('height', y.bandwidth)
-        .attr('y', function(d) {
-          const parentData = d3.select(this.parentNode).datum() as Bar;
-          return y(parentData.name);
-        });
-    });
+      .attr('x', d => x(d.startBp))
+      .attr('height', y.bandwidth)
+      .attr('y', function(d) {
+        const parentData = d3
+          .select(this.parentNode)
+          .datum() as CnvToolAnnotation;
+        return y(parentData.toolIdentity);
+      })
+      .on('mouseover', function(d) {
+        tooltip.html(`<p>Tooltip text</p>`);
+
+        // tooltip
+        //   .select('text.range')
+        //   .text(`Start - End: ${d.startBp} - ${d.endBp}`);
+      })
+      .on('mousemove', function() {
+        const mousePosition = d3.mouse(this);
+        const xTooltipPosition = mousePosition[0];
+        const yTooltipPosition = mousePosition[1];
+
+        // tooltip
+        //   .transition()
+        //   .duration(200)
+        //   .style('opacity', 0.9);
+
+        tooltip
+          .style('left', xTooltipPosition + 'px')
+          .style('top', yTooltipPosition + 'px')
+          .style('display', 'block');
+      })
+      .on('mouseout', function() {
+        tooltip.style('display', 'none');
+      });
 
     // Prep the tooltip bits, initial display is hidden
-    const tooltip = svg
-      .append('g')
-      .attr('class', 'tooltip')
+    const tooltip = d3
+      .select('#chart')
+      .append('div')
+      .attr('id', 'tooltip')
+      .style('position', 'absolute')
+      .style('background-color', '#D3D3D3')
+      .style('padding', 6)
       .style('display', 'none');
-
-    tooltip
-      .append('rect')
-      .attr('width', 60)
-      .attr('height', 20)
-      .attr('fill', 'white')
-      .style('opacity', 0.5);
-
-    tooltip
-      .append('text')
-      .attr('x', 30)
-      .attr('dy', '1.2em')
-      .style('text-anchor', 'middle')
-      .attr('font-size', '12px')
-      .attr('font-weight', 'bold');
   }
 }

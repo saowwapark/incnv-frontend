@@ -81,10 +81,10 @@ table {
 .mat-column-chromosome {
   @include table-column(10%);
 }
-.mat-column-startBasepair {
+.mat-column-startBp {
   @include table-column(25%);
 }
-.mat-column-endBasepair {
+.mat-column-endBp {
   @include table-column(25%);
 }
 .mat-column-cnvType {

@@ -3,8 +3,8 @@
 export class HeaderColumnMapping {
   sample: string;
   chromosome: string;
-  startBasepair: string;
-  endBasepair: string;
+  startBp: string;
+  endBp: string;
   cnvType: string;
 }
 export class DataFieldMapping {

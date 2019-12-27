@@ -1,5 +1,5 @@
 import { AnalysisProcessService } from './analysis-process.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { Sampleset } from 'src/app/sampleset/sampleset.model';
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 
@@ -17,13 +17,15 @@ import {
   templateUrl: './analysis-process.component.html',
   styleUrls: ['./analysis-process.component.scss']
 })
-export class AnalysisProcessComponent implements OnInit {
+export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   @Input() chosenReferenceGenome: string;
   @Input() chosenSampleset: Sampleset;
   @Input() chosenSample: string;
   @Input() chosenFiles: UploadCnvToolResult[];
   @Input() chosenCnvType: string;
   @Input() chosenChr: string;
+
+  cnvTools;
 
   constructor(private analyisService: AnalysisProcessService) {
     // mock data
@@ -44,6 +46,10 @@ export class AnalysisProcessComponent implements OnInit {
         this.chosenChr,
         this.chosenCnvType
       )
-      .subscribe(data => console.log(data));
+      .subscribe(data => {
+        this.cnvTools = data;
+      });
   }
+
+  ngAfterViewInit(): void {}
 }

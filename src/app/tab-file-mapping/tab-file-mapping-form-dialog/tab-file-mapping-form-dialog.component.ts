@@ -48,12 +48,12 @@ export class TabFileMappingFormDialogComponent implements OnInit {
           this.fileMappingConfigured.headerColumnMapping.chromosome,
           Validators.required
         ],
-        startBasepair: [
-          this.fileMappingConfigured.headerColumnMapping.startBasepair,
+        startBp: [
+          this.fileMappingConfigured.headerColumnMapping.startBp,
           Validators.required
         ],
-        endBasepair: [
-          this.fileMappingConfigured.headerColumnMapping.endBasepair,
+        endBp: [
+          this.fileMappingConfigured.headerColumnMapping.endBp,
           Validators.required
         ],
         cnvType: [
@@ -95,12 +95,12 @@ export class TabFileMappingFormDialogComponent implements OnInit {
           fileMappingConfigured.headerColumnMapping.chromosome,
           Validators.required
         ],
-        startBasepair: [
-          fileMappingConfigured.headerColumnMapping.startBasepair,
+        startBp: [
+          fileMappingConfigured.headerColumnMapping.startBp,
           Validators.required
         ],
-        endBasepair: [
-          fileMappingConfigured.headerColumnMapping.endBasepair,
+        endBp: [
+          fileMappingConfigured.headerColumnMapping.endBp,
           Validators.required
         ],
         cnvType: [

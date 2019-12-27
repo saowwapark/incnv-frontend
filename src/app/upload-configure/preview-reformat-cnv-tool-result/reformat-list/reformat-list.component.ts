@@ -41,8 +41,8 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
     'no',
     'sample',
     'chromosome',
-    'startBasepair',
-    'endBasepair',
+    'startBp',
+    'endBp',
     'cnvType',
     'edit'
   ];

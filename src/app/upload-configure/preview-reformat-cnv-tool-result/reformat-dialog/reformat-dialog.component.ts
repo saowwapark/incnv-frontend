@@ -40,8 +40,8 @@ export class ReformatDialogComponent implements OnInit {
       reformatCnvToolResultId: [reformatCnvToolResult.reformatCnvToolResultId],
       chromosome: [reformatCnvToolResult.chromosome],
       cnvType: [reformatCnvToolResult.cnvType],
-      startBasepair: [reformatCnvToolResult.startBasepair],
-      endBasepair: [reformatCnvToolResult.endBasepair]
+      startBp: [reformatCnvToolResult.startBp],
+      endBp: [reformatCnvToolResult.endBp]
     });
   }
 

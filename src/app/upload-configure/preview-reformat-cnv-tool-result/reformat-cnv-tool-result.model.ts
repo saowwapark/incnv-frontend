@@ -1,7 +1,7 @@
 export class ReformatCnvToolResult {
   reformatCnvToolResultId: number;
   chromosome: string;
-  startBasepair: number;
-  endBasepair: number;
+  startBp: number;
+  endBp: number;
   cnvType: string;
 }

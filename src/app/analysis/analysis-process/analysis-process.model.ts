@@ -5,8 +5,8 @@ export class CnvToolDetail {
 export class CnvAnnotation {
   chromosome?: string;
   cnvType?: string;
-  startBasepair?: number;
-  endBasepair?: number;
+  startBp?: number;
+  endBp?: number;
   dgv?: string[]; // dgv.variant_accession
   ensembl?: string[]; // ensembl.gene_id
   clinvar;

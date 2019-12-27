@@ -24,9 +24,9 @@ export class AnalysisProcessService {
     cnvType
   ): Observable<UploadCnvToolResult[]> {
     const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      }),
+      // headers: new HttpHeaders({
+      //   'Content-Type': 'application/json'
+      // }),
       params: {
         referenceGenome: referenceGenome,
         chromosome: chromosome,
