@@ -1,0 +1,42 @@
+<mat-toolbar mat-dialog-title>
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ dialogTitle }}</span>
+    <button mat-icon-button matDialogClose aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div mat-dialog-content>
+  <mat-tab-group>
+    <mat-tab label="General">
+      <div>
+        <span>Chromosome</span>
+        <span></span>
+      </div>
+      <div>
+        <span>Start Basepair</span>
+        <span></span>
+      </div>
+      <div>
+        <span>End Basepair</span>
+        <span></span>
+      </div>
+      <div>
+        <span>CNV Type</span>
+        <span></span>
+      </div>
+    </mat-tab>
+    <mat-tab label="Ensembl">
+      <p>Relatived Gene</p>
+      <span>{{ printedEnsembl }}</span>
+    </mat-tab>
+    <mat-tab label="DGV">
+      <p>Related DGV</p>
+      <span>{{ printedDgv }}</span>
+    </mat-tab>
+    <mat-tab label="Clinvar">
+      <p>Related Clinvar</p>
+    </mat-tab>
+  </mat-tab-group>
+</div>

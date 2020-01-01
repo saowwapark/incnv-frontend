@@ -1,3 +1,4 @@
+import { AnnotationDialogComponent } from './analysis-process/cnv-tool-chart/annotation-dialog/annotation-dialog.component';
 import { AnalysisComponent } from './analysis.component';
 import { MergedResultTableComponent } from './analysis-process/merged-result-table/merged-result-table.component';
 import { AnalysisProcessComponent } from './analysis-process/analaysis-process.component';
@@ -20,9 +21,11 @@ import { ChooseFileComponent } from './analysis-configure/choose-file/choose-fil
     ChooseFileComponent,
     AnalysisProcessComponent,
     CnvToolChartComponent,
+    AnnotationDialogComponent,
     MergedResultTableComponent
   ],
   imports: [SharedModule, AnalysisRoutingModule],
-  providers: [ChooseSamplesetResolver]
+  providers: [ChooseSamplesetResolver],
+  entryComponents: [AnnotationDialogComponent]
 })
 export class AnalysisModule {}

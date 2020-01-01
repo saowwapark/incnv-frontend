@@ -24,6 +24,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -52,7 +53,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatDialogModule,
     ScrollingModule,
     MatProgressSpinnerModule,
-    MatRadioModule
+    MatRadioModule,
+    MatTabsModule
   ]
 })
 export class MaterialModule {}
