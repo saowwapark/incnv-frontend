@@ -11,6 +11,10 @@
   <mat-tab-group>
     <mat-tab label="General">
       <div>
+        <span>Reference Genome</span>
+        <span></span>
+      </div>
+      <div>
         <span>Chromosome</span>
         <span></span>
       </div>
@@ -29,10 +33,29 @@
     </mat-tab>
     <mat-tab label="Ensembl">
       <p>Relatived Gene</p>
-      <span>{{ printedEnsembl }}</span>
+      <div *ngFor="let ensembl of fragment.ensembls">
+        <a href="http://www.ensembl.org/id/{{ ensembl }}" target="_blank">{{
+          ensembl
+        }}</a>
+      </div>
     </mat-tab>
     <mat-tab label="DGV">
       <p>Related DGV</p>
+      <div *ngFor="let dgv of fragment.dgvs">
+        <a
+          *ngIf="fragment.referenceGenome === 'grch37'"
+          href="http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg19/?name={{ dgv }}"
+          target="_blank"
+          >{{ dgv }}
+        </a>
+
+        <a
+          *ngIf="fragment.referenceGenome === 'grch38'"
+          href="http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg38/?name={{ dgv }}"
+          target="_blank"
+          >{{ dgv }}
+        </a>
+      </div>
       <span>{{ printedDgv }}</span>
     </mat-tab>
     <mat-tab label="Clinvar">

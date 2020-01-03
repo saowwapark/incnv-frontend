@@ -24,8 +24,8 @@ export class AnnotationDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.printedEnsembl = this.createPrintedArray(this.fragment.ensembl);
-    this.printedDgv = this.createPrintedArray(this.fragment.dgv);
+    this.printedEnsembl = this.createPrintedArray(this.fragment.ensembls);
+    this.printedDgv = this.createPrintedArray(this.fragment.dgvs);
   }
 
   private createPrintedArray(arrData: any[]) {

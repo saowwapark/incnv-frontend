@@ -26,6 +26,8 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   @Input() chosenChr: string;
 
   cnvTools;
+  regionStartBp: number;
+  regionEndBp: number;
 
   constructor(private analyisService: AnalysisProcessService) {
     // mock data
@@ -49,6 +51,14 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.cnvTools = data;
       });
+  }
+
+  selectRegionBp(selectedRegion: {
+    regionStartBp: number;
+    regionEndBp: number;
+  }) {
+    this.regionStartBp = selectedRegion.regionStartBp;
+    this.regionEndBp = selectedRegion.regionEndBp;
   }
 
   ngAfterViewInit(): void {}

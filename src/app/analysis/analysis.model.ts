@@ -4,6 +4,7 @@ export class CnvToolAnnotation {
 }
 
 export class CnvFragmentAnnotation {
+  referenceGenome?: string;
   chromosome?: string;
   cnvType?: string;
   startBp?: number;
@@ -11,7 +12,7 @@ export class CnvFragmentAnnotation {
   overlapTools?: string[];
   startBpOnRegion?: number;
   endBpOnRegion?: number;
-  dgv?: string[]; // dgv.variant_accession
-  ensembl?: string[]; // ensembl.gene_id
-  clinvar;
+  dgvs?: string[]; // dgv.variant_accession
+  ensembls?: string[]; // ensembl.gene_id
+  clinvars;
 }

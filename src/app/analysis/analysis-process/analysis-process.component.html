@@ -9,7 +9,20 @@
   <!-- / HEADER -->
 
   <!-- CONTENT -->
-  <app-cnv-tool-chart [cnvTools]="cnvTools"></app-cnv-tool-chart>
+  <app-main-chart
+    [cnvTools]="cnvTools"
+    [height]="300"
+    [regionStartBp]="regionStartBp"
+    [regionEndBp]="regionEndBp"
+  ></app-main-chart>
+  <app-overview-chart
+    [cnvTools]="cnvTools"
+    [height]="300"
+    [topMargin]="500"
+    [chr]="1"
+    (selectRegionBp)="selectRegionBp($event)"
+  ></app-overview-chart>
+
   <!-- <app-merged-result-table></app-merged-result-table> -->
 </div>
 <!-- / CONTENT -->

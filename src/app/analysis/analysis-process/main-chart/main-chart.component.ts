@@ -4,7 +4,8 @@ import {
   ViewChild,
   ElementRef,
   OnChanges,
-  Input
+  Input,
+  HostListener
 } from '@angular/core';
 import * as d3 from 'd3';
 import { CnvToolAnnotation, CnvFragmentAnnotation } from '../../analysis.model';
@@ -12,30 +13,90 @@ import { AnnotationDialogComponent } from './annotation-dialog/annotation-dialog
 import { MatDialogRef, MatDialog } from '@angular/material';
 
 @Component({
-  selector: 'app-cnv-tool-chart',
-  templateUrl: './cnv-tool-chart.component.html',
-  styleUrls: ['./cnv-tool-chart.component.scss']
+  selector: 'app-main-chart',
+  templateUrl: './main-chart.component.html',
+  styleUrls: ['./main-chart.component.scss']
 })
-export class CnvToolChartComponent implements OnInit, OnChanges {
+export class MainChartComponent implements OnInit, OnChanges {
   @Input() cnvTools: CnvToolAnnotation[];
-  @ViewChild('chart', { static: true })
+  @Input() height: number;
+  @Input() regionStartBp: number;
+  @Input() regionEndBp: number;
+  @ViewChild('mainChart', { static: true })
   private chartContainer: ElementRef;
 
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
 
-  regionStartBp = 13000000;
-  regionEndBp = 14000000;
+  chartWidth: number;
+  mergedToolIdentity = 'merged tools';
+  svg: d3.Selection<SVGSVGElement, CnvToolAnnotation, null, undefined>;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.chartWidth = event.target.innerWidth;
+    this.updateChart();
+  }
 
   constructor(private _matDialog: MatDialog) {}
   ngOnChanges(): void {
-    console.log(this.cnvTools);
     if (!this.cnvTools) {
       return;
     }
-    this.createChart();
+    this.updateChart();
+    // this.createChart();
   }
   ngOnInit() {}
 
+  private createChart(): void {
+    // create graph (graph consists of xAxis, yAxis, chart)
+    this.svg = this.createSvg();
+    const containerMargin = this.calContainerMargin();
+    const graphContainer = this.createGraphContainer(this.svg, containerMargin);
+
+    const [scaleX, scaleY] = this.createScaleXY(graphContainer);
+    this.generateAxes(graphContainer, scaleX, scaleY);
+    const colorScale = this.createColorScale();
+    const mergedColorScale = this.createLinearColorScale(
+      colorScale(this.mergedToolIdentity)
+    );
+
+    const bars = this.createBars(graphContainer, scaleY);
+    const tooltip = this.createTooltip();
+
+    // generate sub bars
+    const subbars: d3.Selection<
+      SVGSVGElement,
+      CnvFragmentAnnotation,
+      null,
+      undefined
+    > = this.createSubbars(bars, scaleX, scaleY, colorScale, mergedColorScale);
+
+    // Add Events
+    subbars
+      .on('mouseover', (d, i, n) => {
+        this.handleMouseOver(i, n);
+      })
+      .on('mouseout', (d, i, n) => {
+        this.handleMouseOut(d, i, n, colorScale, mergedColorScale, tooltip);
+      })
+      .on('mousemove', (d, i, n) => {
+        this.handleMouseMove(d, tooltip);
+      })
+      .on('click', (d, i, n) => {
+        this.handleClick(d, i, n, tooltip);
+      });
+  }
+
+  /**
+   *  Sub Functions
+   */
+  private updateChart() {
+    if (this.svg) {
+      this.svg.remove();
+    }
+
+    this.createChart();
+  }
   private createDialog(
     cnvToolIdentity: string,
     cnvFragmentAnnotation: CnvFragmentAnnotation
@@ -48,37 +109,66 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
       }
     });
   }
-  private createGraphContainer(svg) {
+  private calContainerMargin() {
+    // max character lenght
+    let maxLength = 0;
+    for (const tool of this.cnvTools) {
+      const length = tool.cnvToolIdentity.length;
+      if (length > maxLength) {
+        maxLength = length;
+      }
+    }
     // create margins and dimensions
-    const margin = {
-      top: 20,
-      right: 20,
+    const containerMargin = {
+      top: 40,
+      right: 40,
       bottom: 30,
-      left: 40
+      left: 10 * maxLength
     };
-    const contentWidth = svg.attr('width') - margin.left - margin.right;
-    const contentHeight = svg.attr('height') - margin.top - margin.bottom;
+    return containerMargin;
+  }
+
+  private createGraphContainer(svg, containerMargin) {
+    const contentWidth =
+      svg.attr('width') - containerMargin.left - containerMargin.right;
+    const contentHeight =
+      svg.attr('height') - containerMargin.top - containerMargin.bottom;
 
     svg
       .append('g')
-      .attr('class', 'graph-container')
+      .attr('class', 'main-graph-container')
       .attr('width', contentWidth)
       .attr('height', contentHeight)
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-    return d3.select('.graph-container');
+      .attr(
+        'transform',
+        `translate(${containerMargin.left}, ${containerMargin.top})`
+      );
+    return d3.select('.main-graph-container');
   }
-  private createSvg(): d3.Selection<SVGSVGElement, unknown, null, undefined> {
+  private createSvg(): d3.Selection<
+    SVGSVGElement,
+    CnvToolAnnotation,
+    null,
+    undefined
+  > {
     // select the svg container
     const element = this.chartContainer.nativeElement;
     const svg = d3
       .select(element)
       .append('svg')
       .attr('width', element.offsetWidth)
-      .attr('height', element.offsetHeight);
+      .attr('height', this.height);
     return svg;
   }
 
-  private createScales(
+  private createLinearColorScale(maxColor) {
+    const myColor = d3
+      .scaleLinear<string>()
+      .domain([-2, this.cnvTools.length - 1])
+      .range(['white', maxColor]);
+    return myColor;
+  }
+  private createScaleXY(
     graphContainer
   ): [d3.ScaleLinear<number, number>, d3.ScaleBand<string>] {
     // create scale on x
@@ -92,7 +182,8 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
       .scaleBand()
       .domain(this.cnvTools.map(tool => tool.cnvToolIdentity))
       .range([0, graphContainer.attr('height')])
-      .paddingInner(0.3);
+      .paddingInner(0.3)
+      .paddingOuter(0.2);
 
     return [scaleX, scaleY];
   }
@@ -105,34 +196,34 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
     let chosenStartBp: number;
     let chosenEndBp: number;
 
-    const diffStart = cnv.startBp - this.regionStartBp;
-    const diffEnd = cnv.endBp - this.regionEndBp;
-    const diffEndStart = cnv.endBp - this.regionStartBp;
-    const diffStartEnd = cnv.startBp - this.regionEndBp;
+    const diffStart = cnv.startBp - regionStartBp;
+    const diffEnd = cnv.endBp - regionEndBp;
+    const diffEndStart = cnv.endBp - regionStartBp;
+    const diffStartEnd = cnv.startBp - regionEndBp;
     // choose cnv in region
     // left region
     if (diffEndStart > 0 && diffStart <= 0) {
-      chosenStartBp = this.regionStartBp;
+      chosenStartBp = regionStartBp;
       chosenEndBp = cnv.endBp;
     } else if (
       (diffEndStart === 0 && diffStart < 0) ||
-      (cnv.startBp === cnv.endBp && cnv.startBp === this.regionStartBp)
+      (cnv.startBp === cnv.endBp && cnv.startBp === regionStartBp)
     ) {
-      chosenStartBp = this.regionStartBp;
-      chosenEndBp = this.regionStartBp;
+      chosenStartBp = regionStartBp;
+      chosenEndBp = regionStartBp;
     }
     // right region
     else if (diffEnd >= 0 && diffStartEnd < 0) {
       chosenStartBp = cnv.startBp;
-      chosenEndBp = this.regionEndBp;
+      chosenEndBp = regionEndBp;
     } else if (
       diffStartEnd === 0 &&
       diffEnd > 0 &&
       cnv.startBp === cnv.endBp &&
-      cnv.startBp === this.regionEndBp
+      cnv.startBp === regionEndBp
     ) {
-      chosenStartBp = this.regionEndBp;
-      chosenEndBp = this.regionEndBp;
+      chosenStartBp = regionEndBp;
+      chosenEndBp = regionEndBp;
     }
     // within region
     else if (diffStart > 0 && diffEnd < 0) {
@@ -144,10 +235,10 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
       (diffStart === 0 && diffEnd === 0) ||
       (diffStart < 0 && diffEnd > 0)
     ) {
-      chosenStartBp = this.regionStartBp;
-      chosenEndBp = this.regionEndBp;
+      chosenStartBp = regionStartBp;
+      chosenEndBp = regionEndBp;
     }
-    return { startBp: chosenStartBp, endBp: chosenEndBp };
+    return { chosenStartBp: chosenStartBp, chosenEndBp: chosenEndBp };
   }
   private filterDataInRegion(
     regionStartBp: number,
@@ -161,13 +252,13 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
         (cnv.startBp >= regionStartBp && cnv.startBp <= regionEndBp) ||
         (cnv.endBp >= regionStartBp && cnv.endBp <= regionEndBp)
       ) {
-        const { startBp, endBp } = this.chooseBasepair(
+        const { chosenStartBp, chosenEndBp } = this.chooseBasepair(
           cnv,
           regionStartBp,
           regionEndBp
         );
-        cnv.startBpOnRegion = startBp;
-        cnv.endBpOnRegion = endBp;
+        cnv.startBpOnRegion = chosenStartBp;
+        cnv.endBpOnRegion = chosenEndBp;
         data.push(cnv);
       }
     }
@@ -179,6 +270,7 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
 
     // generate xAxis
     const xAxis = d3.axisTop(scaleX);
+    // .tickFormat(d3.format('.4s'));
     xAxisGroup.call(xAxis);
 
     // generate yAxis
@@ -193,8 +285,10 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
     any
   > {
     // Prep the tooltip bits, initial display is hidden
+    const element = this.chartContainer.nativeElement;
+
     const tooltip = d3
-      .select('#chart')
+      .select(element)
       .append('div')
       .attr('id', 'tooltip')
       .style('position', 'absolute')
@@ -213,7 +307,7 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
     return colorScale;
   }
 
-  private createBars(graphContainer, scaleY, colorScale) {
+  private createBars(graphContainer, scaleY) {
     // generate bars (add data + color)
     const bars = graphContainer
       .selectAll('g.bar')
@@ -221,8 +315,7 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
       .enter()
       .append('g')
       .attr('class', 'bar')
-      .attr('y', d => scaleY(d.cnvToolIdentity))
-      .attr('fill', d => colorScale(d.cnvToolIdentity) as string);
+      .attr('y', d => scaleY(d.cnvToolIdentity));
 
     // generate bar background
     const barBackground = bars
@@ -237,7 +330,7 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
     return bars;
   }
 
-  private createSubbars(bars, scaleX, scaleY) {
+  private createSubbars(bars, scaleX, scaleY, colorScale, mergedColorScale) {
     const subbars = bars
       .selectAll('rect.subbar')
       .data((d: CnvToolAnnotation) => {
@@ -251,7 +344,7 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
       .append('rect')
       .attr('class', 'subbar')
       .attr('width', (d: CnvFragmentAnnotation) => {
-        return scaleX(d.endBpOnRegion + 1) - scaleX(d.startBpOnRegion);
+        return scaleX(d.endBpOnRegion) - scaleX(d.startBpOnRegion) + 1;
       })
       .attr('x', d => scaleX(d.startBpOnRegion))
       .attr('height', scaleY.bandwidth)
@@ -260,6 +353,18 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
           .select(this.parentNode)
           .datum() as CnvToolAnnotation;
         return scaleY(parentData.cnvToolIdentity);
+      })
+      .attr('fill', (d: CnvFragmentAnnotation, i, n) => {
+        const parentData: CnvToolAnnotation = d3
+          .select(n[i].parentNode)
+          .datum() as CnvToolAnnotation;
+        const cnvToolIdentity = parentData.cnvToolIdentity;
+        let color = colorScale(cnvToolIdentity) as string;
+        if (cnvToolIdentity === 'merged tools') {
+          color = mergedColorScale(d.overlapTools.length);
+        }
+
+        return color;
       });
     return subbars;
   }
@@ -285,6 +390,8 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
     d: CnvFragmentAnnotation,
     tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>
   ) => {
+    console.log('mousemove');
+
     // tooltip
     const menuHeight = 64;
 
@@ -305,6 +412,7 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
     i,
     n,
     colorScale,
+    mergedColorScale,
     tooltip
   ) => {
     console.log('mouseout');
@@ -317,44 +425,15 @@ export class CnvToolChartComponent implements OnInit, OnChanges {
         const parentData = d3
           .select(n[i].parentNode)
           .datum() as CnvToolAnnotation;
-        return colorScale(parentData.cnvToolIdentity);
+        const cnvToolIdentity = parentData.cnvToolIdentity;
+        let color = colorScale(parentData.cnvToolIdentity);
+        if (cnvToolIdentity === this.mergedToolIdentity) {
+          color = mergedColorScale(d.overlapTools.length);
+        }
+        return color;
       });
 
     // tooltip
     tooltip.style('display', 'none');
   };
-  private createChart(): void {
-    // create graph (graph consists of xAxis, yAxis, chart)
-    const svg = this.createSvg();
-    const graphContainer = this.createGraphContainer(svg);
-    const [scaleX, scaleY] = this.createScales(graphContainer);
-    this.generateAxes(graphContainer, scaleX, scaleY);
-    const colorScale = this.createColorScale();
-
-    const bars = this.createBars(graphContainer, scaleY, colorScale);
-    const tooltip = this.createTooltip();
-
-    // generate sub bars
-    const subbars: d3.Selection<
-      SVGSVGElement,
-      CnvFragmentAnnotation,
-      null,
-      undefined
-    > = this.createSubbars(bars, scaleX, scaleY);
-
-    // Add Events
-    subbars
-      .on('mouseover', (d, i, n) => {
-        this.handleMouseOver(i, n);
-      })
-      .on('mouseout', (d, i, n) => {
-        this.handleMouseOut(d, i, n, colorScale, tooltip);
-      })
-      .on('mousemove', (d, i, n) => {
-        this.handleMouseMove(d, tooltip);
-      })
-      .on('click', (d, i, n) => {
-        this.handleClick(d, i, n, tooltip);
-      });
-  }
 }
