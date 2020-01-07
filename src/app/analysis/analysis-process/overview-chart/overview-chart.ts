@@ -1,3 +1,4 @@
+import { chooseBasepair, filterDataInRegion } from './../visualizeBp.utility';
 import * as d3 from 'd3';
 import { CnvFragmentAnnotation } from '../../analysis.model';
 
@@ -10,6 +11,7 @@ export class OverviewChart {
   copyScaleX;
   xAxis;
   yAxis;
+  domainOnX;
   domainOnY;
 
   /**
@@ -20,6 +22,7 @@ export class OverviewChart {
   constructor(parentElement, data, maxTickLeft, domainOnX, domainOnY) {
     this._parentElement = parentElement;
     this._data = data;
+    this.domainOnX = domainOnX;
     this.domainOnY = domainOnY;
     this.initVis(maxTickLeft, domainOnX, domainOnY);
   }
@@ -28,22 +31,16 @@ export class OverviewChart {
     // const width = parentElement.attr('width');
     // const height = parentElement.attr('height');
     // const y = parentElement.attr('y');
-    const element = d3.select('div');
-
-    console.log(element);
-    console.log(element.style('width'));
-    console.log(element.attr('offsetHeight'));
+    const element = d3.select('div .overview');
 
     const width = this._parentElement.offsetWidth;
     const height = this._parentElement.offsetHeight;
-    const y = 500;
     // select the svg container
     const svg = d3
       .select(this._parentElement)
       .append('svg')
       .attr('width', width)
-      .attr('height', height)
-      .attr('y', y);
+      .attr('height', height);
 
     // create margins and dimensions
     const containerMargin = {
@@ -66,7 +63,6 @@ export class OverviewChart {
         'transform',
         `translate(${containerMargin.left}, ${containerMargin.top})`
       );
-    console.log(this.graphContainer);
   }
 
   private generateScaleXY(domainOnX, domainOnY) {
@@ -114,7 +110,9 @@ export class OverviewChart {
     const bars = this.graphContainer.append('g').attr('class', 'overview-bar');
     bars
       .selectAll('rect')
-      .data(this._data) // get merged_tool
+      .data(() => {
+        return this._data;
+      }) // get merged_tool
       .enter()
       .append('rect')
       .attr(
@@ -171,6 +169,13 @@ export class OverviewChart {
     // create new chart with new scaleX
     this.graphContainer
       .selectAll('.overview-bar rect')
+      // .data(() => {
+      //   return filterDataInRegion(
+      //     this._data,
+      //     this.scaleX.domain()[0],
+      //     this.scaleX.domain()[1]
+      //   );
+      // }) // get merged_tool
       .attr('x', (d: CnvFragmentAnnotation) => this.scaleX(d.startBp))
       .attr(
         'width',

@@ -14,15 +14,15 @@
     [height]="300"
     [regionStartBp]="regionStartBp"
     [regionEndBp]="regionEndBp"
+    (selectCnvs)="selectCnvs($event)"
   ></app-main-chart>
   <app-overview-chart
     [cnvTools]="cnvTools"
     [height]="300"
-    [topMargin]="500"
     [chr]="1"
     (selectRegionBp)="selectRegionBp($event)"
   ></app-overview-chart>
-
+  <app-selected-cnv [dataSource]="selectedCnvs"></app-selected-cnv>
   <!-- <app-merged-result-table></app-merged-result-table> -->
 </div>
 <!-- / CONTENT -->

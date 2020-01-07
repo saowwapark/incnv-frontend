@@ -11,24 +11,47 @@
   <mat-tab-group>
     <mat-tab label="General">
       <div>
-        <span>Reference Genome</span>
-        <span></span>
+        <span>Reference Genome:</span>
+        <span>{{ fragment.referenceGenome }}</span>
       </div>
       <div>
-        <span>Chromosome</span>
-        <span></span>
+        <span>Chromosome:</span>
+        <span>{{ fragment.chromosome }}</span>
       </div>
       <div>
-        <span>Start Basepair</span>
-        <span></span>
+        <span>Start Basepair:</span>
+        <span>{{ fragment.startBp }}</span>
       </div>
       <div>
-        <span>End Basepair</span>
-        <span></span>
+        <span>End Basepair:</span>
+        <span>{{ fragment.endBp }}</span>
       </div>
       <div>
-        <span>CNV Type</span>
-        <span></span>
+        <span>CNV Type:</span>
+        <span>{{ fragment.cnvType }}</span>
+      </div>
+
+      <div>
+        <span> Select new Basepair</span>
+        <mat-form-field>
+          <input
+            #selectedStartBp
+            matInput
+            placeholder="Selected Start Basepair"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <input #selectedEndBp matInput placeholder="Selected End Basepair" />
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="selectBasepair(selectedStartBp.value, selectedEndBp.value)"
+        >
+          Select
+        </button>
       </div>
     </mat-tab>
     <mat-tab label="Ensembl">

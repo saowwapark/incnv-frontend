@@ -1,3 +1,4 @@
+import { CnvFragmentAnnotation } from './../analysis.model';
 import { AnalysisProcessService } from './analysis-process.service';
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { Sampleset } from 'src/app/sampleset/sampleset.model';
@@ -28,6 +29,7 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   cnvTools;
   regionStartBp: number;
   regionEndBp: number;
+  selectedCnvs: CnvFragmentAnnotation[];
 
   constructor(private analyisService: AnalysisProcessService) {
     // mock data
@@ -59,6 +61,10 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   }) {
     this.regionStartBp = selectedRegion.regionStartBp;
     this.regionEndBp = selectedRegion.regionEndBp;
+  }
+
+  selectCnvs(selectedCnvs: CnvFragmentAnnotation[]) {
+    this.selectedCnvs = [...selectedCnvs];
   }
 
   ngAfterViewInit(): void {}

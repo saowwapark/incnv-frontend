@@ -1,6 +1,9 @@
+export const MERGE_TOOL_IDENTITY = 'merged tools';
+export const FINAL_RESULT_IDENTITY = 'final result';
+
 export class CnvToolAnnotation {
   cnvToolIdentity?: string; // cnv tool name and parameter.
-  cnvToolAnnotations?: CnvFragmentAnnotation[]; // annotation for a given cnv tool.
+  cnvFragmentAnnotations?: CnvFragmentAnnotation[]; // annotation for a given cnv tool.
 }
 
 export class CnvFragmentAnnotation {

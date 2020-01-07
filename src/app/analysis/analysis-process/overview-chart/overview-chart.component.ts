@@ -21,7 +21,6 @@ export class OverviewChartComponent implements OnInit, OnChanges {
   @Input() cnvTools: CnvToolAnnotation[];
   @Input() chr: string;
   @Input() height: number;
-  @Input() topMargin: number;
   @Output()
   selectRegionBp = new EventEmitter<{
     regionStartBp: number;
@@ -45,7 +44,7 @@ export class OverviewChartComponent implements OnInit, OnChanges {
 
     const chart = new OverviewChart(
       this.chartContainer.nativeElement,
-      this.cnvTools[this.cnvTools.length - 1].cnvToolAnnotations,
+      this.cnvTools[this.cnvTools.length - 1].cnvFragmentAnnotations,
       8,
       [1, this.chrLength - 1],
       [0, this.cnvTools.length - 1]

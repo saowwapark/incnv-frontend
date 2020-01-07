@@ -12,6 +12,7 @@ import { ChooseSamplesetComponent } from './analysis-configure/choose-sampleset/
 import { ChooseSampleComponent } from './analysis-configure/choose-sample/choose-sample.component';
 import { ChooseFileComponent } from './analysis-configure/choose-file/choose-file.component';
 import { OverviewChartComponent } from './analysis-process/overview-chart/overview-chart.component';
+import { SelectedCnvComponent } from './analysis-process/selected-cnv/selected-cnv.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { OverviewChartComponent } from './analysis-process/overview-chart/overvi
     MainChartComponent,
     AnnotationDialogComponent,
     MergedResultTableComponent,
-    OverviewChartComponent
+    OverviewChartComponent,
+    SelectedCnvComponent
   ],
   imports: [SharedModule, AnalysisRoutingModule],
   providers: [ChooseSamplesetResolver],

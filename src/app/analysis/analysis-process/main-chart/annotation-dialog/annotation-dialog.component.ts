@@ -1,6 +1,12 @@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { Component, OnInit, Inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { CnvFragmentAnnotation } from 'src/app/analysis/analysis.model';
 
 @Component({
@@ -38,5 +44,14 @@ export class AnnotationDialogComponent implements OnInit {
       }
     });
     return output;
+  }
+  selectBasepair(selectedStartBp, selectedEndBp) {
+    const cloneFragment = { ...this.fragment } as CnvFragmentAnnotation;
+    cloneFragment.startBp = selectedStartBp;
+    cloneFragment.endBp = selectedEndBp;
+    cloneFragment.dgvs = [];
+    cloneFragment.ensembls = [];
+    cloneFragment.clinvars = [];
+    this.dialogRef.close(cloneFragment);
   }
 }
