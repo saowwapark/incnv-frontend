@@ -31,7 +31,7 @@ export class FinalResultChart {
   constructor(
     parentElement,
     data,
-    maxTickLeft,
+    containerMargin,
     domainOnX,
     domainOnY,
     maxOverlap
@@ -43,9 +43,9 @@ export class FinalResultChart {
     this.maxOverlap = maxOverlap;
 
     // this.domainOnY = domainOnY;
-    this.initVis(maxTickLeft);
+    this.initVis(containerMargin);
   }
-  private generateGraphContainer(maxTickLeft) {
+  private generateGraphContainer(containerMargin) {
     const width = this._parentElement.offsetWidth;
     const height = this._parentElement.offsetHeight;
 
@@ -55,14 +55,6 @@ export class FinalResultChart {
       .append('svg')
       .attr('width', width)
       .attr('height', height);
-
-    // create margins and dimensions
-    const containerMargin = {
-      top: 40,
-      right: 40,
-      bottom: 30,
-      left: 6 * maxTickLeft
-    };
 
     const contentWidth = +width - containerMargin.left - containerMargin.right;
     const contentHeight =

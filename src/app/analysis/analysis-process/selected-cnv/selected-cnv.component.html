@@ -1,11 +1,10 @@
-<span class="table-name">File Preview</span>
 <div class="example-container mat-elevation-z8">
   <div class="example-rate-limit-reached" *ngIf="!dataSource">
-    Please select cnv tool.
+    Please select CNV results.
   </div>
 </div>
 
-<div class="example-table-container">
+<div *ngIf="dataSource" class="example-table-container">
   <table mat-table [dataSource]="dataSource" matSort>
     <!-- No. Column -->
     <ng-container matColumnDef="no">

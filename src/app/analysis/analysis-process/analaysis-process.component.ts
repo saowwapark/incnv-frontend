@@ -30,6 +30,7 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   regionStartBp: number;
   regionEndBp: number;
   selectedCnvs: CnvFragmentAnnotation[];
+  containerMargin: { top: number; right: number; bottom: number; left: number };
 
   constructor(private analyisService: AnalysisProcessService) {
     // mock data
@@ -52,6 +53,7 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
       )
       .subscribe(data => {
         this.cnvTools = data;
+        this.containerMargin = this.calContainerMargin();
       });
   }
 
@@ -65,6 +67,25 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
 
   selectCnvs(selectedCnvs: CnvFragmentAnnotation[]) {
     this.selectedCnvs = [...selectedCnvs];
+  }
+
+  private calContainerMargin() {
+    // max character lenght
+    let maxLength = 0;
+    for (const tool of this.cnvTools) {
+      const length = tool.cnvToolIdentity.length;
+      if (length > maxLength) {
+        maxLength = length;
+      }
+    }
+    // create margins and dimensions
+    const containerMargin = {
+      top: 40,
+      right: 40,
+      bottom: 30,
+      left: 10 + 6 * maxLength
+    };
+    return containerMargin;
   }
 
   ngAfterViewInit(): void {}

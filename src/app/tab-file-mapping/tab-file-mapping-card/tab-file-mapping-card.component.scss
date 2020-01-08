@@ -1,25 +1,37 @@
-.fileMappingcard {
-  width: 90%;
+.card-content {
+  padding: 7px;
 }
 
 .header-file {
-  width: calc((100% / 8) * 5);
+  width: 100%;
   .header-file__field {
+    // background-color: #ffd54f;
     background-color: #69f0ae;
     font-weight: bold;
+    white-space: nowrap;
   }
   .header-file__value {
+    // background-color: #ffecb3;
     background-color: #b9f6ca;
+    white-space: nowrap;
   }
 }
 
 .data-file {
-  width: calc((100% / 8) * 3);
+  width: calc((100% / 5) * 3);
   .data-file__field {
-    background-color: #ffd54f;
+    background-color: #69f0ae;
+    // background-color: #ffd54f;
     font-weight: bold;
+    white-space: nowrap;
   }
   .data-file__value {
-    background-color: #ffecb3;
+    background-color: #b9f6ca;
+    // background-color: #ffecb3;
+    white-space: nowrap;
   }
+}
+
+:host {
+  padding: 7px;
 }

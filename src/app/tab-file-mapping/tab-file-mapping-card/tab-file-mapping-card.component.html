@@ -1,69 +1,69 @@
-<mat-card class="fileMappingcard" *ngIf="fileMappingConfigured">
+<mat-card *ngIf="fileMappingConfigured" class="mat-elevation-z6">
   <mat-card-header>
     <mat-card-title>{{
       fileMappingConfigured.tabFileMappingName
     }}</mat-card-title>
   </mat-card-header>
   <mat-card-content
-    fxLayout="row"
+    fxLayout="column"
     fxLayoutAlign="space-around stretch"
-    fxLayoutGap="0px"
+    fxLayoutGap="30px"
   >
-    <div class="header-file">
-      <mat-grid-list cols="5" rowHeight="50px">
-        <mat-grid-tile colspan="5" class="header-file__field"
-          ><mat-grid-tile-header
-            >Header Column Mapping</mat-grid-tile-header
-          ></mat-grid-tile
-        >
+    <div class="card-content" fxLayout="column" fxLayoutGap="14px">
+      <div class="header-file">
+        <mat-grid-list cols="5" rowHeight="50px">
+          <mat-grid-tile colspan="5" class="header-file__field">
+            <mat-grid-tile-header>Header Column Mapping</mat-grid-tile-header>
+          </mat-grid-tile>
 
-        <mat-grid-tile class="header-file__field">SAMPLE NAME</mat-grid-tile>
-        <mat-grid-tile class="header-file__field">CHROMOSOME</mat-grid-tile>
-        <mat-grid-tile class="header-file__field">START BASEPAIR</mat-grid-tile>
-        <mat-grid-tile class="header-file__field">END BASEPAIR</mat-grid-tile>
-        <mat-grid-tile class="header-file__field">CNV TYPE</mat-grid-tile>
-      </mat-grid-list>
-      <mat-grid-list cols="5" rowHeight="50px">
-        <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerColumnMapping.sample
-        }}</mat-grid-tile>
-        <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerColumnMapping.chromosome
-        }}</mat-grid-tile>
-        <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerColumnMapping.startBp
-        }}</mat-grid-tile>
-        <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerColumnMapping.endBp
-        }}</mat-grid-tile>
-        <mat-grid-tile class="header-file__value">{{
-          fileMappingConfigured.headerColumnMapping.cnvType
-        }}</mat-grid-tile>
-      </mat-grid-list>
-    </div>
-    <div class="data-file">
-      <mat-grid-list cols="3" rowHeight="50px">
-        <mat-grid-tile colspan="3" class="data-file__field"
-          ><mat-grid-tile-header
-            >Data Field Mapping</mat-grid-tile-header
-          ></mat-grid-tile
-        >
+          <mat-grid-tile class="header-file__field">SAMPLE NAME</mat-grid-tile>
+          <mat-grid-tile class="header-file__field">CHROMOSOME</mat-grid-tile>
+          <mat-grid-tile class="header-file__field"
+            >START BASEPAIR</mat-grid-tile
+          >
+          <mat-grid-tile class="header-file__field">END BASEPAIR</mat-grid-tile>
+          <mat-grid-tile class="header-file__field">CNV TYPE</mat-grid-tile>
+        </mat-grid-list>
+        <mat-grid-list cols="5" rowHeight="50px">
+          <mat-grid-tile class="header-file__value">{{
+            fileMappingConfigured.headerColumnMapping.sample
+          }}</mat-grid-tile>
+          <mat-grid-tile class="header-file__value">{{
+            fileMappingConfigured.headerColumnMapping.chromosome
+          }}</mat-grid-tile>
+          <mat-grid-tile class="header-file__value">{{
+            fileMappingConfigured.headerColumnMapping.startBp
+          }}</mat-grid-tile>
+          <mat-grid-tile class="header-file__value">{{
+            fileMappingConfigured.headerColumnMapping.endBp
+          }}</mat-grid-tile>
+          <mat-grid-tile class="header-file__value">{{
+            fileMappingConfigured.headerColumnMapping.cnvType
+          }}</mat-grid-tile>
+        </mat-grid-list>
+      </div>
+      <div class="data-file">
+        <mat-grid-list cols="3" rowHeight="50px">
+          <mat-grid-tile colspan="3" class="data-file__field">
+            <mat-grid-tile-header>Data Field Mapping</mat-grid-tile-header>
+          </mat-grid-tile>
 
-        <mat-grid-tile class="data-file__field">CHROMOSOME 22</mat-grid-tile>
-        <mat-grid-tile class="data-file__field">DUPLICATION</mat-grid-tile>
-        <mat-grid-tile class="data-file__field">DELETION</mat-grid-tile>
-      </mat-grid-list>
-      <mat-grid-list cols="3" rowHeight="50px">
-        <mat-grid-tile class="data-file__value">{{
-          fileMappingConfigured.dataFieldMapping.chromosome22
-        }}</mat-grid-tile>
-        <mat-grid-tile class="data-file__value">{{
-          fileMappingConfigured.dataFieldMapping.duplication
-        }}</mat-grid-tile>
-        <mat-grid-tile class="data-file__value">{{
-          fileMappingConfigured.dataFieldMapping.deletion
-        }}</mat-grid-tile>
-      </mat-grid-list>
+          <mat-grid-tile class="data-file__field">CHROMOSOME 22</mat-grid-tile>
+          <mat-grid-tile class="data-file__field">DUPLICATION</mat-grid-tile>
+          <mat-grid-tile class="data-file__field">DELETION</mat-grid-tile>
+        </mat-grid-list>
+        <mat-grid-list cols="3" rowHeight="50px">
+          <mat-grid-tile class="data-file__value">{{
+            fileMappingConfigured.dataFieldMapping.chromosome22
+          }}</mat-grid-tile>
+          <mat-grid-tile class="data-file__value">{{
+            fileMappingConfigured.dataFieldMapping.duplication
+          }}</mat-grid-tile>
+          <mat-grid-tile class="data-file__value">{{
+            fileMappingConfigured.dataFieldMapping.deletion
+          }}</mat-grid-tile>
+        </mat-grid-list>
+      </div>
     </div>
   </mat-card-content>
 

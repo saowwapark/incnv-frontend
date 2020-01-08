@@ -19,14 +19,14 @@ export class OverviewChart {
    * domainOnX = [1, chromosome.length - 1]
    * domainOnY = [0, this.cnvTools.length]
    */
-  constructor(parentElement, data, maxTickLeft, domainOnX, domainOnY) {
+  constructor(parentElement, data, containerMargin, domainOnX, domainOnY) {
     this._parentElement = parentElement;
     this._data = data;
     this.domainOnX = domainOnX;
     this.domainOnY = domainOnY;
-    this.initVis(maxTickLeft, domainOnX, domainOnY);
+    this.initVis(containerMargin, domainOnX, domainOnY);
   }
-  private createGraphContainer(maxTickLeft) {
+  private createGraphContainer(containerMargin) {
     // const parentElement = d3.select(this._parentElementName);
     // const width = parentElement.attr('width');
     // const height = parentElement.attr('height');
@@ -41,14 +41,6 @@ export class OverviewChart {
       .append('svg')
       .attr('width', width)
       .attr('height', height);
-
-    // create margins and dimensions
-    const containerMargin = {
-      top: 40,
-      right: 40,
-      bottom: 30,
-      left: 6 * maxTickLeft
-    };
 
     const contentWidth = +width - containerMargin.left - containerMargin.right;
     const contentHeight =

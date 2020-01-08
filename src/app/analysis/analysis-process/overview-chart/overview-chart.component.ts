@@ -26,7 +26,12 @@ export class OverviewChartComponent implements OnInit, OnChanges {
     regionStartBp: number;
     regionEndBp: number;
   }>();
-
+  @Input() containerMargin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
   @ViewChild('chart', { static: true })
   private chartContainer: ElementRef;
 
@@ -45,7 +50,7 @@ export class OverviewChartComponent implements OnInit, OnChanges {
     const chart = new OverviewChart(
       this.chartContainer.nativeElement,
       this.cnvTools[this.cnvTools.length - 1].cnvFragmentAnnotations,
-      8,
+      this.containerMargin,
       [1, this.chrLength - 1],
       [0, this.cnvTools.length - 1]
     );

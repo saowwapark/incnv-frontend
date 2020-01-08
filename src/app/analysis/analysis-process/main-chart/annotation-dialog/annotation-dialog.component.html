@@ -9,41 +9,58 @@
 
 <div mat-dialog-content>
   <mat-tab-group>
-    <mat-tab label="General">
-      <div>
-        <span>Reference Genome:</span>
-        <span>{{ fragment.referenceGenome }}</span>
+    <mat-tab label="Feature">
+      <h3>General Information</h3>
+      <div class="property-row" fxLayout="row wrap">
+        <div class="property property-name" fxFlex="1 1 30%">
+          Reference Genome
+        </div>
+        <div class="property property-value" fxFlex="1 1 70%">
+          {{ fragment.referenceGenome }}
+        </div>
       </div>
-      <div>
-        <span>Chromosome:</span>
-        <span>{{ fragment.chromosome }}</span>
+      <div class="property-row" fxLayout="row wrap">
+        <div class="property property-name" fxFlex="1 1 30%">Chromosome</div>
+        <div class="property property-value" fxFlex="1 1 70%">
+          {{ fragment.chromosome }}
+        </div>
       </div>
-      <div>
-        <span>Start Basepair:</span>
-        <span>{{ fragment.startBp }}</span>
+      <div class="property-row" fxLayout="row wrap">
+        <div class="property property-name" fxFlex="1 1 30%">
+          Start Basepair
+        </div>
+        <div class="property property-value" fxFlex="1 1 70%">
+          {{ fragment.startBp }}
+        </div>
       </div>
-      <div>
-        <span>End Basepair:</span>
-        <span>{{ fragment.endBp }}</span>
+      <div class="property-row" fxLayout="row wrap">
+        <div class="property property-name" fxFlex="1 1 30%">End Basepair</div>
+        <div class="property property-value" fxFlex="1 1 70%">
+          {{ fragment.endBp }}
+        </div>
       </div>
-      <div>
-        <span>CNV Type:</span>
-        <span>{{ fragment.cnvType }}</span>
+      <div class="property-row" fxLayout="row wrap">
+        <div class="property property-name" fxFlex="1 1 30%">CNV Type</div>
+        <div class="property property-value" fxFlex="1 1 70%">
+          {{ fragment.cnvType }}
+        </div>
       </div>
 
-      <div>
-        <span> Select new Basepair</span>
-        <mat-form-field>
-          <input
-            #selectedStartBp
-            matInput
-            placeholder="Selected Start Basepair"
-          />
-        </mat-form-field>
-
-        <mat-form-field>
-          <input #selectedEndBp matInput placeholder="Selected End Basepair" />
-        </mat-form-field>
+      <h3>Select Basepair</h3>
+      <div class="property-row" fxLayoutAlign=" center" fxLayout="row wrap">
+        <div class="property property-value">
+          <mat-form-field>
+            <input #selectedStartBp matInput placeholder="start basepair" />
+          </mat-form-field>
+        </div>
+        <div class="property property-value">
+          <span> to </span>
+        </div>
+        <div class="property property-value">
+          <mat-form-field>
+            <input #selectedEndBp matInput placeholder="end basepair" />
+          </mat-form-field>
+        </div>
 
         <button
           mat-raised-button

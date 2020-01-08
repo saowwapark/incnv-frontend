@@ -1,4 +1,4 @@
-<div id="sampleset" class="page-layout my-theme">
+<div id="analysis-process" class="page-layout my-theme">
   <!-- HEADER -->
   <div class="header__container">
     <div class="header__items" fxLayout="row" fxLayoutAlign="start">
@@ -9,20 +9,47 @@
   <!-- / HEADER -->
 
   <!-- CONTENT -->
-  <app-main-chart
-    [cnvTools]="cnvTools"
-    [height]="300"
-    [regionStartBp]="regionStartBp"
-    [regionEndBp]="regionEndBp"
-    (selectCnvs)="selectCnvs($event)"
-  ></app-main-chart>
-  <app-overview-chart
-    [cnvTools]="cnvTools"
-    [height]="300"
-    [chr]="1"
-    (selectRegionBp)="selectRegionBp($event)"
-  ></app-overview-chart>
-  <app-selected-cnv [dataSource]="selectedCnvs"></app-selected-cnv>
-  <!-- <app-merged-result-table></app-merged-result-table> -->
+
+  <div class="content__container--scrollbar ">
+    <div class="content__items" fxLayout="column" fxLayoutGap="32px">
+      <div class="brief" fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="property-row" fxLayout="row">
+          <div class="property property-name">Chromosome:</div>
+          <div class="property property-value">{{ chosenChr }}</div>
+        </div>
+        <div fxLayout="row">
+          <div class="property property-name">CNV Type:</div>
+          <div class="property property-value">{{ chosenCnvType }}</div>
+        </div>
+        <div fxLayout="row">
+          <div class="property property-name">Sample Name:</div>
+          <div class="property property-value">{{ chosenSample }}</div>
+        </div>
+      </div>
+
+      <h3>Main Chart</h3>
+      <app-main-chart
+        [cnvTools]="cnvTools"
+        [containerMargin]="containerMargin"
+        [height]="300"
+        [regionStartBp]="regionStartBp"
+        [regionEndBp]="regionEndBp"
+        (selectCnvs)="selectCnvs($event)"
+      ></app-main-chart>
+
+      <h3>Overview Chart</h3>
+      <app-overview-chart
+        [cnvTools]="cnvTools"
+        [containerMargin]="containerMargin"
+        [height]="300"
+        [chr]="1"
+        (selectRegionBp)="selectRegionBp($event)"
+      ></app-overview-chart>
+
+      <h3>Selected Basepair</h3>
+      <app-selected-cnv [dataSource]="selectedCnvs"></app-selected-cnv>
+      <!-- <app-merged-result-table></app-merged-result-table> -->
+    </div>
+  </div>
 </div>
 <!-- / CONTENT -->

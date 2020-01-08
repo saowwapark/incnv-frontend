@@ -30,6 +30,12 @@ export class MainChartComponent implements OnInit, OnChanges {
   @Input() height: number;
   @Input() regionStartBp: number;
   @Input() regionEndBp: number;
+  @Input() containerMargin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
 
   @Output() selectCnvs = new EventEmitter<CnvFragmentAnnotation[]>();
 
@@ -79,7 +85,7 @@ export class MainChartComponent implements OnInit, OnChanges {
     this.mergedChart = new MergedChart(
       this.mergedChartDiv.nativeElement,
       this.cnvTools,
-      10,
+      this.containerMargin,
       [this.regionStartBp, this.regionEndBp],
       this.cnvTools.map(tool => tool.cnvToolIdentity)
     );
@@ -93,10 +99,10 @@ export class MainChartComponent implements OnInit, OnChanges {
     this.finalResultChart = new FinalResultChart(
       this.finalResultChartDiv.nativeElement,
       [this.finalResultData],
-      10,
+      this.containerMargin,
       [this.regionStartBp, this.regionEndBp],
       [FINAL_RESULT_IDENTITY],
-      2
+      this.cnvTools.length - 1
     );
 
     this.mergedChart.onClickSubbars((cnvToolIdentity, data) => {
@@ -125,23 +131,5 @@ export class MainChartComponent implements OnInit, OnChanges {
       this.finalResultChart.updateVis([this.finalResultData]);
       this.selectCnvs.next(this.finalResultData.cnvFragmentAnnotations);
     });
-  }
-  private calContainerMargin() {
-    // max character lenght
-    let maxLength = 0;
-    for (const tool of this.cnvTools) {
-      const length = tool.cnvToolIdentity.length;
-      if (length > maxLength) {
-        maxLength = length;
-      }
-    }
-    // create margins and dimensions
-    const containerMargin = {
-      top: 40,
-      right: 40,
-      bottom: 30,
-      left: 10 * maxLength
-    };
-    return containerMargin;
   }
 }
