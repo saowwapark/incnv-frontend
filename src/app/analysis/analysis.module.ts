@@ -13,6 +13,8 @@ import { ChooseSampleComponent } from './analysis-configure/choose-sample/choose
 import { ChooseFileComponent } from './analysis-configure/choose-file/choose-file.component';
 import { OverviewChartComponent } from './analysis-process/overview-chart/overview-chart.component';
 import { SelectedCnvComponent } from './analysis-process/selected-cnv/selected-cnv.component';
+import { SelectedCnvDialogComponent } from './analysis-process/selected-cnv/selected-cnv-dialog/selected-cnv-dialog.component';
+import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
   declarations: [
@@ -26,10 +28,11 @@ import { SelectedCnvComponent } from './analysis-process/selected-cnv/selected-c
     AnnotationDialogComponent,
     MergedResultTableComponent,
     OverviewChartComponent,
-    SelectedCnvComponent
+    SelectedCnvComponent,
+    SelectedCnvDialogComponent
   ],
-  imports: [SharedModule, AnalysisRoutingModule],
+  imports: [SharedModule, AnalysisRoutingModule, TextMaskModule],
   providers: [ChooseSamplesetResolver],
-  entryComponents: [AnnotationDialogComponent]
+  entryComponents: [AnnotationDialogComponent, SelectedCnvDialogComponent]
 })
 export class AnalysisModule {}

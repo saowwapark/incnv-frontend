@@ -26,8 +26,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 
 import { AuthenInterceptor } from './authen/authen-interceptor';
 
-import { LayoutComponent } from './layout/layout.component';
-
 /** Services or Resolvers */
 import { ConstantsService } from './shared/services/constants.service';
 import { TabFileMappingService } from './tab-file-mapping/tab-file-mapping.service';
@@ -58,7 +56,6 @@ import { UIService } from './shared/services/ui.service';
     ConfirmDialogComponent,
     ErrorDialogComponent,
 
-    LayoutComponent,
     WelcomeMenuComponent,
     HomeContentComponent,
     HomeMenuComponent

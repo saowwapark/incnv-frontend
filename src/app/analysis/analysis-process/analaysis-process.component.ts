@@ -1,4 +1,4 @@
-import { CnvFragmentAnnotation } from './../analysis.model';
+import { CnvFragmentAnnotation, RegionBp } from './../analysis.model';
 import { AnalysisProcessService } from './analysis-process.service';
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { Sampleset } from 'src/app/sampleset/sampleset.model';
@@ -27,9 +27,9 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   @Input() chosenChr: string;
 
   cnvTools;
-  regionStartBp: number;
-  regionEndBp: number;
-  selectedCnvs: CnvFragmentAnnotation[];
+  selectedRegion: RegionBp;
+  chartCnvs: CnvFragmentAnnotation[];
+  tableCnvs: CnvFragmentAnnotation[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
 
   constructor(private analyisService: AnalysisProcessService) {
@@ -57,16 +57,16 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
       });
   }
 
-  selectRegionBp(selectedRegion: {
-    regionStartBp: number;
-    regionEndBp: number;
-  }) {
-    this.regionStartBp = selectedRegion.regionStartBp;
-    this.regionEndBp = selectedRegion.regionEndBp;
+  selectRegion(selectedRegion: RegionBp) {
+    this.selectedRegion = selectedRegion;
   }
 
-  selectCnvs(selectedCnvs: CnvFragmentAnnotation[]) {
-    this.selectedCnvs = [...selectedCnvs];
+  selectChartCnvs(selectedCnvs: CnvFragmentAnnotation[]) {
+    this.chartCnvs = [...selectedCnvs];
+  }
+
+  selectTableCnvs(selectedCnvs: CnvFragmentAnnotation[]) {
+    this.tableCnvs = [...selectedCnvs];
   }
 
   private calContainerMargin() {

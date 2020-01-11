@@ -1,14 +1,16 @@
-<div id="sampleset" class="page-layout my-theme">
+<div id="history-upload-cnv-tool-result" class="layout--absolute my-theme">
   <!-- HEADER -->
   <div class="header__container">
-    <div class="header__items" fxLayout="row" fxLayoutAlign="start">
+    <div class="header__items">
       <!-- APP TITLE -->
-      <span style="font-size: 2rem">Upload History</span>
+      <span class="h2">Upload History</span>
 
-      <!-- FILTER -->
-      <mat-form-field>
-        <input matInput placeholder="Filter..." #filterInput />
-      </mat-form-field>
+      <!-- SEARCH -->
+      <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
+        <input class="search-input" placeholder="Search..." #filterInput />
+
+        <mat-icon class="search-icon">search</mat-icon>
+      </div>
     </div>
   </div>
   <!-- / HEADER -->

@@ -8,12 +8,13 @@ import {
   Input,
   HostListener,
   Output,
-  EventEmitter
+  EventEmitter,
+  SimpleChanges
 } from '@angular/core';
-import * as d3 from 'd3';
 import {
   CnvToolAnnotation,
   CnvFragmentAnnotation,
+  RegionBp,
   FINAL_RESULT_IDENTITY
 } from '../../analysis.model';
 import { AnnotationDialogComponent } from './annotation-dialog/annotation-dialog.component';
@@ -28,14 +29,15 @@ import { MergedChart } from './merged-chart';
 export class MainChartComponent implements OnInit, OnChanges {
   @Input() cnvTools: CnvToolAnnotation[];
   @Input() height: number;
-  @Input() regionStartBp: number;
-  @Input() regionEndBp: number;
+  @Input() selectedRegion: RegionBp;
   @Input() containerMargin: {
     top: number;
     right: number;
     bottom: number;
     left: number;
   };
+
+  @Input() tableCnvs: CnvFragmentAnnotation[];
 
   @Output() selectCnvs = new EventEmitter<CnvFragmentAnnotation[]>();
 
@@ -51,12 +53,11 @@ export class MainChartComponent implements OnInit, OnChanges {
 
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
 
-  chartWidth: number;
-
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.chartWidth = event.target.innerWidth;
-    // this.updateChart();
+    // const chartWidth = event.target.innerWidth;
+    this.createMergedChart();
+    // this.createFinalResultChart();
   }
 
   constructor(private _matDialog: MatDialog) {
@@ -64,29 +65,39 @@ export class MainChartComponent implements OnInit, OnChanges {
     this.finalResultData.cnvToolIdentity = FINAL_RESULT_IDENTITY;
     this.finalResultData.cnvFragmentAnnotations = [];
   }
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (!this.cnvTools) {
       return;
     }
-    if (this.mergedChart) {
-      this.mergedChart.removeVis();
-    }
 
-    if (this.finalResultChart) {
-      this.finalResultChart.removeVis();
+    for (const propName in changes) {
+      if (changes.hasOwnProperty(propName)) {
+        switch (propName) {
+          case 'selectedRegion':
+            this.createMergedChart();
+            //this.createFinalResultChart();
+            break;
+          case 'tableCnvs':
+            if (this.tableCnvs) {
+              this.finalResultData.cnvFragmentAnnotations = this.tableCnvs;
+              break;
+            }
+        }
+      }
     }
-
-    this.createMergedChart();
-    this.createFinalResultChart();
   }
   ngOnInit() {}
 
   createMergedChart() {
+    if (this.mergedChart) {
+      this.mergedChart.removeVis();
+    }
     this.mergedChart = new MergedChart(
+      '1',
       this.mergedChartDiv.nativeElement,
       this.cnvTools,
       this.containerMargin,
-      [this.regionStartBp, this.regionEndBp],
+      [this.selectedRegion.startBp, this.selectedRegion.endBp],
       this.cnvTools.map(tool => tool.cnvToolIdentity)
     );
 
@@ -96,11 +107,14 @@ export class MainChartComponent implements OnInit, OnChanges {
   }
 
   createFinalResultChart() {
+    if (this.finalResultChart) {
+      this.finalResultChart.removeVis();
+    }
     this.finalResultChart = new FinalResultChart(
       this.finalResultChartDiv.nativeElement,
       [this.finalResultData],
       this.containerMargin,
-      [this.regionStartBp, this.regionEndBp],
+      [this.selectedRegion.startBp, this.selectedRegion.endBp],
       [FINAL_RESULT_IDENTITY],
       this.cnvTools.length - 1
     );

@@ -8,15 +8,17 @@ import { filterDataInRegion } from '../visualizeBp.utility';
 
 export class MergedChart {
   _parentElement; // angular native element
+  _id: string;
   _data;
+  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolIdentity) // set of tool identity;
+  _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
   scaleY: d3.ScaleBand<string>;
   colorScale;
   xAxis;
   yAxis;
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolIdentity) // set of tool identity;
-  _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
+
   tooltip;
   subbars;
   svg;
@@ -26,7 +28,8 @@ export class MergedChart {
    * domainOnX = [1, chromosome.length - 1]
    * domainOnY = [0, this.cnvTools.length]
    */
-  constructor(parentElement, data, containerMargin, domainOnX, domainOnY) {
+  constructor(id, parentElement, data, containerMargin, domainOnX, domainOnY) {
+    this._id = id;
     this._parentElement = parentElement;
     this._data = data;
     this._domainOnX = domainOnX;
@@ -43,6 +46,7 @@ export class MergedChart {
     this.svg = d3
       .select(this._parentElement)
       .append('svg')
+      .attr('id', this._id)
       .attr('width', width)
       .attr('height', height);
 
@@ -59,16 +63,24 @@ export class MergedChart {
         'transform',
         `translate(${containerMargin.left}, ${containerMargin.top})`
       );
+
+    // clip path
+    this.graphContainer
+      .append('clipPath')
+      .attr('id', `clip-${this._id}`)
+      .append('rect')
+      .attr('width', this.graphContainer.attr('width'))
+      .attr('height', this.graphContainer.attr('height'));
+    console.log(this.graphContainer);
   }
 
-  private createScaleXY() {
-    // create scale on x
+  private createScaleX() {
     this.scaleX = d3
       .scaleLinear()
       .domain(this._domainOnX)
       .range([0, this.graphContainer.attr('width')]);
-
-    // create scale on y
+  }
+  private createScaleY() {
     this.scaleY = d3
       .scaleBand()
       .domain(this._domainOnY)
@@ -77,14 +89,16 @@ export class MergedChart {
       .paddingOuter(0.2);
   }
 
-  private generateAxes() {
+  private generateAxisX() {
     const xAxisGroup = this.graphContainer.append('g').attr('class', 'x-axis');
-    const yAxisGroup = this.graphContainer.append('g').attr('class', 'y-axis');
-
     // generate xAxis
     const xAxis = d3.axisTop(this.scaleX);
     // .tickFormat(d3.format('.4s'));
     xAxisGroup.call(xAxis);
+  }
+
+  private generateAxisY() {
+    const yAxisGroup = this.graphContainer.append('g').attr('class', 'y-axis');
 
     // generate yAxis
     const yAxis = d3.axisLeft(this.scaleY);
@@ -115,18 +129,22 @@ export class MergedChart {
   }
 
   private generateBars() {
+    const area = this.graphContainer
+      .append('g')
+      .attr('clip-path', 'url(#clip-' + this._id + ')');
+
     // generate bars (add data + color)
-    const bars = this.graphContainer
+    const bars = area
       .selectAll('g.bar')
       .data(this._data)
-      .enter()
-      .append('g')
+      .join('g')
       .attr('class', 'bar')
       .attr('y', d => this.scaleY(d.cnvToolIdentity));
 
     // generate bar background
     const barBackground = bars
       .insert('rect', ':first-child')
+
       .attr('height', this.scaleY.bandwidth)
       .attr('y', d => this.scaleY(d.cnvToolIdentity))
       .attr('x', '1')
@@ -139,7 +157,9 @@ export class MergedChart {
 
   private generateSubbars(bars, mergedColorScale) {
     const subbars = bars
+
       .selectAll('rect.subbar')
+
       .data((d: CnvToolAnnotation) => {
         return filterDataInRegion(
           d.cnvFragmentAnnotations,
@@ -147,15 +167,16 @@ export class MergedChart {
           this._domainOnX[1]
         );
       })
-      .enter()
-      .append('rect')
+      // .data((d: CnvToolAnnotation) => {
+      //   return d.cnvFragmentAnnotations;
+      // })
+      .join('rect')
       .attr('class', 'subbar')
+
       .attr('width', (d: CnvFragmentAnnotation) => {
-        return (
-          this.scaleX(d.endBpOnRegion) - this.scaleX(d.startBpOnRegion) + 1
-        );
+        return this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1;
       })
-      .attr('x', d => this.scaleX(d.startBpOnRegion))
+      .attr('x', d => this.scaleX(d.startBp))
       .attr('height', this.scaleY.bandwidth)
       .attr('y', (d, i, n) => {
         const parentData = d3
@@ -174,6 +195,7 @@ export class MergedChart {
         }
         return color;
       });
+
     return subbars;
   }
 
@@ -218,11 +240,11 @@ export class MergedChart {
       })
       .on('mousemove', d => {
         // tooltip
-        const menuHeight = 64;
+        const menuHeight = 50; // 5.0rem, 50px
 
         this.tooltip
           .style('left', d3.event.clientX + 20 + 'px')
-          .style('top', d3.event.clientY - menuHeight - 20 + 'px')
+          .style('top', d3.event.pageY - menuHeight - 20 + 'px')
           .style('display', null);
 
         this.tooltip.html(() => {
@@ -246,13 +268,23 @@ export class MergedChart {
       .style('z-index', '10');
   }
 
-  public initVis(generateGraphContainer) {
-    this.generateGraphContainer(generateGraphContainer);
-    this.createScaleXY();
-    this.generateAxes();
+  public initVis(containerMargin) {
+    this.generateGraphContainer(containerMargin);
+    this.createScaleX();
+    this.createScaleY();
+    this.generateAxisX();
+    this.generateAxisY();
     this.createColorScale();
 
     this.generateTooltip();
+    this.drawData();
+  }
+
+  public updateVis(newData, newDomainOnX) {
+    this._data = newData;
+    this._domainOnX = newDomainOnX;
+    this.createScaleX();
+    this.generateAxisX();
     this.drawData();
   }
 

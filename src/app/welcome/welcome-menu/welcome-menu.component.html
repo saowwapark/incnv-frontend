@@ -1,17 +1,26 @@
-<mat-toolbar color="primary">
-  <div>
+<div
+  class="top-menu__container"
+  fxLayoutAlign="row"
+  fxLayoutAlign="space-between center"
+>
+  <div class="left">
     <button mat-icon-button (click)="onToggleNavigation()">
-      <mat-icon>menu</mat-icon>
+      <mat-icon style="color: white;">menu</mat-icon>
     </button>
   </div>
-  <div fxFlex fxLayout fxLayoutAlign="flex-end" class="menu__buttons">
-    <div class="menu_logo">
+  <div
+    class="right top-menu__buttons"
+    fxFlex
+    fxLayout="row"
+    fxLayoutAlign="end center"
+  >
+    <div class="top-menu_logo">
       <a routerLink="/">
         <img
           class="logo-box"
           src="../../assets/static/images/logo-white.png"
           alt="Logo"
-          class="menu__logo-img"
+          class="top-menu__logo-img"
         />
       </a>
     </div>
@@ -19,4 +28,4 @@
       <li><a (click)="onLogout()">Logout</a></li>
     </ul>
   </div>
-</mat-toolbar>
+</div>

@@ -1,18 +1,18 @@
 @import '~@angular/material/theming';
 
-.menu__logo {
+.top-menu__logo {
   float: left;
 }
-.menu__logo-box--home {
+.top-menu__logo-box--home {
   position: absolute;
   top: 15px;
   left: 20px;
 }
-.menu__logo-img {
+.top-menu__logo-img {
   height: 35px;
 }
 
-.menu__buttons {
+.top-menu__buttons {
   list-style: none;
   float: right;
   li {

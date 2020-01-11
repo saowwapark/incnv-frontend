@@ -9,14 +9,15 @@ import { filterDataInRegion } from '../visualizeBp.utility';
 export class FinalResultChart {
   _parentElement; // angular native element
   _data: CnvToolAnnotation[];
+  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolIdentity) // set of tool identity;
+  _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
   scaleY: d3.ScaleBand<string>;
   colorScale;
   xAxis;
   yAxis;
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolIdentity) // set of tool identity;
-  _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
+
   maxOverlap;
   tooltip;
   bars;
@@ -228,7 +229,7 @@ export class FinalResultChart {
       })
       .on('mousemove', d => {
         // tooltip
-        const menuHeight = 64;
+        const menuHeight = 50; // 5.0rem, 50px
 
         this.tooltip
           .style('left', d3.event.clientX + 20 + 'px')

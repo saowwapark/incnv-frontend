@@ -1,5 +1,16 @@
 import { CnvFragmentAnnotation } from 'src/app/analysis/analysis.model';
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  EventEmitter,
+  Output
+} from '@angular/core';
+import { DialogAction } from 'src/app/shared/models/dialog.action.model';
+import { SelectedCnvDialogComponent } from './selected-cnv-dialog/selected-cnv-dialog.component';
+import { MatDialogRef, MatDialog } from '@angular/material';
+import { Sampleset } from 'src/app/sampleset/sampleset.model';
 
 @Component({
   selector: 'app-selected-cnv',
@@ -10,6 +21,7 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
   // @Input() selectedCnvs: CnvFragmentAnnotation[];
   // dataSource;
   @Input() dataSource: CnvFragmentAnnotation[];
+  @Output() updateSelectedCnv = new EventEmitter<CnvFragmentAnnotation[]>();
   displayedColumns = [
     'no',
     'chromosome',
@@ -20,8 +32,9 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
     'edit',
     'delete'
   ];
+  dialogRef: MatDialogRef<SelectedCnvDialogComponent>;
 
-  constructor() {}
+  constructor(public _matDialog: MatDialog) {}
 
   ngOnInit() {}
 
@@ -29,9 +42,32 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
     console.log(this.dataSource);
   }
 
-  editRow() {}
+  editRow(generalInfo: CnvFragmentAnnotation, index: number): void {
+    // Original data
+    this.dialogRef = this._matDialog.open(SelectedCnvDialogComponent, {
+      panelClass: 'dialog-default',
+      data: {
+        cnvFragmentAnnotation: generalInfo
+      }
+    });
 
-  deleteRow() {}
+    // Updated data
+    this.dialogRef.afterClosed().subscribe(response => {
+      if (!response) {
+        return;
+      }
+      this.dataSource[index] = response;
+      this.dataSource = [...this.dataSource];
+
+      this.updateSelectedCnv.next(this.dataSource);
+    });
+  }
+
+  deleteRow(index: number) {
+    this.dataSource.splice(index, 1);
+    this.dataSource = [...this.dataSource];
+    this.updateSelectedCnv.next(this.dataSource);
+  }
 
   addRow() {}
 }

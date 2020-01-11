@@ -1,16 +1,16 @@
-<div id="analysis-process" class="page-layout my-theme">
+<div id="analysis-process" class="layout--absolute-1vh">
   <!-- HEADER -->
   <div class="header__container">
-    <div class="header__items" fxLayout="row" fxLayoutAlign="start">
+    <div class="header__items">
       <!-- APP TITLE -->
-      <span style="font-size: 2rem">Analyis Process</span>
+      <span class="h2">Analyis Process</span>
     </div>
   </div>
   <!-- / HEADER -->
 
   <!-- CONTENT -->
 
-  <div class="content__container--scrollbar ">
+  <div class="content__container--default ">
     <div class="content__items" fxLayout="column" fxLayoutGap="32px">
       <div class="brief" fxLayout="row" fxLayoutAlign="space-between center">
         <div class="property-row" fxLayout="row">
@@ -27,27 +27,30 @@
         </div>
       </div>
 
-      <h3>Main Chart</h3>
-      <app-main-chart
-        [cnvTools]="cnvTools"
-        [containerMargin]="containerMargin"
-        [height]="300"
-        [regionStartBp]="regionStartBp"
-        [regionEndBp]="regionEndBp"
-        (selectCnvs)="selectCnvs($event)"
-      ></app-main-chart>
-
       <h3>Overview Chart</h3>
       <app-overview-chart
         [cnvTools]="cnvTools"
         [containerMargin]="containerMargin"
         [height]="300"
-        [chr]="1"
-        (selectRegionBp)="selectRegionBp($event)"
+        [chr]="'1'"
+        (selectRegion)="selectRegion($event)"
       ></app-overview-chart>
 
+      <h3>Main Chart</h3>
+      <app-main-chart
+        [cnvTools]="cnvTools"
+        [containerMargin]="containerMargin"
+        [height]="300"
+        [selectedRegion]="selectedRegion"
+        [tableCnvs]="tableCnvs"
+        (selectCnvs)="selectChartCnvs($event)"
+      ></app-main-chart>
+
       <h3>Selected Basepair</h3>
-      <app-selected-cnv [dataSource]="selectedCnvs"></app-selected-cnv>
+      <app-selected-cnv
+        [dataSource]="chartCnvs"
+        (updateSelectedCnv)="selectTableCnvs($event)"
+      ></app-selected-cnv>
       <!-- <app-merged-result-table></app-merged-result-table> -->
     </div>
   </div>

@@ -8,6 +8,8 @@ import {
   ElementRef
 } from '@angular/core';
 import { CnvFragmentAnnotation } from 'src/app/analysis/analysis.model';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import { FormBuilder, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'annotation-dialog',
@@ -15,23 +17,33 @@ import { CnvFragmentAnnotation } from 'src/app/analysis/analysis.model';
   styleUrls: ['./annotation-dialog.component.scss']
 })
 export class AnnotationDialogComponent implements OnInit {
-  fragment: CnvFragmentAnnotation;
+  cnv: CnvFragmentAnnotation;
   dialogTitle: string;
   printedEnsembl: string;
   printedDgv: string;
-
+  numberMark;
   constructor(
     @Inject(MAT_DIALOG_DATA)
     { cnvToolIdentity, cnvFragmentAnnotation }: any,
-    public dialogRef: MatDialogRef<AnnotationDialogComponent>
+    public dialogRef: MatDialogRef<AnnotationDialogComponent>,
+    private fb: FormBuilder
   ) {
     this.dialogTitle = cnvToolIdentity;
-    this.fragment = cnvFragmentAnnotation;
+    this.cnv = cnvFragmentAnnotation;
+
+    this.numberMark = createNumberMask({
+      prefix: '',
+      suffix: '',
+      includeThousandsSeparator: true,
+      thousandsSeparatorSymbol: ',',
+      allowDecimal: false,
+      allowNegative: false
+    });
   }
 
   ngOnInit() {
-    this.printedEnsembl = this.createPrintedArray(this.fragment.ensembls);
-    this.printedDgv = this.createPrintedArray(this.fragment.dgvs);
+    this.printedEnsembl = this.createPrintedArray(this.cnv.ensembls);
+    this.printedDgv = this.createPrintedArray(this.cnv.dgvs);
   }
 
   private createPrintedArray(arrData: any[]) {
@@ -45,10 +57,12 @@ export class AnnotationDialogComponent implements OnInit {
     });
     return output;
   }
-  selectBasepair(selectedStartBp, selectedEndBp) {
-    const cloneFragment = { ...this.fragment } as CnvFragmentAnnotation;
-    cloneFragment.startBp = selectedStartBp;
-    cloneFragment.endBp = selectedEndBp;
+
+  selectBasepair(form: NgForm) {
+    console.log(form);
+    const cloneFragment = { ...this.cnv } as CnvFragmentAnnotation;
+    cloneFragment.startBp = form.controls['selectedStartBp'].value;
+    cloneFragment.endBp = form.controls['selectedEndBp'].value;
     cloneFragment.dgvs = [];
     cloneFragment.ensembls = [];
     cloneFragment.clinvars = [];

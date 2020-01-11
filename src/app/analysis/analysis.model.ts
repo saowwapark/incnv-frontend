@@ -19,3 +19,13 @@ export class CnvFragmentAnnotation {
   ensembls?: string[]; // ensembl.gene_id
   clinvars;
 }
+
+export class RegionBp {
+  startBp: number;
+  endBp: number;
+
+  constructor(startBp, endBp) {
+    this.startBp = startBp;
+    this.endBp = endBp;
+  }
+}

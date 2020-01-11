@@ -1,18 +1,20 @@
-<mat-toolbar color="primary">
-  <div class="menu_logo">
+<div
+  class="top-menu__container"
+  fxLayoutAlign="row"
+  fxLayoutAlign="space-between center"
+>
+  <div class="top-menu_logo">
     <a routerLink="/">
-      <div class="menu__logo-box--home">
-        <img
-          class="logo-box"
-          src="../../../assets/static/images/logo-white.png"
-          alt="Logo"
-          class="menu__logo-img"
-        />
-      </div>
+      <img
+        class="logo-box"
+        src="../../assets/static/images/logo-white.png"
+        alt="Logo"
+        class="top-menu__logo-img"
+      />
     </a>
   </div>
-  <ul fxFlex fxLayout fxLayoutAlign="flex-end" class="menu__buttons">
+  <ul fxFlex fxLayout fxLayoutAlign="flex-end" class="top-menu__buttons">
     <li><a routerLink="/signup">Signup</a></li>
     <li><a routerLink="/login">Login</a></li>
   </ul>
-</mat-toolbar>
+</div>

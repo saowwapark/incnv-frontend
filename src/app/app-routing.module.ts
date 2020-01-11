@@ -1,4 +1,3 @@
-import { LayoutComponent } from './layout/layout.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -33,10 +32,6 @@ const appRoutes: Routes = [
       import('./tab-file-mapping/tab-file-mapping.module').then(
         module => module.TabFileMappingModule
       )
-  },
-  {
-    path: 'layout',
-    component: LayoutComponent
   },
   { path: '**', component: PageNotFoundComponent }
 ];

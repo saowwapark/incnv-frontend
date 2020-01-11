@@ -1,14 +1,10 @@
-<div class="page-layout">
+<div class="layout--absolute-1vh">
   <!-- HEADER -->
   <div class="header__container">
-    <div
-      class="header__items"
-      fxLayout="row"
-      fxLayoutAlign="space-between center"
-    >
-      <div>
-        <h2>Tab File Mapping</h2>
-      </div>
+    <div class="header__items">
+      <!-- APP TITLE -->
+      <span class="h2">Tab File Mapping</span>
+
       <!-- SEARCH -->
       <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
         <input
@@ -17,7 +13,6 @@
           [formControl]="searchInput"
           placeholder="Search CNV tools..."
         />
-
         <mat-icon class="search-icon">search</mat-icon>
       </div>
     </div>

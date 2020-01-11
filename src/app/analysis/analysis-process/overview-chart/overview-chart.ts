@@ -5,14 +5,17 @@ import { CnvFragmentAnnotation } from '../../analysis.model';
 export class OverviewChart {
   _parentElement; // string
   _data; // CnvFragmentAnnotation[] only merged_tool เพราะว่าเราต้องการดูที่ overlap
+  _domainOnX;
+  _domainOnY;
   graphContainer;
+  clipPath;
   scaleX: d3.ScaleLinear<number, number>;
   scaleY: d3.ScaleLinear<number, number>;
   copyScaleX;
   xAxis;
   yAxis;
-  domainOnX;
-  domainOnY;
+
+  svg;
 
   /**
    * // get merged_tool
@@ -22,21 +25,20 @@ export class OverviewChart {
   constructor(parentElement, data, containerMargin, domainOnX, domainOnY) {
     this._parentElement = parentElement;
     this._data = data;
-    this.domainOnX = domainOnX;
-    this.domainOnY = domainOnY;
-    this.initVis(containerMargin, domainOnX, domainOnY);
+    this._domainOnX = domainOnX;
+    this._domainOnY = domainOnY;
+    this.initVis(containerMargin);
   }
-  private createGraphContainer(containerMargin) {
+  private generateGraphContainer(containerMargin) {
     // const parentElement = d3.select(this._parentElementName);
     // const width = parentElement.attr('width');
     // const height = parentElement.attr('height');
     // const y = parentElement.attr('y');
-    const element = d3.select('div .overview');
 
     const width = this._parentElement.offsetWidth;
     const height = this._parentElement.offsetHeight;
     // select the svg container
-    const svg = d3
+    this.svg = d3
       .select(this._parentElement)
       .append('svg')
       .attr('width', width)
@@ -46,7 +48,7 @@ export class OverviewChart {
     const contentHeight =
       +height - containerMargin.top - containerMargin.bottom;
 
-    this.graphContainer = svg
+    this.graphContainer = this.svg
       .append('g')
       .attr('class', 'overview-graph-container')
       .attr('width', contentWidth)
@@ -57,40 +59,52 @@ export class OverviewChart {
       );
   }
 
-  private generateScaleXY(domainOnX, domainOnY) {
+  private createClipPath() {
+    this.clipPath = this.graphContainer
+      .append('clipPath')
+      .attr('id', 'clip')
+      .append('rect')
+      .attr('width', this.graphContainer.attr('width'))
+      .attr('height', this.graphContainer.attr('height'));
+  }
+
+  private generateScaleX() {
     // create scale on x
     this.scaleX = d3
       .scaleLinear()
-      .domain(domainOnX)
+      .domain(this._domainOnX)
       .range([0, this.graphContainer.attr('width')]);
-
-    // create scale on y
-    this.scaleY = d3
-      .scaleLinear()
-      .domain(domainOnY)
-      .range([this.graphContainer.attr('height'), 0]);
 
     this.copyScaleX = this.scaleX.copy();
   }
+  private generateScaleY() {
+    // create scale on y
+    this.scaleY = d3
+      .scaleLinear()
+      .domain(this._domainOnY)
+      .range([this.graphContainer.attr('height'), 0]);
+  }
 
-  private createAxes() {
+  private createAxisX() {
     const xAxisGroup = this.graphContainer
       .append('g')
       .attr('class', 'x-axis')
       .attr('transform', `translate(0, ${this.graphContainer.attr('height')})`);
+    // generate xAxis
+    this.xAxis = d3.axisBottom(this.scaleX);
+    xAxisGroup.call(this.xAxis);
+  }
+
+  private createAxisY() {
     const yAxisGroup = this.graphContainer
       .append('g')
       .attr('class', 'y-axis')
       .attr('transform', `translate(0, 0)`);
 
-    // generate xAxis
-    this.xAxis = d3.axisBottom(this.scaleX);
-    xAxisGroup.call(this.xAxis);
-
     // generate yAxis
     this.yAxis = d3
       .axisLeft(this.scaleY)
-      .ticks(this.domainOnY[1])
+      .ticks(this._domainOnY[1])
       .tickFormat((d: number) => {
         return `${d3.format(',d')(d)} tools`;
       });
@@ -99,7 +113,10 @@ export class OverviewChart {
 
   private createBars() {
     // generate bars (add data + color)
-    const bars = this.graphContainer.append('g').attr('class', 'overview-bar');
+    const bars = this.graphContainer
+      .append('g')
+      .attr('class', 'overview-bar')
+      .attr('clip-path', 'url(#clip)');
     bars
       .selectAll('rect')
       .data(() => {
@@ -161,13 +178,6 @@ export class OverviewChart {
     // create new chart with new scaleX
     this.graphContainer
       .selectAll('.overview-bar rect')
-      // .data(() => {
-      //   return filterDataInRegion(
-      //     this._data,
-      //     this.scaleX.domain()[0],
-      //     this.scaleX.domain()[1]
-      //   );
-      // }) // get merged_tool
       .attr('x', (d: CnvFragmentAnnotation) => this.scaleX(d.startBp))
       .attr(
         'width',
@@ -202,12 +212,21 @@ export class OverviewChart {
     return zoomScale;
   }
 
-  public initVis(maxTickLeft, domainOnX, domainOnY) {
-    this.createGraphContainer(maxTickLeft);
-    this.generateScaleXY(domainOnX, domainOnY);
-    this.createAxes();
+  public initVis(maxTickLeft) {
+    this.generateGraphContainer(maxTickLeft);
+    this.createClipPath();
+    this.generateScaleX();
+    this.generateScaleY();
+    this.createAxisX();
+    this.createAxisY();
 
     this.graphContainer.call(this.createZoomScale());
     this.createBars();
+  }
+
+  public removeVis() {
+    if (this.svg) {
+      this.svg.remove();
+    }
   }
 }

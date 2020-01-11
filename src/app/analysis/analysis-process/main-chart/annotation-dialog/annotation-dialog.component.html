@@ -16,13 +16,13 @@
           Reference Genome
         </div>
         <div class="property property-value" fxFlex="1 1 70%">
-          {{ fragment.referenceGenome }}
+          {{ cnv.referenceGenome }}
         </div>
       </div>
       <div class="property-row" fxLayout="row wrap">
         <div class="property property-name" fxFlex="1 1 30%">Chromosome</div>
         <div class="property property-value" fxFlex="1 1 70%">
-          {{ fragment.chromosome }}
+          {{ cnv.chromosome }}
         </div>
       </div>
       <div class="property-row" fxLayout="row wrap">
@@ -30,50 +30,63 @@
           Start Basepair
         </div>
         <div class="property property-value" fxFlex="1 1 70%">
-          {{ fragment.startBp }}
+          {{ cnv.startBp | number }}
         </div>
       </div>
       <div class="property-row" fxLayout="row wrap">
         <div class="property property-name" fxFlex="1 1 30%">End Basepair</div>
         <div class="property property-value" fxFlex="1 1 70%">
-          {{ fragment.endBp }}
+          {{ cnv.endBp | number }}
         </div>
       </div>
       <div class="property-row" fxLayout="row wrap">
         <div class="property property-name" fxFlex="1 1 30%">CNV Type</div>
         <div class="property property-value" fxFlex="1 1 70%">
-          {{ fragment.cnvType }}
+          {{ cnv.cnvType }}
         </div>
       </div>
 
       <h3>Select Basepair</h3>
-      <div class="property-row" fxLayoutAlign=" center" fxLayout="row wrap">
-        <div class="property property-value">
-          <mat-form-field>
-            <input #selectedStartBp matInput placeholder="start basepair" />
-          </mat-form-field>
-        </div>
-        <div class="property property-value">
-          <span> to </span>
-        </div>
-        <div class="property property-value">
-          <mat-form-field>
-            <input #selectedEndBp matInput placeholder="end basepair" />
-          </mat-form-field>
-        </div>
+      <form #f="ngForm" (ngSubmit)="selectBasepair(f)">
+        <div class="property-row" fxLayoutAlign=" center" fxLayout="row wrap">
+          <div class="property property-value">
+            <mat-form-field>
+              <input
+                name="selectedStartBp"
+                matInput
+                placeholder="start basepair"
+                [textMask]="{ mask: numberMark }"
+                unmaskNumeric
+                ngModel
+              />
+            </mat-form-field>
+          </div>
+          <div class="property property-value">
+            <span> to </span>
+          </div>
+          <div class="property property-value">
+            <mat-form-field>
+              <input
+                name="selectedEndBp"
+                matInput
+                placeholder="end basepair"
+                [textMask]="{ mask: numberMark }"
+                unmaskNumeric
+                ngModel
+              />
+            </mat-form-field>
+          </div>
 
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="selectBasepair(selectedStartBp.value, selectedEndBp.value)"
-        >
-          Select
-        </button>
-      </div>
+          <button type="submit" mat-raised-button color="primary">
+            SELECT
+          </button>
+        </div>
+      </form>
     </mat-tab>
+
     <mat-tab label="Ensembl">
       <p>Relatived Gene</p>
-      <div *ngFor="let ensembl of fragment.ensembls">
+      <div *ngFor="let ensembl of cnv.ensembls">
         <a href="http://www.ensembl.org/id/{{ ensembl }}" target="_blank">{{
           ensembl
         }}</a>
@@ -81,16 +94,16 @@
     </mat-tab>
     <mat-tab label="DGV">
       <p>Related DGV</p>
-      <div *ngFor="let dgv of fragment.dgvs">
+      <div *ngFor="let dgv of cnv.dgvs">
         <a
-          *ngIf="fragment.referenceGenome === 'grch37'"
+          *ngIf="cnv.referenceGenome === 'grch37'"
           href="http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg19/?name={{ dgv }}"
           target="_blank"
           >{{ dgv }}
         </a>
 
         <a
-          *ngIf="fragment.referenceGenome === 'grch38'"
+          *ngIf="cnv.referenceGenome === 'grch38'"
           href="http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg38/?name={{ dgv }}"
           target="_blank"
           >{{ dgv }}
