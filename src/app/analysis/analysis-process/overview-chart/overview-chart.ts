@@ -1,10 +1,9 @@
-import { chooseBasepair, filterDataInRegion } from './../visualizeBp.utility';
 import * as d3 from 'd3';
-import { CnvFragmentAnnotation } from '../../analysis.model';
+import { CnvInfo } from '../../analysis.model';
 
 export class OverviewChart {
   _parentElement; // string
-  _data; // CnvFragmentAnnotation[] only merged_tool เพราะว่าเราต้องการดูที่ overlap
+  _data: CnvInfo;
   _domainOnX;
   _domainOnY;
   graphContainer;
@@ -126,18 +125,15 @@ export class OverviewChart {
       .append('rect')
       .attr(
         'height',
-        (d: CnvFragmentAnnotation) =>
+        (d: CnvInfo) =>
           this.graphContainer.attr('height') -
           this.scaleY(d.overlapTools.length)
       )
-      .attr('x', (d: CnvFragmentAnnotation) => this.scaleX(d.startBp))
-      .attr('y', (d: CnvFragmentAnnotation) =>
-        this.scaleY(d.overlapTools.length)
-      )
+      .attr('x', (d: CnvInfo) => this.scaleX(d.startBp))
+      .attr('y', (d: CnvInfo) => this.scaleY(d.overlapTools.length))
       .attr(
         'width',
-        (d: CnvFragmentAnnotation) =>
-          this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
+        (d: CnvInfo) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
       )
       .attr('fill', 'red');
   }
@@ -178,11 +174,10 @@ export class OverviewChart {
     // create new chart with new scaleX
     this.graphContainer
       .selectAll('.overview-bar rect')
-      .attr('x', (d: CnvFragmentAnnotation) => this.scaleX(d.startBp))
+      .attr('x', (d: CnvInfo) => this.scaleX(d.startBp))
       .attr(
         'width',
-        (d: CnvFragmentAnnotation) =>
-          this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
+        (d: CnvInfo) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
       );
 
     // create new xAxis with new scaleX

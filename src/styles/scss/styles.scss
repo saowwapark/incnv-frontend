@@ -5,6 +5,7 @@
 @import '../scss/base/animations';
 @import '../scss/base/base';
 @import '../scss/base/typography';
+@import '../scss/base/utilities';
 
 @import '../scss/abstracts/variables';
 @import '../scss/abstracts/mixins';
@@ -16,6 +17,7 @@
 @import '../scss/components/dialog';
 @import '../scss/components/card';
 @import '../scss/components/search';
+@import '../scss/components/table';
 
 // input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
 //   border: 1px solid red

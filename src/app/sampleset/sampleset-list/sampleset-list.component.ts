@@ -136,14 +136,14 @@ export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  /************************* Collapse ************************/
-  onSampleset(element) {
-    if (this.expandedElement === element) {
-      this.expandedElement = null;
-    } else {
-      this.expandedElement = element;
-    }
-  }
+  // /************************* Collapse ************************/
+  // onSampleset(element) {
+  //   if (this.expandedElement === element) {
+  //     this.expandedElement = null;
+  //   } else {
+  //     this.expandedElement = element;
+  //   }
+  // }
 
   /************************* Select **************************/
   /** Whether the number of selected elements matches the total number of rows. */

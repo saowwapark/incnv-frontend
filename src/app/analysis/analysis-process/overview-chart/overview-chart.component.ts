@@ -11,7 +11,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import * as d3 from 'd3';
-import { CnvToolAnnotation, CnvFragmentAnnotation } from '../../analysis.model';
+import { CnvTool, CnvInfo } from '../../analysis.model';
 import { OverviewChart } from './overview-chart';
 import { HUMAN_CHROMOSOME } from '../../chromosome.model';
 
@@ -21,11 +21,11 @@ import { HUMAN_CHROMOSOME } from '../../chromosome.model';
   styleUrls: ['./overview-chart.component.scss']
 })
 export class OverviewChartComponent implements OnInit, OnChanges {
-  @Input() cnvTools: CnvToolAnnotation[];
+  @Input() cnvTools: CnvTool[];
   @Input() chr: string;
   @Input() height: number;
   @Output()
-  selectRegion = new EventEmitter<RegionBp>();
+  selectChrRegion = new EventEmitter<RegionBp>();
   @Input() containerMargin: {
     top: number;
     right: number;
@@ -39,13 +39,15 @@ export class OverviewChartComponent implements OnInit, OnChanges {
 
   chrLength: number;
 
-  mergedToolIdentity = 'merged tools';
-  svg: d3.Selection<SVGSVGElement, CnvToolAnnotation, null, undefined>;
+  mergedToolId = 'merged tools';
+  svg: d3.Selection<SVGSVGElement, CnvTool, null, undefined>;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // const chartWidth = event.target.innerWidth;
-    this.createOverviewChart();
+    if (this.overviewChart) {
+      this.createOverviewChart();
+    }
   }
   constructor() {}
   ngOnChanges(): void {
@@ -66,7 +68,7 @@ export class OverviewChartComponent implements OnInit, OnChanges {
     }
     this.overviewChart = new OverviewChart(
       this.overviewChartDiv.nativeElement,
-      this.cnvTools[this.cnvTools.length - 1].cnvFragmentAnnotations,
+      this.cnvTools[this.cnvTools.length - 1].cnvInfos,
       this.containerMargin,
       [1, this.chrLength - 1],
       [0, this.cnvTools.length - 1]
@@ -78,7 +80,7 @@ export class OverviewChartComponent implements OnInit, OnChanges {
   }
 
   private callback(sx1, sx2) {
-    const selectedRegion = new RegionBp(sx1, sx2);
-    this.selectRegion.next(selectedRegion);
+    const selectedChrRegion = new RegionBp(sx1, sx2);
+    this.selectChrRegion.next(selectedChrRegion);
   }
 }

@@ -1,7 +1,7 @@
 import { NgForm } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-import { CnvFragmentAnnotation } from 'src/app/analysis/analysis.model';
+import { CnvInfo } from 'src/app/analysis/analysis.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
@@ -10,17 +10,17 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
   styleUrls: ['./selected-cnv-dialog.component.scss']
 })
 export class SelectedCnvDialogComponent implements OnInit {
-  cnv: CnvFragmentAnnotation;
+  cnv: CnvInfo;
   dialogTitle: string;
 
   numberMark;
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    { cnvFragmentAnnotation }: any,
+    { cnvInfo }: any,
     public dialogRef: MatDialogRef<SelectedCnvDialogComponent>
   ) {
     this.dialogTitle = 'Selected CNV';
-    this.cnv = cnvFragmentAnnotation;
+    this.cnv = cnvInfo;
 
     this.numberMark = createNumberMask({
       prefix: '',
@@ -35,10 +35,10 @@ export class SelectedCnvDialogComponent implements OnInit {
   ngOnInit() {}
 
   selectBasepair(form: NgForm) {
-    const cloneFragment = { ...this.cnv } as CnvFragmentAnnotation;
-    cloneFragment.startBp = form.controls['selectedStartBp'].value;
-    cloneFragment.endBp = form.controls['selectedEndBp'].value;
+    const clonedCnvInfo = { ...this.cnv } as CnvInfo;
+    clonedCnvInfo.startBp = form.controls['selectedStartBp'].value;
+    clonedCnvInfo.endBp = form.controls['selectedEndBp'].value;
 
-    this.dialogRef.close(cloneFragment);
+    this.dialogRef.close(clonedCnvInfo);
   }
 }

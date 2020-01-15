@@ -1,15 +1,17 @@
+
 import * as d3 from 'd3';
 import {
-  FINAL_RESULT_IDENTITY,
-  CnvToolAnnotation,
-  CnvFragmentAnnotation
+  FINAL_RESULT_ID,
+  CnvTool,
+  CnvInfo
 } from '../../analysis.model';
-import { filterDataInRegion } from '../visualizeBp.utility';
+import { formatNumberWithComma } from '../../../utils/map.utils';
 
 export class FinalResultChart {
+  _id: string;
   _parentElement; // angular native element
-  _data: CnvToolAnnotation[];
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolIdentity) // set of tool identity;
+  _data: CnvTool[];
+  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolId)
   _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
@@ -30,6 +32,7 @@ export class FinalResultChart {
    * domainOnY = [0, this.cnvTools.length]
    */
   constructor(
+    id,
     parentElement,
     data,
     containerMargin,
@@ -37,6 +40,7 @@ export class FinalResultChart {
     domainOnY,
     maxOverlap
   ) {
+    this._id = id;
     this._parentElement = parentElement;
     this._data = data;
     this._domainOnX = domainOnX;
@@ -70,6 +74,14 @@ export class FinalResultChart {
         'transform',
         `translate(${containerMargin.left}, ${containerMargin.top})`
       );
+
+    // clip path
+    this.graphContainer
+      .append('clipPath')
+      .attr('id', `clip-${this._id}`)
+      .append('rect')
+      .attr('width', this.graphContainer.attr('width'))
+      .attr('height', this.graphContainer.attr('height'));
   }
 
   // update
@@ -121,26 +133,30 @@ export class FinalResultChart {
   public drawData() {
     this.generateBars();
     const mergedColorScale = this.createMergedColorScale(
-      this.colorScale(FINAL_RESULT_IDENTITY)
+      this.colorScale(FINAL_RESULT_ID)
     );
     this.subbars = this.generateSubbars(mergedColorScale);
     this.addEventToSubbars(mergedColorScale);
   }
 
   private generateBars() {
+    const area = this.graphContainer
+      .append('g')
+      .attr('clip-path', 'url(#clip-' + this._id + ')');
+
     // generate bars (add data + color)
-    this.bars = this.graphContainer
+    this.bars = area
       .selectAll('g.bar')
       .data(this._data)
       .join('g')
       .attr('class', 'bar')
-      .attr('y', d => this.scaleY(d.cnvToolIdentity));
+      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId));
 
     // generate bar background
     const barBackground = this.bars
       .insert('rect', ':first-child')
       .attr('height', this.scaleY.bandwidth)
-      .attr('y', d => this.scaleY(d.cnvToolIdentity))
+      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId))
       .attr('x', '1')
       .attr('width', this.graphContainer.attr('width'))
       .attr('fill-opacity', '0.5')
@@ -151,40 +167,43 @@ export class FinalResultChart {
   private generateSubbars(mergedColorScale) {
     const subbars = this.bars
       .selectAll('rect.subbar')
-      .data((d: CnvToolAnnotation) => {
-        return filterDataInRegion(
-          d.cnvFragmentAnnotations,
-          this._domainOnX[0],
-          this._domainOnX[1]
-        );
+      .data((d: CnvTool) => {
+        return d.cnvInfos;
       })
       .enter()
       .append('rect')
-      .attr('class', 'subbar')
-      .attr('width', (d: CnvFragmentAnnotation) => {
-        return (
-          this.scaleX(d.endBpOnRegion) - this.scaleX(d.startBpOnRegion) + 1
-        );
+      .attr('class', 'subbar');
+
+    subbars
+      .attr('width', (d: CnvInfo) => {
+        return this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1;
       })
-      .attr('x', d => this.scaleX(d.startBpOnRegion))
+      .attr('x', d => this.scaleX(d.startBp))
       .attr('height', this.scaleY.bandwidth)
       .attr('y', (d, i, n) => {
         const parentData = d3
           .select(n[i].parentNode)
-          .datum() as CnvToolAnnotation;
-        return this.scaleY(parentData.cnvToolIdentity);
+          .datum() as CnvTool;
+        return this.scaleY(parentData.cnvToolId);
       })
-      .attr('fill', (d: CnvFragmentAnnotation, i, n) => {
-        const parentData: CnvToolAnnotation = d3
+      .attr('fill', (d: CnvInfo, i, n) => {
+        const parentData: CnvTool = d3
           .select(n[i].parentNode)
-          .datum() as CnvToolAnnotation;
-        const cnvToolIdentity = parentData.cnvToolIdentity;
-        let color = this.colorScale(cnvToolIdentity) as string;
-        if (cnvToolIdentity === FINAL_RESULT_IDENTITY) {
+          .datum() as CnvTool;
+        const cnvToolId = parentData.cnvToolId;
+        let color = this.colorScale(cnvToolId) as string;
+        if (cnvToolId === FINAL_RESULT_ID) {
           color = mergedColorScale(d.overlapTools.length);
         }
         return color;
-      });
+      })
+      .attr('stroke', (d, i, n) => {
+        const parentData = d3
+          .select(n[i].parentNode)
+          .datum() as CnvTool;
+        return this.colorScale(parentData.cnvToolId);
+      })
+      .attr('stroke-opacity', '0');
     return subbars;
   }
 
@@ -192,8 +211,8 @@ export class FinalResultChart {
     this.subbars.on('click', (d, i, n) => {
       const parentData = d3
         .select(n[i].parentNode)
-        .datum() as CnvToolAnnotation;
-      callback(parentData.cnvToolIdentity, d);
+        .datum() as CnvTool;
+      callback(parentData.cnvToolId, d);
     });
   }
 
@@ -205,7 +224,8 @@ export class FinalResultChart {
         d3.select(n[i])
           .transition()
           .duration(300)
-          .attr('fill', '#fff');
+          .attr('fill', '#fff')
+          .attr('stroke-opacity', '1');
       })
       .on('mouseout', (d, i, n) => {
         // subbar
@@ -215,29 +235,30 @@ export class FinalResultChart {
           .attr('fill', () => {
             const parentData = d3
               .select(n[i].parentNode)
-              .datum() as CnvToolAnnotation;
-            const cnvToolIdentity = parentData.cnvToolIdentity;
-            let color = this.colorScale(parentData.cnvToolIdentity);
-            if (cnvToolIdentity === FINAL_RESULT_IDENTITY) {
+              .datum() as CnvTool;
+            const cnvToolId = parentData.cnvToolId;
+            let color = this.colorScale(parentData.cnvToolId);
+            if (cnvToolId === FINAL_RESULT_ID) {
               color = mergedColorScale(d.overlapTools.length);
             }
             return color;
-          });
+          })
+          .attr('stroke-opacity', '0');
 
         // tooltip
         this.tooltip.style('display', 'none');
       })
-      .on('mousemove', d => {
+      .on('mousemove', (d, i, n) => {
         // tooltip
-        const menuHeight = 50; // 5.0rem, 50px
-
         this.tooltip
-          .style('left', d3.event.clientX + 20 + 'px')
-          .style('top', d3.event.clientY - menuHeight - 20 + 'px')
+          .style('left', d3.mouse(n[i])[0] + 10 + 'px')
+          .style('top', d3.mouse(n[i])[1] - 20 + 'px')
           .style('display', null);
 
         this.tooltip.html(() => {
-          let content = `<p>Chromosome ${d.chromosome}: ${d.startBp} - ${d.endBp}</p>`;
+          let content = `Chromosome ${d.chromosome}: ${formatNumberWithComma(
+            d.startBp
+          )} - ${formatNumberWithComma(d.endBp)}`;
           content += ``;
           return content;
         });
@@ -250,9 +271,14 @@ export class FinalResultChart {
       .select(this._parentElement)
       .append('div')
       .attr('id', 'tooltip')
+      .attr('class', 'tooltip')
       .style('position', 'absolute')
-      .style('background-color', '#D3D3D3')
-      .style('padding', '6px')
+      .style('background', '#D3D3D3')
+      .style('color', '#313639')
+      .style('text-align', 'center')
+      .style('border-radius', '8px')
+      .style('padding', '0.3rem 1rem')
+      .style('font-size', '1.3rem')
       .style('display', 'none')
       .style('z-index', '10');
   }
@@ -277,7 +303,7 @@ export class FinalResultChart {
     }
   }
 
-  public updateVis(newData: CnvToolAnnotation[]) {
+  public updateVis(newData: CnvTool[]) {
     // join new data
     // this.bars.data(newData);
     this._data = newData;

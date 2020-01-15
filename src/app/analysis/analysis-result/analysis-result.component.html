@@ -11,7 +11,7 @@
       <!-- No. Column -->
       <ng-container matColumnDef="no">
         <th mat-header-cell *matHeaderCellDef>No.</th>
-        <td mat-cell *matCellDef="let i = dataIndex">{{ i + 1 }}</td>
+        <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
       </ng-container>
 
       <!-- Chromosome Column -->
@@ -63,23 +63,13 @@
       <!-- CNV Type Column -->
       <ng-container matColumnDef="overlapTools">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Tools</th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.overlapTools.join(', ') }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="edit">
-        <th mat-header-cell *matHeaderCellDef>Edit</th>
-        <td mat-cell *matCellDef="let row; let i = dataIndex">
-          <button mat-icon-button (click)="editRow(row, i)">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </td>
+        <!-- <td mat-cell *matCellDef="let row">{{ row.overlapTools.join() }}</td> -->
+        <td mat-cell *matCellDef="let row">Test Edit later</td>
       </ng-container>
 
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
-        <td mat-cell *matCellDef="let i = dataIndex">
+        <td mat-cell *matCellDef="let i = index">
           <button mat-icon-button (click)="deleteRow(i)">
             <mat-icon>delete</mat-icon>
           </button>
@@ -108,7 +98,7 @@
                   color="accent"
                   selected
                 >
-                  {{ ensembl.geneSymbol }}
+                  {{ ensembl }}
                 </mat-chip>
               </mat-chip-list>
             </div>
@@ -141,6 +131,7 @@
           </div>
         </td>
       </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr
         mat-row

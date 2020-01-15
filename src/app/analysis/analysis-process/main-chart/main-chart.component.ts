@@ -1,3 +1,4 @@
+import { AnalysisProcessService } from './../analysis-process.service';
 import { FinalResultChart } from './final-result-chart';
 import {
   Component,
@@ -9,13 +10,15 @@ import {
   HostListener,
   Output,
   EventEmitter,
-  SimpleChanges
+  SimpleChanges,
+  AfterViewInit,
+  AfterViewChecked
 } from '@angular/core';
 import {
-  CnvToolAnnotation,
-  CnvFragmentAnnotation,
+  CnvTool,
+  CnvInfo,
   RegionBp,
-  FINAL_RESULT_IDENTITY
+  FINAL_RESULT_ID
 } from '../../analysis.model';
 import { AnnotationDialogComponent } from './annotation-dialog/annotation-dialog.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
@@ -24,12 +27,13 @@ import { MergedChart } from './merged-chart';
 @Component({
   selector: 'app-main-chart',
   templateUrl: './main-chart.component.html',
-  styleUrls: ['./main-chart.component.scss']
+  styleUrls: ['./main-chart.component.scss', './merged-chart.css']
 })
-export class MainChartComponent implements OnInit, OnChanges {
-  @Input() cnvTools: CnvToolAnnotation[];
+export class MainChartComponent
+  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+  @Input() cnvTools: CnvTool[];
   @Input() height: number;
-  @Input() selectedRegion: RegionBp;
+  @Input() selectedChrRegion: RegionBp;
   @Input() containerMargin: {
     top: number;
     right: number;
@@ -37,33 +41,56 @@ export class MainChartComponent implements OnInit, OnChanges {
     left: number;
   };
 
-  @Input() tableCnvs: CnvFragmentAnnotation[];
+  @Input() tableCnvs: CnvInfo[];
 
-  @Output() selectCnvs = new EventEmitter<CnvFragmentAnnotation[]>();
+  @Output() selectCnvs = new EventEmitter<CnvInfo[]>();
 
-  @ViewChild('mergedChartDiv', { static: true })
   private mergedChartDiv: ElementRef;
-  @ViewChild('finalResultChartDiv', { static: true })
+  @ViewChild('mergedChartDiv', { static: false }) set mergedChartContent(
+    mergedChartContent: ElementRef
+  ) {
+    this.mergedChartDiv = mergedChartContent;
+    if (this.mergedChartDiv) {
+      this.createMergedChart();
+    }
+  }
+
   private finalResultChartDiv: ElementRef;
+  @ViewChild('finalResultChartDiv', { static: false }) set content(
+    content: ElementRef
+  ) {
+    this.finalResultChartDiv = content;
+    if (this.finalResultChartDiv) {
+      this.createFinalResultChart();
+    }
+  }
 
   mergedChart;
   finalResultChart;
 
-  finalResultData: CnvToolAnnotation;
+  finalResultData: CnvTool;
 
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // const chartWidth = event.target.innerWidth;
-    this.createMergedChart();
-    // this.createFinalResultChart();
+    if (this.mergedChart) {
+      this.createMergedChart();
+    }
+
+    if (this.finalResultChart) {
+      this.createFinalResultChart();
+    }
   }
 
-  constructor(private _matDialog: MatDialog) {
-    this.finalResultData = new CnvToolAnnotation();
-    this.finalResultData.cnvToolIdentity = FINAL_RESULT_IDENTITY;
-    this.finalResultData.cnvFragmentAnnotations = [];
+  constructor(
+    private _matDialog: MatDialog,
+    private service: AnalysisProcessService
+  ) {
+    this.finalResultData = new CnvTool();
+    this.finalResultData.cnvToolId = FINAL_RESULT_ID;
+    this.finalResultData.cnvInfos = [];
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.cnvTools) {
@@ -73,13 +100,19 @@ export class MainChartComponent implements OnInit, OnChanges {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
         switch (propName) {
-          case 'selectedRegion':
-            this.createMergedChart();
-            //this.createFinalResultChart();
+          case 'selectedChrRegion':
+            if (this.selectedChrRegion && this.mergedChartDiv) {
+              this.createMergedChart();
+            }
+            if (this.selectedChrRegion && this.finalResultChartDiv) {
+              this.createFinalResultChart();
+            }
+
             break;
           case 'tableCnvs':
             if (this.tableCnvs) {
-              this.finalResultData.cnvFragmentAnnotations = this.tableCnvs;
+              this.finalResultData.cnvInfos = this.tableCnvs;
+              this.createFinalResultChart();
               break;
             }
         }
@@ -88,7 +121,12 @@ export class MainChartComponent implements OnInit, OnChanges {
   }
   ngOnInit() {}
 
+  ngAfterViewInit() {}
+
+  ngAfterViewChecked() {}
+
   createMergedChart() {
+    console.log('create merged chart');
     if (this.mergedChart) {
       this.mergedChart.removeVis();
     }
@@ -97,12 +135,21 @@ export class MainChartComponent implements OnInit, OnChanges {
       this.mergedChartDiv.nativeElement,
       this.cnvTools,
       this.containerMargin,
-      [this.selectedRegion.startBp, this.selectedRegion.endBp],
-      this.cnvTools.map(tool => tool.cnvToolIdentity)
+      [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
+      this.cnvTools.map(tool => tool.cnvToolId)
     );
 
-    this.mergedChart.onClickSubbars((cnvToolIdentity, data) => {
-      this.createDialog(cnvToolIdentity, data);
+    this.mergedChart.onClickSubbars((cnvToolId, data) => {
+      const selectedCnvRegions: RegionBp[] = [];
+      for (const selectedCnv of this.finalResultData.cnvInfos) {
+        const selectedCnvRegion = new RegionBp(
+          selectedCnv.startBp,
+          selectedCnv.endBp
+        );
+        selectedCnvRegions.push(selectedCnvRegion);
+      }
+
+      this.createDialog(cnvToolId, data, selectedCnvRegions);
     });
   }
 
@@ -111,39 +158,48 @@ export class MainChartComponent implements OnInit, OnChanges {
       this.finalResultChart.removeVis();
     }
     this.finalResultChart = new FinalResultChart(
+      '2',
       this.finalResultChartDiv.nativeElement,
       [this.finalResultData],
       this.containerMargin,
-      [this.selectedRegion.startBp, this.selectedRegion.endBp],
-      [FINAL_RESULT_IDENTITY],
+      [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
+      [FINAL_RESULT_ID],
       this.cnvTools.length - 1
     );
 
-    this.mergedChart.onClickSubbars((cnvToolIdentity, data) => {
-      this.createDialog(cnvToolIdentity, data);
+    this.finalResultChart.onClickSubbars((cnvToolId, data) => {
+      this.createDialog(cnvToolId, data);
     });
   }
 
   private createDialog(
-    cnvToolIdentity: string,
-    cnvFragmentAnnotation: CnvFragmentAnnotation
+    cnvToolId: string,
+    cnvInfo: CnvInfo,
+    selectedCnvRegions?: RegionBp[]
   ) {
     this.dialogRef = this._matDialog.open(AnnotationDialogComponent, {
       panelClass: 'dialog-default',
       data: {
-        cnvToolIdentity: cnvToolIdentity,
-        cnvFragmentAnnotation: cnvFragmentAnnotation
+        title: cnvToolId,
+        cnvInfo: cnvInfo,
+        selectedCnvRegions: selectedCnvRegions
       }
     });
 
-    // Updated data
-    this.dialogRef.afterClosed().subscribe(response => {
+    // add data
+    this.dialogRef.afterClosed().subscribe((response: CnvInfo) => {
       if (!response) {
         return;
       }
-      this.finalResultData.cnvFragmentAnnotations.push(response);
-      this.finalResultChart.updateVis([this.finalResultData]);
-      this.selectCnvs.next(this.finalResultData.cnvFragmentAnnotations);
+      this.service
+        .updateCnvInfo(response)
+        .subscribe((updatedCnvInfo: CnvInfo) => {
+          this.finalResultData.cnvInfos.push(updatedCnvInfo);
+          if (this.finalResultChart) {
+            this.finalResultChart.updateVis([this.finalResultData]);
+          }
+          this.selectCnvs.next(this.finalResultData.cnvInfos);
+        });
     });
   }
 }

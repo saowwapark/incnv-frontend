@@ -1,3 +1,5 @@
+import { CnvTool } from './../analysis.model';
+import { CnvInfo } from 'src/app/analysis/analysis.model';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { Sampleset } from 'src/app/sampleset/sampleset.model';
@@ -22,7 +24,7 @@ export class AnalysisProcessService {
     sample,
     chromosome,
     cnvType
-  ): Observable<UploadCnvToolResult[]> {
+  ): Observable<CnvTool[]> {
     const options = {
       // headers: new HttpHeaders({
       //   'Content-Type': 'application/json'
@@ -39,5 +41,33 @@ export class AnalysisProcessService {
     return this._http
       .get(`${this.baseRouteUrl}/all-cnv-tool-details`, options)
       .pipe(map(res => res['payload']));
+  }
+
+  updateCnvInfos(cnvInfos: CnvInfo[]) {
+    return (
+      this._http
+        // .get(`${this.baseRouteUrl}/final-cnv-annotations`, {
+        //   params: { cnvs: cnvs.toString() }
+        // })
+        .post(`${this.baseRouteUrl}/cnv-infos`, [...cnvInfos])
+        .pipe(map(res => res['payload']))
+    );
+  }
+
+  updateCnvInfo(cnvInfo: CnvInfo) {
+    return (
+      this._http
+        // .get(`${this.baseRouteUrl}/final-cnv-annotations`, {
+        //   params: { cnvs: cnvs.toString() }
+        // })
+        .post(`${this.baseRouteUrl}/cnv-info`, { ...cnvInfo })
+        .pipe(map(res => res['payload']))
+    );
+  }
+
+  exportCnvInfos(cnvInfos: CnvInfo[]) {
+    return this._http.post(`${this.baseRouteUrl}/download/cnv-infos`, [
+      ...cnvInfos
+    ]);
   }
 }

@@ -41,3 +41,34 @@ export const maxNumberValidator = (max: number): ValidatorFn => {
     return null;
   };
 };
+
+export const numberInRangeValidator = (
+  min: number,
+  max: number
+): ValidatorFn => {
+  return (c: FormControl) => {
+    const num = +c.value;
+    if (num > min) {
+      return {
+        numberInRange: { valid: false }
+      };
+    }
+    if (num < max) {
+      return {
+        numberInRange: { valid: false }
+      };
+    }
+  };
+};
+
+export const duplicationValidator = (items: any[]): ValidatorFn => {
+  return (c: FormControl) => {
+    for (const item of items) {
+      if (c.value === item) {
+        return {
+          duplication: { valid: false }
+        };
+      }
+    }
+  };
+};

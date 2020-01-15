@@ -1,4 +1,6 @@
-import { CnvFragmentAnnotation } from 'src/app/analysis/analysis.model';
+import { AnnotationDialogComponent } from './../main-chart/annotation-dialog/annotation-dialog.component';
+import { AnalysisProcessService } from './../analysis-process.service';
+import { CnvInfo } from 'src/app/analysis/analysis.model';
 import {
   Component,
   OnInit,
@@ -7,21 +9,34 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
-import { DialogAction } from 'src/app/shared/models/dialog.action.model';
 import { SelectedCnvDialogComponent } from './selected-cnv-dialog/selected-cnv-dialog.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
-import { Sampleset } from 'src/app/sampleset/sampleset.model';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate
+} from '@angular/animations';
 
 @Component({
   selector: 'app-selected-cnv',
   templateUrl: './selected-cnv.component.html',
-  styleUrls: ['./selected-cnv.component.scss']
+  styleUrls: ['./selected-cnv.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      )
+    ])
+  ]
 })
 export class SelectedCnvComponent implements OnInit, OnChanges {
-  // @Input() selectedCnvs: CnvFragmentAnnotation[];
-  // dataSource;
-  @Input() dataSource: CnvFragmentAnnotation[];
-  @Output() updateSelectedCnv = new EventEmitter<CnvFragmentAnnotation[]>();
+  @Input() dataSource: CnvInfo[];
+  @Output() updateSelectedCnv = new EventEmitter<CnvInfo[]>();
   displayedColumns = [
     'no',
     'chromosome',
@@ -32,9 +47,13 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
     'edit',
     'delete'
   ];
-  dialogRef: MatDialogRef<SelectedCnvDialogComponent>;
+  dialogRef: MatDialogRef<AnnotationDialogComponent>;
+  expandedElement: string | null;
 
-  constructor(public _matDialog: MatDialog) {}
+  constructor(
+    public _matDialog: MatDialog,
+    private service: AnalysisProcessService
+  ) {}
 
   ngOnInit() {}
 
@@ -42,12 +61,13 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
     console.log(this.dataSource);
   }
 
-  editRow(generalInfo: CnvFragmentAnnotation, index: number): void {
+  editRow(cnvInfo: CnvInfo, index: number): void {
     // Original data
-    this.dialogRef = this._matDialog.open(SelectedCnvDialogComponent, {
+    this.dialogRef = this._matDialog.open(AnnotationDialogComponent, {
       panelClass: 'dialog-default',
       data: {
-        cnvFragmentAnnotation: generalInfo
+        title: 'selected CNV',
+        cnvInfo: cnvInfo
       }
     });
 
@@ -56,18 +76,20 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
       if (!response) {
         return;
       }
-      this.dataSource[index] = response;
-      this.dataSource = [...this.dataSource];
-
-      this.updateSelectedCnv.next(this.dataSource);
+      // new selected startBp and endBp
+      this.service
+        .updateCnvInfo(response)
+        .subscribe((updatedCnvInfo: CnvInfo) => {
+          this.dataSource[index] = { ...updatedCnvInfo };
+          this.dataSource = [...this.dataSource];
+          this.updateSelectedCnv.next([...this.dataSource]);
+        });
     });
   }
 
   deleteRow(index: number) {
     this.dataSource.splice(index, 1);
     this.dataSource = [...this.dataSource];
-    this.updateSelectedCnv.next(this.dataSource);
+    this.updateSelectedCnv.next([...this.dataSource]);
   }
-
-  addRow() {}
 }

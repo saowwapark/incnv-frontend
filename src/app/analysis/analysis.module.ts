@@ -1,6 +1,5 @@
 import { AnnotationDialogComponent } from './analysis-process/main-chart/annotation-dialog/annotation-dialog.component';
 import { AnalysisComponent } from './analysis.component';
-import { MergedResultTableComponent } from './analysis-process/merged-result-table/merged-result-table.component';
 import { AnalysisProcessComponent } from './analysis-process/analaysis-process.component';
 import { MainChartComponent } from './analysis-process/main-chart/main-chart.component';
 import { ChooseSamplesetResolver } from './analysis-configure/choose-sampleset/choose-sampleset.resolver';
@@ -15,6 +14,7 @@ import { OverviewChartComponent } from './analysis-process/overview-chart/overvi
 import { SelectedCnvComponent } from './analysis-process/selected-cnv/selected-cnv.component';
 import { SelectedCnvDialogComponent } from './analysis-process/selected-cnv/selected-cnv-dialog/selected-cnv-dialog.component';
 import { TextMaskModule } from 'angular2-text-mask';
+import { AnalysisResultComponent } from './analysis-result/analysis-result.component';
 
 @NgModule({
   declarations: [
@@ -26,10 +26,10 @@ import { TextMaskModule } from 'angular2-text-mask';
     AnalysisProcessComponent,
     MainChartComponent,
     AnnotationDialogComponent,
-    MergedResultTableComponent,
     OverviewChartComponent,
     SelectedCnvComponent,
-    SelectedCnvDialogComponent
+    SelectedCnvDialogComponent,
+    AnalysisResultComponent
   ],
   imports: [SharedModule, AnalysisRoutingModule, TextMaskModule],
   providers: [ChooseSamplesetResolver],

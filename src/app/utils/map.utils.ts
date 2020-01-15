@@ -40,3 +40,8 @@ export const filterIncluded = (value: string, list: any[]): any[] => {
     }
   });
 };
+
+/*********** Number **************/
+export const formatNumberWithComma = num => {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+};

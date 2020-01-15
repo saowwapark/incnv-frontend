@@ -1,0 +1,43 @@
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges
+} from '@angular/core';
+import { CnvInfo } from '../analysis.model';
+import { MatDialogRef, MatDialog } from '@angular/material';
+import { SelectedCnvDialogComponent } from '../analysis-process/selected-cnv/selected-cnv-dialog/selected-cnv-dialog.component';
+
+@Component({
+  selector: 'app-analysis-result',
+  templateUrl: './analysis-result.component.html',
+  styleUrls: ['./analysis-result.component.scss']
+})
+export class AnalysisResultComponent implements OnInit, OnChanges {
+  @Input() dataSource: CnvInfo[];
+  displayedColumns = [
+    'no',
+    'chromosome',
+    'startBp',
+    'endBp',
+    'cnvType',
+    'overlapTools',
+    'delete'
+  ];
+  dialogRef: MatDialogRef<SelectedCnvDialogComponent>;
+  expandedElement: string | null;
+
+  constructor(public _matDialog: MatDialog) {}
+
+  ngOnInit() {}
+
+  ngOnChanges(): void {
+    console.log(this.dataSource);
+  }
+  deleteRow(index: number) {
+    this.dataSource.splice(index, 1);
+    this.dataSource = [...this.dataSource];
+  }
+}

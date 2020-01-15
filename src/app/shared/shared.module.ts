@@ -27,6 +27,7 @@ import { FilteredSelectComponent } from './components/filtered-select/filtered-s
     CommonModule,
     MaterialModule,
     FormsModule,
+    ReactiveFormsModule,
     FlexLayoutModule
   ]
 })

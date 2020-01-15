@@ -41,9 +41,3 @@ table {
 .mat-column-delete {
   @include table-column(5%);
 }
-
-.example-rate-limit-reached {
-  color: #980000;
-  max-width: 100%;
-  text-align: center;
-}

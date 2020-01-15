@@ -9,12 +9,6 @@
   width: 70%;
 }
 
-/* Structure */
-.example-container {
-  position: relative;
-  min-height: 200px;
-}
-
 .example-table-container {
   position: relative;
   max-height: 400px;
@@ -36,12 +30,6 @@ table {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.example-rate-limit-reached {
-  color: #980000;
-  max-width: 360px;
-  text-align: center;
 }
 
 .header-right .mat-sort-header-container {

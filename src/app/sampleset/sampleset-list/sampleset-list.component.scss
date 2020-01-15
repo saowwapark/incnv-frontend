@@ -40,32 +40,6 @@ table {
   @include table-column(5%);
 }
 
-.expand-detail {
-  overflow: hidden;
-  display: flex;
-}
-.expand-detail-element {
-  padding: 16px;
-}
-
-.expand-detail-header {
-  opacity: 0.5;
-}
-
-tr.element-row td {
-  border-bottom-width: 0;
-}
-tr.detail-row {
-  height: 0;
-}
-tr.element-row:not(.expanded-row):hover {
-  background: #777;
-}
-
-tr.element-row:not(.expanded-row):active {
-  background: #efefef;
-}
-
 .page__container {
   display: flex;
   align-items: center;

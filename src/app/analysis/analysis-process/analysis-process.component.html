@@ -28,12 +28,13 @@
       </div>
 
       <h3>Overview Chart</h3>
+      <p>Please drag a region of interest.</p>
       <app-overview-chart
         [cnvTools]="cnvTools"
         [containerMargin]="containerMargin"
         [height]="300"
         [chr]="'1'"
-        (selectRegion)="selectRegion($event)"
+        (selectChrRegion)="selectChrRegion($event)"
       ></app-overview-chart>
 
       <h3>Main Chart</h3>
@@ -41,18 +42,28 @@
         [cnvTools]="cnvTools"
         [containerMargin]="containerMargin"
         [height]="300"
-        [selectedRegion]="selectedRegion"
+        [selectedChrRegion]="selectedChrRegion"
         [tableCnvs]="tableCnvs"
         (selectCnvs)="selectChartCnvs($event)"
       ></app-main-chart>
 
       <h3>Selected Basepair</h3>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button
+          mat-button
+          mat-raised-button
+          color="primary"
+          (click)="exportResult()"
+        >
+          Export Result
+        </button>
+      </div>
+
       <app-selected-cnv
         [dataSource]="chartCnvs"
         (updateSelectedCnv)="selectTableCnvs($event)"
       ></app-selected-cnv>
-      <!-- <app-merged-result-table></app-merged-result-table> -->
     </div>
   </div>
+  <!-- / CONTENT -->
 </div>
-<!-- / CONTENT -->

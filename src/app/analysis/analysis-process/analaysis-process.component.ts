@@ -1,4 +1,4 @@
-import { CnvFragmentAnnotation, RegionBp } from './../analysis.model';
+import { CnvInfo, RegionBp, CnvTool } from './../analysis.model';
 import { AnalysisProcessService } from './analysis-process.service';
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { Sampleset } from 'src/app/sampleset/sampleset.model';
@@ -26,10 +26,10 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   @Input() chosenCnvType: string;
   @Input() chosenChr: string;
 
-  cnvTools;
-  selectedRegion: RegionBp;
-  chartCnvs: CnvFragmentAnnotation[];
-  tableCnvs: CnvFragmentAnnotation[];
+  cnvTools: CnvTool[];
+  selectedChrRegion: RegionBp;
+  chartCnvs: CnvInfo[];
+  tableCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
 
   constructor(private analyisService: AnalysisProcessService) {
@@ -57,23 +57,26 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
       });
   }
 
-  selectRegion(selectedRegion: RegionBp) {
-    this.selectedRegion = selectedRegion;
+  selectChrRegion(selectedChrRegion: RegionBp) {
+    this.selectedChrRegion = selectedChrRegion;
   }
 
-  selectChartCnvs(selectedCnvs: CnvFragmentAnnotation[]) {
+  selectChartCnvs(selectedCnvs: CnvInfo[]) {
     this.chartCnvs = [...selectedCnvs];
   }
 
-  selectTableCnvs(selectedCnvs: CnvFragmentAnnotation[]) {
+  selectTableCnvs(selectedCnvs: CnvInfo[]) {
     this.tableCnvs = [...selectedCnvs];
   }
 
+  exportResult() {
+    this.analyisService.exportCnvInfos(this.tableCnvs);
+  }
   private calContainerMargin() {
     // max character lenght
     let maxLength = 0;
     for (const tool of this.cnvTools) {
-      const length = tool.cnvToolIdentity.length;
+      const length = tool.cnvToolId.length;
       if (length > maxLength) {
         maxLength = length;
       }

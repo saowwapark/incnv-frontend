@@ -1,16 +1,12 @@
 import * as d3 from 'd3';
-import {
-  CnvFragmentAnnotation,
-  CnvToolAnnotation,
-  MERGE_TOOL_IDENTITY
-} from '../../analysis.model';
-import { filterDataInRegion } from '../visualizeBp.utility';
+import { CnvInfo, CnvTool, MERGED_TOOL_ID } from '../../analysis.model';
+import { formatNumberWithComma } from '../../../utils/map.utils';
 
 export class MergedChart {
-  _parentElement; // angular native element
   _id: string;
+  _parentElement; // angular native element
   _data;
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolIdentity) // set of tool identity;
+  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolId) // set of tool id;
   _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
@@ -42,6 +38,7 @@ export class MergedChart {
     const width = this._parentElement.offsetWidth;
     const height = this._parentElement.offsetHeight;
 
+    console.log(this._parentElement.id);
     // select the svg container
     this.svg = d3
       .select(this._parentElement)
@@ -71,7 +68,6 @@ export class MergedChart {
       .append('rect')
       .attr('width', this.graphContainer.attr('width'))
       .attr('height', this.graphContainer.attr('height'));
-    console.log(this.graphContainer);
   }
 
   private createScaleX() {
@@ -122,7 +118,7 @@ export class MergedChart {
   public drawData() {
     const bars = this.generateBars();
     const mergedColorScale = this.createMergedColorScale(
-      this.colorScale(MERGE_TOOL_IDENTITY)
+      this.colorScale(MERGED_TOOL_ID)
     );
     this.subbars = this.generateSubbars(bars, mergedColorScale);
     this.addEventToSubbars(mergedColorScale);
@@ -139,14 +135,14 @@ export class MergedChart {
       .data(this._data)
       .join('g')
       .attr('class', 'bar')
-      .attr('y', d => this.scaleY(d.cnvToolIdentity));
+      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId));
 
     // generate bar background
     const barBackground = bars
       .insert('rect', ':first-child')
 
       .attr('height', this.scaleY.bandwidth)
-      .attr('y', d => this.scaleY(d.cnvToolIdentity))
+      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId))
       .attr('x', '1')
       .attr('width', this.graphContainer.attr('width'))
       .attr('fill-opacity', '0.5')
@@ -160,51 +156,46 @@ export class MergedChart {
 
       .selectAll('rect.subbar')
 
-      .data((d: CnvToolAnnotation) => {
-        return filterDataInRegion(
-          d.cnvFragmentAnnotations,
-          this._domainOnX[0],
-          this._domainOnX[1]
-        );
+      .data((d: CnvTool) => {
+        return d.cnvInfos;
       })
-      // .data((d: CnvToolAnnotation) => {
-      //   return d.cnvFragmentAnnotations;
-      // })
       .join('rect')
-      .attr('class', 'subbar')
+      .attr('class', 'subbar');
 
-      .attr('width', (d: CnvFragmentAnnotation) => {
+    subbars
+      .attr('width', (d: CnvInfo) => {
         return this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1;
       })
       .attr('x', d => this.scaleX(d.startBp))
       .attr('height', this.scaleY.bandwidth)
       .attr('y', (d, i, n) => {
-        const parentData = d3
-          .select(n[i].parentNode)
-          .datum() as CnvToolAnnotation;
-        return this.scaleY(parentData.cnvToolIdentity);
+        const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
+        return this.scaleY(parentData.cnvToolId);
       })
-      .attr('fill', (d: CnvFragmentAnnotation, i, n) => {
-        const parentData: CnvToolAnnotation = d3
+      .attr('fill', (d: CnvInfo, i, n) => {
+        const parentData: CnvTool = d3
           .select(n[i].parentNode)
-          .datum() as CnvToolAnnotation;
-        const cnvToolIdentity = parentData.cnvToolIdentity;
-        let color = this.colorScale(cnvToolIdentity) as string;
-        if (cnvToolIdentity === MERGE_TOOL_IDENTITY) {
+          .datum() as CnvTool;
+        const cnvToolId = parentData.cnvToolId;
+        let color = this.colorScale(cnvToolId) as string;
+        if (cnvToolId === MERGED_TOOL_ID) {
           color = mergedColorScale(d.overlapTools.length);
         }
         return color;
-      });
+      })
+      .attr('stroke', (d, i, n) => {
+        const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
+        return this.colorScale(parentData.cnvToolId);
+      })
+      .attr('stroke-opacity', '0');
 
     return subbars;
   }
 
   public onClickSubbars(callback) {
     this.subbars.on('click', (d, i, n) => {
-      const parentData = d3
-        .select(n[i].parentNode)
-        .datum() as CnvToolAnnotation;
-      callback(parentData.cnvToolIdentity, d);
+      const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
+      callback(parentData.cnvToolId, d);
     });
   }
 
@@ -216,7 +207,9 @@ export class MergedChart {
         d3.select(n[i])
           .transition()
           .duration(300)
-          .attr('fill', '#fff');
+          .attr('fill', '#fff')
+          .attr('stroke-opacity', '1')
+          .style('cursor', 'pointer');
       })
       .on('mouseout', (d, i, n) => {
         // subbar
@@ -224,31 +217,30 @@ export class MergedChart {
           .transition()
           .duration(300)
           .attr('fill', () => {
-            const parentData = d3
-              .select(n[i].parentNode)
-              .datum() as CnvToolAnnotation;
-            const cnvToolIdentity = parentData.cnvToolIdentity;
-            let color = this.colorScale(parentData.cnvToolIdentity);
-            if (cnvToolIdentity === MERGE_TOOL_IDENTITY) {
+            const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
+            const cnvToolId = parentData.cnvToolId;
+            let color = this.colorScale(parentData.cnvToolId);
+            if (cnvToolId === MERGED_TOOL_ID) {
               color = mergedColorScale(d.overlapTools.length);
             }
             return color;
-          });
+          })
+          .attr('stroke-opacity', '0');
 
         // tooltip
         this.tooltip.style('display', 'none');
       })
-      .on('mousemove', d => {
+      .on('mousemove', (d, i, n) => {
         // tooltip
-        const menuHeight = 50; // 5.0rem, 50px
-
         this.tooltip
-          .style('left', d3.event.clientX + 20 + 'px')
-          .style('top', d3.event.pageY - menuHeight - 20 + 'px')
+          .style('left', d3.mouse(n[i])[0] + 10 + 'px')
+          .style('top', d3.mouse(n[i])[1] - 20 + 'px')
           .style('display', null);
 
         this.tooltip.html(() => {
-          let content = `<p>Chromosome ${d.chromosome}: ${d.startBp} - ${d.endBp}</p>`;
+          let content = `Chromosome ${d.chromosome}: ${formatNumberWithComma(
+            d.startBp
+          )} - ${formatNumberWithComma(d.endBp)}`;
           content += ``;
           return content;
         });
@@ -261,9 +253,14 @@ export class MergedChart {
       .select(this._parentElement)
       .append('div')
       .attr('id', 'tooltip')
+      .attr('class', 'tooltip')
       .style('position', 'absolute')
-      .style('background-color', '#D3D3D3')
-      .style('padding', '6px')
+      .style('background', '#D3D3D3')
+      .style('color', '#313639')
+      .style('text-align', 'center')
+      .style('border-radius', '8px')
+      .style('padding', '0.3rem 1rem')
+      .style('font-size', '1.3rem')
       .style('display', 'none')
       .style('z-index', '10');
   }
