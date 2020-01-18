@@ -1,6 +1,10 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TabFileMapping } from '../tab-file-mapping.model';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogConfig
+} from '@angular/material/dialog';
 
 import { Component, OnInit, Inject } from '@angular/core';
 @Component({
@@ -31,6 +35,9 @@ export class TabFileMappingFormDialogComponent implements OnInit {
       this.fileMappingConfigured = new TabFileMapping();
     }
     this.form = this._createTabFileMappingForm();
+
+    this.matDialogRef.addPanelClass('tab-file-mapping-dialog');
+    // this.matDialogRef.updateSize('85%', '90%');
   }
 
   private _createTabFileMappingForm(): FormGroup {

@@ -1,7 +1,15 @@
+import { AnalysisProcessService } from './../analysis-process/analysis-process.service';
 import { UploadCnvToolResult } from './../../shared/models/upload-cnv-tool-result.model';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Sampleset } from '../../sampleset/sampleset.model';
+import { IndividualSampleConfig } from '../analysis.model';
 
 @Component({
   selector: 'app-analysis-configure',
@@ -10,6 +18,7 @@ import { Sampleset } from '../../sampleset/sampleset.model';
 })
 export class AnalysisConfigureComponent implements OnInit {
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
+
   chosenReferenceGenome: string;
   chosenSampleset: Sampleset;
   chosenSample: string;
@@ -18,7 +27,7 @@ export class AnalysisConfigureComponent implements OnInit {
   chosenChr: string;
   chrs: string[];
 
-  constructor() {
+  constructor(private service: AnalysisProcessService) {
     this.chosenSampleset = new Sampleset();
     this.chosenChr = '';
     this.chrs = [];
@@ -53,5 +62,16 @@ export class AnalysisConfigureComponent implements OnInit {
   setUploadFilesAndNextStep(files: UploadCnvToolResult[]) {
     this.chosenFiles = files;
     this.goToNexStep();
+  }
+
+  confirmConfig() {
+    const individualConfig = new IndividualSampleConfig(
+      this.chosenReferenceGenome,
+      this.chosenChr,
+      this.chosenCnvType,
+      this.chosenFiles,
+      this.chosenSample
+    );
+    this.service.onIndividualConfigChanged.next(individualConfig);
   }
 }

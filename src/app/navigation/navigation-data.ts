@@ -8,6 +8,27 @@ export const navigationData: Navigation[] = [
     icon: 'apps',
     children: [
       {
+        id: 'cnvtool',
+        title: 'CNVtool',
+        type: 'collapsable',
+        icon: 'dashboard',
+        children: [
+          {
+            id: 'tabFileMapping',
+            title: 'File Mapping',
+            type: 'item',
+            url: '/tabfilemapping'
+          }
+        ]
+      },
+      {
+        id: 'sampleset',
+        title: 'Sampleset',
+        type: 'item',
+        icon: 'shopping_cart',
+        url: '/sampleset'
+      },
+      {
         id: 'upload',
         title: 'Upload',
         type: 'collapsable',
@@ -24,27 +45,6 @@ export const navigationData: Navigation[] = [
             title: 'History',
             type: 'item',
             url: '/uploadhistory'
-          }
-        ]
-      },
-      {
-        id: 'sampleset',
-        title: 'Sampleset',
-        type: 'item',
-        icon: 'shopping_cart',
-        url: '/sampleset'
-      },
-      {
-        id: 'cnvtool',
-        title: 'CNVtool',
-        type: 'collapsable',
-        icon: 'dashboard',
-        children: [
-          {
-            id: 'tabFileMapping',
-            title: 'File Mapping',
-            type: 'item',
-            url: '/tabfilemapping'
           }
         ]
       }

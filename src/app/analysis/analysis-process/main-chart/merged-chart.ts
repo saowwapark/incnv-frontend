@@ -5,7 +5,7 @@ import { formatNumberWithComma } from '../../../utils/map.utils';
 export class MergedChart {
   _id: string;
   _parentElement; // angular native element
-  _data;
+  _data: CnvInfo[];
   _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolId) // set of tool id;
   _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   graphContainer;
@@ -164,9 +164,15 @@ export class MergedChart {
 
     subbars
       .attr('width', (d: CnvInfo) => {
-        return this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1;
+        if (d.startBp && d.endBp) {
+          return this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1;
+        }
       })
-      .attr('x', d => this.scaleX(d.startBp))
+      .attr('x', d => {
+        if (d.startBp) {
+          return this.scaleX(d.startBp);
+        }
+      })
       .attr('height', this.scaleY.bandwidth)
       .attr('y', (d, i, n) => {
         const parentData = d3.select(n[i].parentNode).datum() as CnvTool;

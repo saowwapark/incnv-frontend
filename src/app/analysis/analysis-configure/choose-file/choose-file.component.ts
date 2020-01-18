@@ -37,7 +37,7 @@ export class ChooseFileComponent
     'fileInfo',
     'cnvToolName',
     'tagDescriptions',
-    'createDate'
+    'createdDate'
   ];
 
   dataSource: MatTableDataSource<UploadCnvToolResult>;

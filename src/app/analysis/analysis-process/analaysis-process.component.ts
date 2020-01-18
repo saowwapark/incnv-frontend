@@ -1,4 +1,9 @@
-import { CnvInfo, RegionBp, CnvTool } from './../analysis.model';
+import {
+  CnvInfo,
+  RegionBp,
+  CnvTool,
+  IndividualSampleConfig
+} from './../analysis.model';
 import { AnalysisProcessService } from './analysis-process.service';
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { Sampleset } from 'src/app/sampleset/sampleset.model';
@@ -26,51 +31,54 @@ export class AnalysisProcessComponent implements OnInit, AfterViewInit {
   @Input() chosenCnvType: string;
   @Input() chosenChr: string;
 
+  oneSampleConfig: IndividualSampleConfig;
   cnvTools: CnvTool[];
   selectedChrRegion: RegionBp;
-  chartCnvs: CnvInfo[];
-  tableCnvs: CnvInfo[];
+  selectedCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
 
-  constructor(private analyisService: AnalysisProcessService) {
-    // mock data
-    this.chosenReferenceGenome = chosenReferenceGenome;
-    this.chosenSampleset = chosenSampleset;
-    this.chosenSample = chosenSample;
-    this.chosenFiles = chosenFiles;
-    this.chosenCnvType = chosenCnvType;
-    this.chosenChr = chosenChr;
-  }
+  constructor(private service: AnalysisProcessService) {}
 
   ngOnInit() {
-    this.analyisService
-      .getAllCnvToolDetails(
-        this.chosenReferenceGenome,
-        this.chosenFiles,
-        this.chosenSample,
-        this.chosenChr,
-        this.chosenCnvType
-      )
-      .subscribe(data => {
-        this.cnvTools = data;
-        this.containerMargin = this.calContainerMargin();
-      });
+    // // mock data
+    // this.chosenReferenceGenome = chosenReferenceGenome;
+    // this.chosenSampleset = chosenSampleset;
+    // this.chosenSample = chosenSample;
+    // this.chosenFiles = chosenFiles;
+    // this.chosenCnvType = chosenCnvType;
+    // this.chosenChr = chosenChr;
+
+    this.service.onIndividualConfigChanged.subscribe(
+      (config: IndividualSampleConfig) => {
+        this.oneSampleConfig = config;
+        this.service
+          .getAllCnvToolDetails(
+            this.oneSampleConfig.referenceGenome,
+            this.oneSampleConfig.uploadCnvToolResults,
+            this.oneSampleConfig.sample,
+            this.oneSampleConfig.chromosome,
+            this.oneSampleConfig.cnvType
+          )
+          .subscribe(data => {
+            this.cnvTools = data;
+            this.containerMargin = this.calContainerMargin();
+          });
+      }
+    );
   }
 
   selectChrRegion(selectedChrRegion: RegionBp) {
     this.selectedChrRegion = selectedChrRegion;
   }
 
-  selectChartCnvs(selectedCnvs: CnvInfo[]) {
-    this.chartCnvs = [...selectedCnvs];
+  selectCnvs(selectedCnvs: CnvInfo[]) {
+    this.selectedCnvs = [...selectedCnvs];
   }
 
-  selectTableCnvs(selectedCnvs: CnvInfo[]) {
-    this.tableCnvs = [...selectedCnvs];
-  }
-
-  exportResult() {
-    this.analyisService.exportCnvInfos(this.tableCnvs);
+  exportCnvInfos() {
+    this.service.downloadCnvInfos(this.selectedCnvs).subscribe(() => {
+      console.log('export success');
+    });
   }
   private calContainerMargin() {
     // max character lenght

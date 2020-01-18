@@ -43,8 +43,8 @@
         [containerMargin]="containerMargin"
         [height]="300"
         [selectedChrRegion]="selectedChrRegion"
-        [tableCnvs]="tableCnvs"
-        (selectCnvs)="selectChartCnvs($event)"
+        [inputCnvs]="selectedCnvs"
+        (selectCnvs)="selectCnvs($event)"
       ></app-main-chart>
 
       <h3>Selected Basepair</h3>
@@ -53,15 +53,15 @@
           mat-button
           mat-raised-button
           color="primary"
-          (click)="exportResult()"
+          (click)="exportCnvInfos()"
         >
           Export Result
         </button>
       </div>
 
       <app-selected-cnv
-        [dataSource]="chartCnvs"
-        (updateSelectedCnv)="selectTableCnvs($event)"
+        [dataSource]="selectedCnvs"
+        (updateSelectedCnv)="selectCnvs($event)"
       ></app-selected-cnv>
     </div>
   </div>

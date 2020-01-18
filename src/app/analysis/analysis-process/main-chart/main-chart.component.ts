@@ -41,7 +41,7 @@ export class MainChartComponent
     left: number;
   };
 
-  @Input() tableCnvs: CnvInfo[];
+  @Input() inputCnvs: CnvInfo[];
 
   @Output() selectCnvs = new EventEmitter<CnvInfo[]>();
 
@@ -75,13 +75,10 @@ export class MainChartComponent
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // const chartWidth = event.target.innerWidth;
-    if (this.mergedChart) {
-      this.createMergedChart();
-    }
 
-    if (this.finalResultChart) {
-      this.createFinalResultChart();
-    }
+    this.createMergedChart();
+
+    this.createFinalResultChart();
   }
 
   constructor(
@@ -101,18 +98,17 @@ export class MainChartComponent
       if (changes.hasOwnProperty(propName)) {
         switch (propName) {
           case 'selectedChrRegion':
-            if (this.selectedChrRegion && this.mergedChartDiv) {
+            if (this.selectedChrRegion) {
               this.createMergedChart();
-            }
-            if (this.selectedChrRegion && this.finalResultChartDiv) {
               this.createFinalResultChart();
             }
 
             break;
-          case 'tableCnvs':
-            if (this.tableCnvs) {
-              this.finalResultData.cnvInfos = this.tableCnvs;
+          case 'inputCnvs':
+            if (this.inputCnvs && this.inputCnvs.length > 0) {
+              this.finalResultData.cnvInfos = this.inputCnvs;
               this.createFinalResultChart();
+
               break;
             }
         }
@@ -127,6 +123,9 @@ export class MainChartComponent
 
   createMergedChart() {
     console.log('create merged chart');
+    if (!this.mergedChartDiv) {
+      return;
+    }
     if (this.mergedChart) {
       this.mergedChart.removeVis();
     }
@@ -154,6 +153,9 @@ export class MainChartComponent
   }
 
   createFinalResultChart() {
+    if (!this.finalResultChartDiv) {
+      return;
+    }
     if (this.finalResultChart) {
       this.finalResultChart.removeVis();
     }
@@ -195,9 +197,10 @@ export class MainChartComponent
         .updateCnvInfo(response)
         .subscribe((updatedCnvInfo: CnvInfo) => {
           this.finalResultData.cnvInfos.push(updatedCnvInfo);
-          if (this.finalResultChart) {
-            this.finalResultChart.updateVis([this.finalResultData]);
-          }
+          this.createFinalResultChart();
+          // if (this.finalResultChart) {
+          //   this.finalResultChart.updateVis([this.finalResultData]);
+          // }
           this.selectCnvs.next(this.finalResultData.cnvInfos);
         });
     });

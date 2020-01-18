@@ -1,7 +1,29 @@
+import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 export const MERGED_TOOL_ID = 'merged tools';
 export const FINAL_RESULT_ID = 'final result';
 export const SELECTED_CNV_ID = 'selected CNV';
 
+export class IndividualSampleConfig {
+  referenceGenome?: string;
+  chromosome?: string;
+  cnvType?: string;
+  uploadCnvToolResults?: UploadCnvToolResult[];
+  sample?: string;
+
+  constructor(
+    refenceGenome?,
+    chromosome?,
+    cnvType?,
+    uploadCnvToolResults?,
+    sample?
+  ) {
+    this.referenceGenome = refenceGenome || '';
+    this.chromosome = chromosome || '';
+    this.cnvType = cnvType || '';
+    this.uploadCnvToolResults = uploadCnvToolResults || [];
+    this.sample = sample || '';
+  }
+}
 export class CnvTool {
   cnvToolId?: string; // cnv tool name and parameter.
   cnvInfos?: CnvInfo[]; // annotation for a given cnv tool.

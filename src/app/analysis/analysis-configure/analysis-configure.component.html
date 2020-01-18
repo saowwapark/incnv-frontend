@@ -39,11 +39,19 @@
       <app-choose-file
         [samplesetId]="chosenSampleset.samplesetId"
         [referenceGenome]="chosenReferenceGenome"
+        (previousStep)="goToPreviousStep()"
         (nextStep)="setUploadFilesAndNextStep($event)"
       >
       </app-choose-file>
     </mat-step>
     <mat-step label="Choose CNV Type">
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" matStepperNext>
+          Next
+        </button>
+      </div>
+
       <mat-label>CNV Type: </mat-label>
       <mat-radio-group [(ngModel)]="chosenCnvType">
         <mat-radio-button value="duplication" checked
@@ -53,6 +61,12 @@
       </mat-radio-group>
     </mat-step>
     <mat-step label="Choose Chromosome">
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" matStepperNext>
+          Next
+        </button>
+      </div>
       <mat-form-field>
         <mat-label>Choose Chromosome...</mat-label>
         <app-filtered-select [options]="chrs" [(ngModel)]="chosenChr">
@@ -61,7 +75,10 @@
     </mat-step>
 
     <mat-step label="Done">
-      <p>Conclusion</p>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button matStepperPrevious>Back</button>
+      </div>
+      <div class="h3">Conclusion</div>
       <p>Reference Genome: {{ chosenReferenceGenome }}</p>
       <p>
         Sampleset: {{ chosenSampleset.samplesetName }}, Sample:
@@ -85,6 +102,7 @@
       mat-raised-button
       color="primary"
       [routerLink]="['/analysis/analysis-process']"
+      (click)="confirmConfig()"
     >
       Confirm
     </button>
