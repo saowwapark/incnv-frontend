@@ -14,7 +14,7 @@
       <div class="name-wrapper" style="padding-top:30px; padding-bottom: 20px">
         <div fxLayout="column" fxLayoutAlign="center stretch">
           <mat-form-field appearance="outline" class="width--full">
-            <mat-label>CNV Tool Name</mat-label>
+            <mat-label>File Mapping Name</mat-label>
             <input
               fxFlex
               formControlName="tabFileMappingName"
@@ -122,8 +122,7 @@
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
   <button
     *ngIf="action !== 'edit'"
-    mat-button
-    mat-flat-button
+    mat-stroked-button
     color="primary"
     (click)="matDialogRef.close(form)"
     [disabled]="f.invalid"
@@ -134,9 +133,7 @@
 
   <button
     *ngIf="action === 'edit'"
-    mat-button
-    mat-flat-button
-    color="primary"
+    mat-stroked-button
     (click)="matDialogRef.close(['save', form])"
     [disabled]="f.invalid"
     aria-label="SAVE"

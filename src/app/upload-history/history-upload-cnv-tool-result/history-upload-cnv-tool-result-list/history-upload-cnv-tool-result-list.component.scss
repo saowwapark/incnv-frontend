@@ -24,30 +24,37 @@ table {
 .mat-column-select {
   @include table-column(5%);
 }
+.mat-column-no {
+  @include table-column(5%);
+}
+.mat-column-fileName {
+  @include table-column(18%);
+}
+.mat-column-fileInfo {
+  @include table-column(7%);
+}
+.mat-column-referenceGenome {
+  @include table-column(5%);
+}
 .mat-column-cnvToolName {
   @include table-column(10%);
 }
-.mat-column-fileName {
-  @include table-column(15%);
-}
-.mat-column-samplesetName {
-  @include table-column(12%);
-}
-.mat-column-tags {
-  @include table-column(15%);
-}
-.mat-column-date {
+
+.mat-column-tabFileMappingName {
   @include table-column(10%);
 }
-.mat-column-size {
-  @include table-column(8%);
+.mat-column-samplesetName {
+  @include table-column(10%);
 }
-.mat-column-file {
-  @include table-column(5%);
+.mat-column-tagDescriptions {
+  @include table-column(15%);
+}
+.mat-column-createDate {
+  @include table-column(10%);
 }
 .mat-column-edit {
   @include table-column(5%);
 }
-.mat-column-delete {
+.mat-column-detail {
   @include table-column(5%);
 }

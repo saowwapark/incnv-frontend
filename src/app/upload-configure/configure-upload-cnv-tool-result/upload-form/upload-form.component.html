@@ -1,9 +1,14 @@
-<mat-card>
+<mat-card class="mat-elevation-z4">
   <mat-card-header>
     <mat-card-title>Upload File</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="form">
+    <form
+      [formGroup]="form"
+      fxLayout="column"
+      fxLayoutAlign="space-around stretch"
+      fxLayoutGap="10px"
+    >
       <!--reference genome-->
       <div>
         <mat-label>Reference Genome: </mat-label>
@@ -14,66 +19,54 @@
       </div>
 
       <!--upload file Column-->
-      <div class="data" fxLayoutGap="5px">
-        <mat-form-field style="width:400px">
-          <input
-            formControlName="fileName"
-            matInput
-            placeholder="Upload File..."
-          />
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Upload File...</mat-label>
+          <input formControlName="fileName" matInput readonly="true" />
+
+          <mat-icon matSuffix color="accent" (click)="filePicker.click()"
+            >cloud_upload</mat-icon
+          >
         </mat-form-field>
-        <button mat-icon-button type="button" (click)="filePicker.click()">
-          <mat-icon>cloud_upload</mat-icon>
-        </button>
+
         <input type="file" #filePicker (change)="onFilePicked($event)" />
       </div>
 
       <!--fileInfo-->
       <div>
-        <mat-form-field style="width:400px">
-          <input
-            fxFlex
-            formControlName="fileInfo"
-            matInput
-            placeholder="Specify File Info..."
-          />
+        <mat-form-field appearance="outline">
+          <mat-label>File Info...</mat-label>
+          <input fxFlex formControlName="fileInfo" matInput />
           <mat-error *ngIf="form.get('fileInfo').hasError('required')"
             >required</mat-error
           >
         </mat-form-field>
       </div>
       <!--cnvToolName Column-->
-      <mat-form-field style="width:400px">
-        <input
-          fxFlex
-          formControlName="cnvToolName"
-          matInput
-          placeholder="Define CNV Tool Name..."
-        />
+      <mat-form-field appearance="outline">
+        <mat-label>CNV Tool Name...</mat-label>
+        <input fxFlex formControlName="cnvToolName" matInput />
         <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
           >required</mat-error
         >
       </mat-form-field>
       <!--tabFileMapping Id Column-->
-      <div class="data" fxLayout="row" fxLayoutGap="5px">
-        <mat-form-field style="width:400px">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>File Mapping...</mat-label>
           <app-filtered-select
-            placeholder="Choose Tab File Mapping..."
             formControlName="tabFileMapping"
             [options]="tabFileMappings"
           >
           </app-filtered-select>
         </mat-form-field>
-        <button mat-icon-button>
-          <mat-icon (click)="onLoadTabFileMappingPage()">add</mat-icon>
-        </button>
       </div>
 
       <!--sampleset Column-->
-      <div class="data" fxLayout="row" fxLayoutGap="5px">
-        <mat-form-field style="width:400px">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Sampleset...</mat-label>
           <app-filtered-select
-            placeholder="Choose Sampleset..."
             formControlName="sampleset"
             [options]="samplesets"
           >
@@ -85,17 +78,16 @@
             >not have</mat-error
           > -->
         </mat-form-field>
-
-        <button mat-icon-button>
-          <mat-icon (click)="onLoadSamplesetPage()">add</mat-icon>
-        </button>
       </div>
 
       <!--Tag Descriptions Column-->
-      <div class="data" fxLayoutGap="5px">
-        <mat-form-field style="width:400px">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Tag Description ...</mat-label>
           <mat-chip-list #tagList>
             <mat-chip
+              color="accent"
+              selected
               *ngFor="let tag of tagDescriptions"
               selectable="false"
               [removable]="true"
@@ -104,9 +96,9 @@
               {{ tag }}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
+
             <input
               formControlName="tagDescriptions"
-              placeholder="Define Tag Description ..."
               [matChipInputFor]="tagList"
               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
               matChipInputAddOnBlur="true"
@@ -117,8 +109,12 @@
       </div>
     </form>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-button (click)="onConfirm()">CONFIRM</button>
-    <button mat-button (click)="onReset()">RESET</button>
+  <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
+    <button mat-stroked-button color="accent" (click)="onConfirm()">
+      CONFIRM
+    </button>
+    <button mat-stroked-button color="warn" (click)="onReset()">
+      RESET
+    </button>
   </mat-card-actions>
 </mat-card>

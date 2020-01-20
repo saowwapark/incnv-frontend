@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-history-reformat-cnv-tool-result',
@@ -6,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./history-reformat-cnv-tool-result.component.scss']
 })
 export class HistoryReformatCnvToolResultComponent implements OnInit {
-  constructor() {}
+  cnvToolResultId: number;
+  constructor(private route: ActivatedRoute) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // this.cnvToolResultId = +this.route.snapshot.paramMap.get('id');
+  }
 }

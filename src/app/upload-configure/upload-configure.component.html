@@ -10,14 +10,14 @@
   <!-- CONTENT -->
   <div>
     <mat-horizontal-stepper #stepper linear="false">
-      <mat-step label="Upload File">
+      <mat-step label="Upload CNV Tool Result">
         <app-upload-form
           fxLayout="column"
           fxLayoutAlign="space-between center"
           (confirmClicked)="goToReformatStep($event)"
         ></app-upload-form>
       </mat-step>
-      <mat-step label="Reformat File">
+      <mat-step label="Edited/Reformatted File">
         <app-preview-reformat-cnv-tool-result
           *ngIf="uploadCnvToolResultId"
           [uploadCnvToolResultId]="uploadCnvToolResultId"

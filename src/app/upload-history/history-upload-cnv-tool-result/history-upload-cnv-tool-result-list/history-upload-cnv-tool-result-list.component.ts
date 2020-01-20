@@ -26,6 +26,7 @@ export class HistoryUploadCnvToolResultListComponent
   uploads: any;
   displayedColumns = [
     'select',
+    'no',
     'fileName',
     'fileInfo',
     'referenceGenome',
@@ -34,6 +35,7 @@ export class HistoryUploadCnvToolResultListComponent
     'samplesetName',
     'tagDescriptions',
     'createDate',
+    'edit',
     'detail'
   ];
 

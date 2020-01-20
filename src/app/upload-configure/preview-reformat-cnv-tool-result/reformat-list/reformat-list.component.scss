@@ -1,3 +1,6 @@
+:host {
+  width: 100%;
+}
 .reformat-container {
   width: 100%;
   display: flex;
@@ -6,12 +9,12 @@
 
 .reformat-item {
   height: 100%;
-  width: 70%;
+  width: 100%;
 }
 
-.example-table-container {
+.table-container {
   position: relative;
-  max-height: 400px;
+  // max-height: 800px;
   overflow: auto;
 }
 
@@ -19,7 +22,7 @@ table {
   width: 100%;
 }
 
-.example-loading-shade {
+.loading-shade {
   position: absolute;
   top: 0;
   left: 0;
@@ -60,11 +63,14 @@ table {
   hyphens: auto;
 }
 
+.mat-column-select {
+  @include table-column(10%);
+}
 .mat-column-no {
   @include table-column(10%);
 }
 .mat-column-sample {
-  @include table-column(20%);
+  @include table-column(10%);
 }
 .mat-column-chromosome {
   @include table-column(10%);
