@@ -1,5 +1,9 @@
 <div [formGroup]="filterSelectGroup">
-  <mat-select [(value)]="selectedOption" formControlName="selectControl">
+  <mat-select
+    [(value)]="selectedOption"
+    formControlName="selectControl"
+    (selectionChange)="selectionChange.next(selectedOption)"
+  >
     <mat-optgroup *ngIf="filteredOptions">
       <input matInput type="text" placeholder="Filter..." #input />
       <mat-option *ngFor="let option of filteredOptions" [value]="option">

@@ -14,18 +14,15 @@
     fxLayout="row"
     fxLayoutAlign="end center"
   >
-    <div class="top-menu_logo">
-      <a routerLink="/">
-        <img
-          class="logo-box"
-          src="../../assets/static/images/logo-white.png"
-          alt="Logo"
-          class="top-menu__logo-img"
-        />
-      </a>
-    </div>
-    <ul fxLayout fxLayoutGap="10px">
-      <li><a (click)="onLogout()">Logout</a></li>
-    </ul>
+    <a routerLink="/">
+      <img
+        mat-button
+        src="../../assets/static/images/logo-white.png"
+        alt="Logo"
+        class="top-menu__logo-img"
+      />
+    </a>
+
+    <a mat-button style="color: white" (click)="onLogout()">Logout</a>
   </div>
 </div>

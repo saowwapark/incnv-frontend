@@ -8,6 +8,7 @@ export class IndividualSampleConfig {
   chromosome?: string;
   cnvType?: string;
   uploadCnvToolResults?: UploadCnvToolResult[];
+  samplesetName?: string;
   sample?: string;
 
   constructor(
@@ -15,13 +16,40 @@ export class IndividualSampleConfig {
     chromosome?,
     cnvType?,
     uploadCnvToolResults?,
+    samplesetName?,
     sample?
   ) {
     this.referenceGenome = refenceGenome || '';
     this.chromosome = chromosome || '';
     this.cnvType = cnvType || '';
     this.uploadCnvToolResults = uploadCnvToolResults || [];
+    this.samplesetName = samplesetName || '';
     this.sample = sample || '';
+  }
+}
+
+export class MultipleSampleConfig {
+  referenceGenome?: string;
+  chromosome?: string;
+  cnvType?: string;
+  uploadCnvToolResult?: UploadCnvToolResult;
+  samplesetName?: string;
+  samples?: string[];
+
+  constructor(
+    refenceGenome?,
+    chromosome?,
+    cnvType?,
+    uploadCnvToolResult?,
+    samplesetName?,
+    samples?
+  ) {
+    this.referenceGenome = refenceGenome || '';
+    this.chromosome = chromosome || '';
+    this.cnvType = cnvType || '';
+    this.uploadCnvToolResult = uploadCnvToolResult || {};
+    this.samplesetName = samplesetName || '';
+    this.samples = samples || [];
   }
 }
 export class CnvTool {
@@ -35,7 +63,7 @@ export class CnvInfo {
   cnvType?: string;
   startBp?: number;
   endBp?: number;
-  overlapTools?: string[];
+  overlaps?: string[];
   dgvs?: string[]; // dgv.variant_accession
   ensembls?: EnsemblAnnotation[]; // ensembl.gene_id
   clinvar?: ClinvarAnnotationList;

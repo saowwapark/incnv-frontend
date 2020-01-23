@@ -10,14 +10,16 @@
 @import '../scss/abstracts/variables';
 @import '../scss/abstracts/mixins';
 
-@import '../scss/layout/menu';
 @import '../scss/layout/navigation';
+@import '../scss/layout/layout';
+@import '../scss/layout/container';
 
 @import '../scss/pages/home';
 @import '../scss/components/dialog';
 @import '../scss/components/card';
 @import '../scss/components/search';
 @import '../scss/components/table';
+@import '../scss/components/top-menu';
 
 // input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
 //   border: 1px solid red

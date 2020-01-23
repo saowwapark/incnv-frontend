@@ -1,0 +1,40 @@
+<ng-container *ngIf="!selectedChrRegion; else elseTemplate">
+  <div class="warning__container--not-show-data mat-elevation-z8">
+    <div class="warning__item--not-show-data">
+      Selected region of interest.
+    </div>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div
+    onResize
+    #comparedChartDiv
+    [style.height.px]="height"
+    style="position: relative;"
+  ></div>
+
+  <div
+    onResize
+    #mergedChartDiv
+    [style.height.px]="100"
+    style="position: relative"
+  ></div>
+
+  <ng-container
+    *ngIf="this.finalResultData.cnvInfos.length === 0; else selectCnvsTemplate"
+  >
+    <div class="warning__container--not-show-data mat-elevation-z8">
+      <div class="warning__item--not-show-data">
+        Selected CNVs
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #selectCnvsTemplate>
+    <div
+      onResize
+      #finalResultChartDiv
+      [style.height.px]="100"
+      style="position: relative"
+    ></div>
+  </ng-template>
+</ng-template>

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CnvInfo } from '../analysis.model';
 import { MatDialogRef, MatDialog } from '@angular/material';
-import { SelectedCnvDialogComponent } from '../analysis-process/selected-cnv/selected-cnv-dialog/selected-cnv-dialog.component';
+import { SelectedCnvDialogComponent } from '../shared/analysis-process/selected-cnv/selected-cnv-dialog/selected-cnv-dialog.component';
 
 @Component({
   selector: 'app-analysis-result',
@@ -23,7 +23,7 @@ export class AnalysisResultComponent implements OnInit, OnChanges {
     'startBp',
     'endBp',
     'cnvType',
-    'overlapTools',
+    'overlaps',
     'delete'
   ];
   dialogRef: MatDialogRef<SelectedCnvDialogComponent>;

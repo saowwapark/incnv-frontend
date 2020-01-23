@@ -8,7 +8,9 @@ import {
   Optional,
   Self,
   OnDestroy,
-  AfterViewInit
+  AfterViewInit,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -58,6 +60,7 @@ export class FilteredSelectComponent
   input: ElementRef;
   filteredOptions: any[];
   selectedOption: any;
+  @Output() selectionChange = new EventEmitter();
 
   /************************************** Property for MatFormFieldControl **********************************/
   static nextId = 0;

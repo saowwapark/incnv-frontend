@@ -1,0 +1,66 @@
+.layout--absolute-default {
+  overflow: auto;
+  position: absolute;
+  top: $top-menu-height;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.layout--absolute-1vh {
+  // margin-top: 5.0rem;
+  overflow: auto;
+  position: absolute;
+  top: $top-menu-height;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  height: calc(100% - #{$top-menu-height});
+
+  > .layout__header-container {
+    position: relative;
+    background-color: mat-color($primary);
+    color: white;
+    width: 100%;
+    height: $header-container-height;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    > .layout__header-items {
+      width: 100%;
+      height: 100%;
+      padding: 0 3rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  > .layout__content-container--default {
+    width: 100%;
+    flex: 1 1 auto;
+    > .layout__content-items {
+      margin: 3rem;
+      flex: 1 1 auto;
+    }
+  }
+  // Scrollbar
+  > .layout__content-container--scrollbar {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    > .layout__content-items {
+      margin: 3rem;
+      flex: 1 1 auto;
+    }
+  }
+}

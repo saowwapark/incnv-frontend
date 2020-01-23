@@ -21,17 +21,17 @@
 
   <!-- Sampleset Name Column -->
   <ng-container matColumnDef="samplesetName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Set Name</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Sample Set</th>
     <td mat-cell *matCellDef="let sampleset">
-      {{ sampleset.samplesetName }}
+      {{ sampleset.samplesetName | titlecase }}
     </td>
   </ng-container>
 
   <!-- Description Column -->
   <ng-container matColumnDef="description">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-    <td mat-cell *matCellDef="let sampleset" class="description">
-      {{ sampleset.description }}
+    <td mat-cell *matCellDef="let sampleset">
+      {{ sampleset.description | titlecase }}
     </td>
   </ng-container>
 

@@ -21,7 +21,7 @@ table {
 .mat-column-select {
   @include table-column(5%);
 }
-.mat-column-name {
+.mat-column-samplesetName {
   @include table-column(15%);
 }
 .mat-column-description {
@@ -38,22 +38,6 @@ table {
 }
 .mat-column-delete {
   @include table-column(5%);
-}
-
-.page__container {
-  display: flex;
-  align-items: center;
-}
-
-.page-select {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  /*color: mat-color($foreground, secondary-text);*/
-
-  .label {
-    margin: 0 4px;
-  }
 }
 
 .description:first-letter {

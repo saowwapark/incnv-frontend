@@ -1,0 +1,21 @@
+<form [formGroup]="parentForm">
+  <button (click)="addSamples()">Add</button>
+
+  <div
+    formArrayName="sampleFormArray"
+    *ngFor="let sampleForm of sampleFormArray.controls; let i = index"
+  >
+    <ng-container [formGroupName]="i">
+      <mat-form-field appearance="outline">
+        <mat-label>Sample...</mat-label>
+        <app-filtered-select
+          formControlName="sample"
+          [options]="samples"
+          (selectionChange)="onSubmit()"
+        >
+        </app-filtered-select>
+      </mat-form-field>
+      <button (click)="removeSample(i)">Remove</button>
+    </ng-container>
+  </div>
+</form>

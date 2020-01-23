@@ -3,18 +3,18 @@
   fxLayoutAlign="row"
   fxLayoutAlign="space-between center"
 >
-  <div class="top-menu_logo">
-    <a routerLink="/">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <a mat-button routerLink="/">
       <img
-        class="logo-box"
         src="../../assets/static/images/logo-white.png"
         alt="Logo"
         class="top-menu__logo-img"
       />
     </a>
   </div>
-  <ul fxFlex fxLayout fxLayoutAlign="flex-end" class="top-menu__buttons">
-    <li><a routerLink="/signup">Signup</a></li>
-    <li><a routerLink="/login">Login</a></li>
-  </ul>
+
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <a mat-button style="color: white" routerLink="/signup">Signup</a>
+    <a mat-button style="color: white" routerLink="/login">Login</a>
+  </div>
 </div>
