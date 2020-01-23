@@ -78,7 +78,7 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
       }
       // new selected startBp and endBp
       this.service
-        .updateCnvInfo(response)
+        .getCnvInfo(response)
         .subscribe((updatedCnvInfo: CnvInfo) => {
           this.dataSource[index] = { ...updatedCnvInfo };
           this.dataSource = [...this.dataSource];

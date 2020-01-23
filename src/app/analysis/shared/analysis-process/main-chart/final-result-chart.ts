@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
-import { CnvTool, CnvInfo } from 'src/app/analysis/analysis.model';
+import { CnvGroup, CnvInfo } from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
 
 export class FinalResultChart {
   _id: string;
   _parentElement; // angular native element
-  _data: CnvTool[];
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolId)
+  _data: CnvGroup[];
+  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName)
   _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   _maxOverlap;
   _color;
@@ -138,13 +138,13 @@ export class FinalResultChart {
       .data(this._data)
       .join('g')
       .attr('class', 'bar')
-      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId));
+      .attr('y', (d: CnvGroup) => this.scaleY(d.cnvGroupName));
 
     // generate bar background
     const barBackground = this.bars
       .insert('rect', ':first-child')
       .attr('height', this.scaleY.bandwidth)
-      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId))
+      .attr('y', (d: CnvGroup) => this.scaleY(d.cnvGroupName))
       .attr('x', '1')
       .attr('width', this.graphContainer.attr('width'))
       .attr('fill-opacity', '0.5')
@@ -155,7 +155,7 @@ export class FinalResultChart {
   private generateSubbars(mergedColorScale) {
     const subbars = this.bars
       .selectAll('rect.subbar')
-      .data((d: CnvTool) => {
+      .data((d: CnvGroup) => {
         return d.cnvInfos;
       })
       .enter()
@@ -169,8 +169,8 @@ export class FinalResultChart {
       .attr('x', d => this.scaleX(d.startBp))
       .attr('height', this.scaleY.bandwidth)
       .attr('y', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-        return this.scaleY(parentData.cnvToolId);
+        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+        return this.scaleY(parentData.cnvGroupName);
       })
       .attr('fill', (d: CnvInfo, i, n) => {
         return mergedColorScale(d.overlaps.length);
@@ -184,8 +184,8 @@ export class FinalResultChart {
 
   public onClickSubbars(callback) {
     this.subbars.on('click', (d, i, n) => {
-      const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-      callback(parentData.cnvToolId, d);
+      const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+      callback(parentData.cnvGroupName, d);
     });
   }
 
@@ -206,7 +206,7 @@ export class FinalResultChart {
           .transition()
           .duration(300)
           .attr('fill', () => {
-            const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
+            const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
             return mergedColorScale(d.overlaps.length);
           })
           .attr('stroke-opacity', '0');
@@ -268,7 +268,7 @@ export class FinalResultChart {
     }
   }
 
-  public updateVis(newData: CnvTool[]) {
+  public updateVis(newData: CnvGroup[]) {
     // join new data
     // this.bars.data(newData);
     this._data = newData;

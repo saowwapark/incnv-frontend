@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
-import { CnvTool, CnvInfo } from 'src/app/analysis/analysis.model';
+import { CnvGroup, CnvInfo } from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
 export class ComparedChart {
   _id: string;
   _parentElement; // angular native element
-  _data: CnvTool[];
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolId) // set of tool id;
+  _data: CnvGroup[];
+  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName) // set of tool id;
   _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
@@ -26,7 +26,7 @@ export class ComparedChart {
   constructor(
     id,
     parentElement,
-    data: CnvTool[],
+    data: CnvGroup[],
     containerMargin,
     domainOnX,
     domainOnY
@@ -132,14 +132,14 @@ export class ComparedChart {
       .data(this._data)
       .join('g')
       .attr('class', 'bar')
-      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId));
+      .attr('y', (d: CnvGroup) => this.scaleY(d.cnvGroupName));
 
     // generate bar background
     const barBackground = bars
       .insert('rect', ':first-child')
 
       .attr('height', this.scaleY.bandwidth)
-      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId))
+      .attr('y', (d: CnvGroup) => this.scaleY(d.cnvGroupName))
       .attr('x', '1')
       .attr('width', this.graphContainer.attr('width'))
       .attr('fill-opacity', '0.5')
@@ -153,7 +153,7 @@ export class ComparedChart {
 
       .selectAll('rect.subbar')
 
-      .data((d: CnvTool) => {
+      .data((d: CnvGroup) => {
         return d.cnvInfos;
       })
       .join('rect')
@@ -172,19 +172,19 @@ export class ComparedChart {
       })
       .attr('height', this.scaleY.bandwidth)
       .attr('y', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-        return this.scaleY(parentData.cnvToolId);
+        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+        return this.scaleY(parentData.cnvGroupName);
       })
       .attr('fill', (d: CnvInfo, i, n) => {
-        const parentData: CnvTool = d3
+        const parentData: CnvGroup = d3
           .select(n[i].parentNode)
-          .datum() as CnvTool;
-        const cnvToolId = parentData.cnvToolId;
-        return this.colorScale(cnvToolId) as string;
+          .datum() as CnvGroup;
+        const cnvGroupName = parentData.cnvGroupName;
+        return this.colorScale(cnvGroupName) as string;
       })
       .attr('stroke', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-        return this.colorScale(parentData.cnvToolId);
+        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+        return this.colorScale(parentData.cnvGroupName);
       })
       .attr('stroke-opacity', '0');
 
@@ -193,8 +193,8 @@ export class ComparedChart {
 
   public onClickSubbars(callback) {
     this.subbars.on('click', (d, i, n) => {
-      const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-      callback(parentData.cnvToolId, d);
+      const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+      callback(parentData.cnvGroupName, d);
     });
   }
 
@@ -216,8 +216,8 @@ export class ComparedChart {
           .transition()
           .duration(300)
           .attr('fill', () => {
-            const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-            return this.colorScale(parentData.cnvToolId);
+            const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+            return this.colorScale(parentData.cnvGroupName);
           })
           .attr('stroke-opacity', '0');
 

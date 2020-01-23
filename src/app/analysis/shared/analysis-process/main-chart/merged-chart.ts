@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
-import { CnvTool, CnvInfo } from 'src/app/analysis/analysis.model';
+import { CnvGroup, CnvInfo } from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
 
 export class MergedChart {
   _id: string;
   _parentElement; // angular native element
-  _data: CnvTool[];
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvToolId) // set of tool id;
+  _data: CnvGroup[];
+  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName) // set of tool id;
   _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
   _maxOverlap;
   _color;
@@ -28,7 +28,7 @@ export class MergedChart {
   constructor(
     id,
     parentElement,
-    data: CnvTool[],
+    data: CnvGroup[],
     containerMargin,
     domainOnX,
     domainOnY,
@@ -135,14 +135,14 @@ export class MergedChart {
       .data(this._data)
       .join('g')
       .attr('class', 'bar')
-      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId));
+      .attr('y', (d: CnvGroup) => this.scaleY(d.cnvGroupName));
 
     // generate bar background
     const barBackground = bars
       .insert('rect', ':first-child')
 
       .attr('height', this.scaleY.bandwidth)
-      .attr('y', (d: CnvTool) => this.scaleY(d.cnvToolId))
+      .attr('y', (d: CnvGroup) => this.scaleY(d.cnvGroupName))
       .attr('x', '1')
       .attr('width', this.graphContainer.attr('width'))
       .attr('fill-opacity', '0.5')
@@ -156,7 +156,7 @@ export class MergedChart {
 
       .selectAll('rect.subbar')
 
-      .data((d: CnvTool) => {
+      .data((d: CnvGroup) => {
         return d.cnvInfos;
       })
       .join('rect')
@@ -175,15 +175,15 @@ export class MergedChart {
       })
       .attr('height', this.scaleY.bandwidth)
       .attr('y', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-        return this.scaleY(parentData.cnvToolId);
+        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+        return this.scaleY(parentData.cnvGroupName);
       })
       .attr('fill', (d: CnvInfo, i, n) => {
         const color = mergedColorScale(d.overlaps.length);
         return color;
       })
       .attr('stroke', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
+        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
         return this._color;
       })
       .attr('stroke-opacity', '0');
@@ -193,8 +193,8 @@ export class MergedChart {
 
   public onClickSubbars(callback) {
     this.subbars.on('click', (d, i, n) => {
-      const parentData = d3.select(n[i].parentNode).datum() as CnvTool;
-      callback(parentData.cnvToolId, d);
+      const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+      callback(parentData.cnvGroupName, d);
     });
   }
 

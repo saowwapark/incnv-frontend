@@ -1,7 +1,7 @@
 import {
   CnvInfo,
   RegionBp,
-  CnvTool,
+  CnvGroup,
   IndividualSampleConfig
 } from '../analysis.model';
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
@@ -23,8 +23,8 @@ import { AnalysisProcessService } from '../shared/analysis-process/analysis-proc
 })
 export class IndividualProcessComponent implements OnInit, AfterViewInit {
   individualConfig: IndividualSampleConfig;
-  cnvTools: CnvTool[];
-  mergedTool: CnvTool;
+  cnvTools: CnvGroup[];
+  mergedTool: CnvGroup;
   selectedChrRegion: RegionBp;
   selectedCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
@@ -72,7 +72,7 @@ export class IndividualProcessComponent implements OnInit, AfterViewInit {
     // max character lenght
     let maxLength = 0;
     for (const tool of this.cnvTools) {
-      const length = tool.cnvToolId.length;
+      const length = tool.cnvGroupName.length;
       if (length > maxLength) {
         maxLength = length;
       }

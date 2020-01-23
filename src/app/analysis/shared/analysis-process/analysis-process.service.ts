@@ -1,6 +1,6 @@
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 import {
-  CnvTool,
+  CnvGroup,
   IndividualSampleConfig,
   MultipleSampleConfig
 } from '../../analysis.model';
@@ -27,7 +27,7 @@ export class AnalysisProcessService {
 
   getIndividualData(
     config: IndividualSampleConfig
-  ): Observable<[CnvTool[], CnvTool]> {
+  ): Observable<[CnvGroup[], CnvGroup]> {
     const options = {
       // headers: new HttpHeaders({
       //   'Content-Type': 'application/json'
@@ -48,7 +48,7 @@ export class AnalysisProcessService {
 
   getMulitpleData(
     config: MultipleSampleConfig
-  ): Observable<[CnvTool[], CnvTool]> {
+  ): Observable<[CnvGroup[], CnvGroup]> {
     const options = {
       // headers: new HttpHeaders({
       //   'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export class AnalysisProcessService {
       .pipe(map(res => res['payload']));
   }
 
-  updateCnvInfos(cnvInfos: CnvInfo[]) {
+  getCnvInfos(cnvInfos: CnvInfo[]) {
     return (
       this._http
         // .get(`${this.baseRouteUrl}/final-cnv-annotations`, {
@@ -78,7 +78,7 @@ export class AnalysisProcessService {
     );
   }
 
-  updateCnvInfo(cnvInfo: CnvInfo) {
+  getCnvInfo(cnvInfo: CnvInfo) {
     return (
       this._http
         // .get(`${this.baseRouteUrl}/final-cnv-annotations`, {

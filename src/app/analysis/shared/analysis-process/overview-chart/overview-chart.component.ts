@@ -11,7 +11,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import * as d3 from 'd3';
-import { CnvTool, CnvInfo } from '../../../analysis.model';
+import { CnvGroup, CnvInfo } from '../../../analysis.model';
 import { OverviewChart } from './overview-chart';
 import { HUMAN_CHROMOSOME } from '../../../chromosome.model';
 
@@ -21,7 +21,7 @@ import { HUMAN_CHROMOSOME } from '../../../chromosome.model';
   styleUrls: ['./overview-chart.component.scss']
 })
 export class OverviewChartComponent implements OnInit, OnChanges {
-  @Input() mergedData: CnvTool;
+  @Input() mergedData: CnvGroup;
   @Input() chr: string;
   @Input() height: number;
   @Output()
@@ -40,7 +40,7 @@ export class OverviewChartComponent implements OnInit, OnChanges {
   chrLength: number;
 
   mergedToolId = 'merged tools';
-  svg: d3.Selection<SVGSVGElement, CnvTool, null, undefined>;
+  svg: d3.Selection<SVGSVGElement, CnvGroup, null, undefined>;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {

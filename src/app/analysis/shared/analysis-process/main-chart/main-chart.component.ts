@@ -19,7 +19,7 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 import { MergedChart } from './merged-chart';
 import { ComparedChart } from './compared-chart';
 import {
-  CnvTool,
+  CnvGroup,
   RegionBp,
   CnvInfo,
   FINAL_RESULT_ID
@@ -33,8 +33,8 @@ import { AnnotationDialogComponent } from '../annotation-dialog/annotation-dialo
 })
 export class MainChartComponent
   implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
-  @Input() comparedData: CnvTool[];
-  @Input() mergedData: CnvTool;
+  @Input() comparedData: CnvGroup[];
+  @Input() mergedData: CnvGroup;
   @Input() height: number;
   @Input() selectedChrRegion: RegionBp;
   @Input() containerMargin: {
@@ -80,7 +80,7 @@ export class MainChartComponent
   mergedChart;
   finalResultChart;
 
-  finalResultData: CnvTool;
+  finalResultData: CnvGroup;
 
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
 
@@ -99,8 +99,8 @@ export class MainChartComponent
     private _matDialog: MatDialog,
     private service: AnalysisProcessService
   ) {
-    this.finalResultData = new CnvTool();
-    this.finalResultData.cnvToolId = FINAL_RESULT_ID;
+    this.finalResultData = new CnvGroup();
+    this.finalResultData.cnvGroupName = FINAL_RESULT_ID;
     this.finalResultData.cnvInfos = [];
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -149,10 +149,10 @@ export class MainChartComponent
       this.comparedData,
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      this.comparedData.map(tool => tool.cnvToolId)
+      this.comparedData.map(tool => tool.cnvGroupName)
     );
 
-    this.comparedChart.onClickSubbars((cnvToolId, data) => {
+    this.comparedChart.onClickSubbars((cnvGroupName, data) => {
       const selectedCnvRegions: RegionBp[] = [];
       for (const selectedCnv of this.finalResultData.cnvInfos) {
         const selectedCnvRegion = new RegionBp(
@@ -162,7 +162,7 @@ export class MainChartComponent
         selectedCnvRegions.push(selectedCnvRegion);
       }
 
-      this.createDialog(cnvToolId, data, selectedCnvRegions);
+      this.createDialog(cnvGroupName, data, selectedCnvRegions);
     });
   }
 
@@ -179,12 +179,12 @@ export class MainChartComponent
       [this.mergedData],
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      [this.mergedData.cnvToolId],
+      [this.mergedData.cnvGroupName],
       this.comparedData.length,
       'red'
     );
 
-    this.mergedChart.onClickSubbars((cnvToolId, data) => {
+    this.mergedChart.onClickSubbars((cnvGroupName, data) => {
       const selectedCnvRegions: RegionBp[] = [];
       for (const selectedCnv of this.finalResultData.cnvInfos) {
         const selectedCnvRegion = new RegionBp(
@@ -194,7 +194,7 @@ export class MainChartComponent
         selectedCnvRegions.push(selectedCnvRegion);
       }
 
-      this.createDialog(cnvToolId, data, selectedCnvRegions);
+      this.createDialog(cnvGroupName, data, selectedCnvRegions);
     });
   }
 
@@ -216,20 +216,20 @@ export class MainChartComponent
       'green'
     );
 
-    this.finalResultChart.onClickSubbars((cnvToolId, data) => {
-      this.createDialog(cnvToolId, data);
+    this.finalResultChart.onClickSubbars((cnvGroupName, data) => {
+      this.createDialog(cnvGroupName, data);
     });
   }
 
   private createDialog(
-    cnvToolId: string,
+    cnvGroupName: string,
     cnvInfo: CnvInfo,
     selectedCnvRegions?: RegionBp[]
   ) {
     this.dialogRef = this._matDialog.open(AnnotationDialogComponent, {
       panelClass: 'dialog-default',
       data: {
-        title: cnvToolId,
+        title: cnvGroupName,
         cnvInfo: cnvInfo,
         selectedCnvRegions: selectedCnvRegions
       }
@@ -240,16 +240,14 @@ export class MainChartComponent
       if (!response) {
         return;
       }
-      this.service
-        .updateCnvInfo(response)
-        .subscribe((updatedCnvInfo: CnvInfo) => {
-          this.finalResultData.cnvInfos.push(updatedCnvInfo);
-          this.createFinalResultChart();
-          // if (this.finalResultChart) {
-          //   this.finalResultChart.updateVis([this.finalResultData]);
-          // }
-          this.selectCnvs.next(this.finalResultData.cnvInfos);
-        });
+      this.service.getCnvInfo(response).subscribe((updatedCnvInfo: CnvInfo) => {
+        this.finalResultData.cnvInfos.push(updatedCnvInfo);
+        this.createFinalResultChart();
+        // if (this.finalResultChart) {
+        //   this.finalResultChart.updateVis([this.finalResultData]);
+        // }
+        this.selectCnvs.next(this.finalResultData.cnvInfos);
+      });
     });
   }
 }

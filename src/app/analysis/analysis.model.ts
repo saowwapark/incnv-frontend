@@ -52,8 +52,8 @@ export class MultipleSampleConfig {
     this.samples = samples || [];
   }
 }
-export class CnvTool {
-  cnvToolId?: string; // cnv tool name and parameter.
+export class CnvGroup {
+  cnvGroupName?: string; // cnv tool name and parameter.
   cnvInfos?: CnvInfo[]; // annotation for a given cnv tool.
 }
 
