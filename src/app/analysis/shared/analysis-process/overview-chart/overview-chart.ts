@@ -4,8 +4,10 @@ import { CnvInfo } from '../../../analysis.model';
 export class OverviewChart {
   _parentElement; // string
   _data: CnvInfo[];
+  _yAxisUnit;
   _domainOnX;
   _domainOnY;
+
   graphContainer;
   clipPath;
   scaleX: d3.ScaleLinear<number, number>;
@@ -25,13 +27,16 @@ export class OverviewChart {
     parentElement,
     data: CnvInfo[],
     containerMargin,
+    yUnit,
     domainOnX,
     domainOnY?
   ) {
     this._parentElement = parentElement;
     this._data = data;
+    this._yAxisUnit = yUnit;
     this._domainOnX = domainOnX;
     this._domainOnY = domainOnY || [0, d3.max(data, d => d.overlaps.length)];
+
     this.initVis(containerMargin);
   }
   private generateGraphContainer(containerMargin) {
@@ -111,7 +116,7 @@ export class OverviewChart {
       .axisLeft(this.scaleY)
       .ticks(this._domainOnY[1])
       .tickFormat((d: number) => {
-        return `${d3.format(',d')(d)} tools`;
+        return `${d3.format(',d')(d)} ${this._yAxisUnit}`;
       });
     yAxisGroup.call(this.yAxis);
   }

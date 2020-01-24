@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { IndividualConfigureComponent } from './individual-configure/individual-configure.component';
 import { MultipleConfigureComponent } from './multiple-configure/multiple-configure.component';
 import { ChooseSamplesetResolver } from './shared/analysis-configure/choose-sampleset/choose-sampleset.resolver';
+import { MultipleProcessComponent } from './multiple-process/multiple-process.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'multiple-analysis/analysis-process',
-    component: IndividualProcessComponent
+    component: MultipleProcessComponent
   }
 ];
 @NgModule({

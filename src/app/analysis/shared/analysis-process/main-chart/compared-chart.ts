@@ -40,9 +40,27 @@ export class ComparedChart {
     // this.domainOnY = domainOnY;
     this.initVis(containerMargin);
   }
+
+  private calContainerHeight(containerMargin) {
+    const barNumber = this._data.length;
+    const xAxisBarHeight = 20;
+    const dataBarHeight = 30; // approximately with inner padding
+    const innerPaddingHeight = 0.3 * dataBarHeight;
+    const innerPaddingNumber = barNumber === 0 ? 0 : barNumber - 1;
+    const outterPaddingHeight = 0.2 * dataBarHeight;
+    return (
+      containerMargin.top +
+      containerMargin.bottom +
+      xAxisBarHeight +
+      barNumber * dataBarHeight +
+      innerPaddingHeight * innerPaddingNumber +
+      2 * outterPaddingHeight
+    );
+  }
   private generateGraphContainer(containerMargin) {
     const width = this._parentElement.offsetWidth;
-    const height = this._parentElement.offsetHeight;
+    // const height = this._parentElement.offsetHeight;
+    const height = this.calContainerHeight(containerMargin);
 
     console.log(this._parentElement.id);
     // select the svg container

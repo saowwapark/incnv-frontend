@@ -1,7 +1,7 @@
 import {
   RegionBp,
   CnvInfo,
-  MERGED_TOOL_ID,
+  MERGED_RESULT_NAME,
   SELECTED_CNV_ID
 } from '../../../analysis.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -41,6 +41,7 @@ export class AnnotationDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     { title, cnvInfo, selectedCnvRegions }: any,
     public dialogRef: MatDialogRef<AnnotationDialogComponent>,
+    public matDialogRef: MatDialogRef<AnnotationDialogComponent>,
     private fb: FormBuilder
   ) {
     this.dialogTitle = title;
@@ -55,7 +56,7 @@ export class AnnotationDialogComponent implements OnInit {
       allowNegative: false
     });
 
-    if (title === MERGED_TOOL_ID || title === SELECTED_CNV_ID) {
+    if (title === MERGED_RESULT_NAME || title === SELECTED_CNV_ID) {
       this.isSelectable = true;
     } else {
       this.isSelectable = false;
@@ -63,7 +64,9 @@ export class AnnotationDialogComponent implements OnInit {
     this.selectForm = this.createSelectForm();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.matDialogRef.addPanelClass('annotation-dialog');
+  }
 
   // createSelectForm() {
   //   const selectForm = this.fb.group({
@@ -158,5 +161,26 @@ export class AnnotationDialogComponent implements OnInit {
       : this.selectForm.hasError('duplicated')
       ? 'Duplicated'
       : '';
+  }
+
+  copyPasteStartBp() {
+    this.selectForm.controls['selectedStartBp'].setValue(this.cnvInfo.startBp);
+  }
+
+  copyPasteEndBp() {
+    this.selectForm.controls['selectedEndBp'].setValue(this.cnvInfo.endBp);
+  }
+
+  ensemblLink(geneId) {
+    const url = `http://www.ensembl.org/id/${geneId}`;
+    window.open(url, '_blank');
+  }
+  dgvLink(variantAccession) {
+    if (this.cnvInfo.referenceGenome === 'grch37') {
+      const url = `http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg19/?name=${variantAccession}`;
+      window.open(url, '_blank');
+    } else {
+      window.location.href = `http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg38/?name=${variantAccession}`;
+    }
   }
 }

@@ -34,6 +34,8 @@
       <mat-label>Sample Name</mat-label>
       <mat-chip-list #sampleList>
         <mat-chip
+          color="accent"
+          selected
           *ngFor="let sample of form.get('samples').value; let i = index"
           selectable="false"
           [removable]="true"
@@ -43,7 +45,6 @@
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
         <input
-          placeholder="Sample Name"
           [matChipInputFor]="sampleList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           matChipInputAddOnBlur="true"

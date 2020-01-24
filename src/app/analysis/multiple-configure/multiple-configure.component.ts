@@ -73,13 +73,14 @@ export class MultipleConfigureComponent implements OnInit {
   }
 
   confirmConfig() {
-    const individualConfig = new MultipleSampleConfig(
+    const multipleConfig = new MultipleSampleConfig(
       this.chosenReferenceGenome,
       this.chosenChr,
       this.chosenCnvType,
       this.chosenFile,
+      this.chosenSampleset.samplesetName,
       this.chosenSamples
     );
-    this.service.onMultipleConfigChanged.next(individualConfig);
+    this.service.onMultipleSampleConfigChanged.next(multipleConfig);
   }
 }

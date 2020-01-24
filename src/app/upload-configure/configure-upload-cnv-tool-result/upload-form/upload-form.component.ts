@@ -66,7 +66,6 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
   // -----------------------------------------------------------------------------------------------------
 
   ngOnInit() {
-    console.log('upload-form.component.ts');
     this.form = this._createUploadForm();
 
     this._samplesetService.onTriggerDataChanged
@@ -194,6 +193,7 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onReset() {
     this.form.reset();
+    this.tagDescriptions = [];
   }
   onLoadSamplesetPage() {
     this._router.navigate([]).then(result => {

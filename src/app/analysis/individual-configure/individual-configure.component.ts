@@ -77,6 +77,6 @@ export class IndividualConfigureComponent implements OnInit {
       this.chosenSampleset.samplesetName,
       this.chosenSample
     );
-    this.service.onIndividualConfigChanged.next(individualConfig);
+    this.service.onIndividualSampleConfigChanged.next(individualConfig);
   }
 }

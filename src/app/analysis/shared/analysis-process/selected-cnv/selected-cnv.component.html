@@ -94,6 +94,7 @@
           [attr.colspan]="displayedColumns.length"
         >
           <div
+            *ngIf="row.ensembls"
             class="expand-row-wrapper"
             fxLayout="column"
             [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
@@ -107,6 +108,7 @@
                   *ngFor="let ensembl of row.ensembls"
                   color="accent"
                   selected
+                  (click)="ensemblLink(ensembl.geneId)"
                 >
                   {{ ensembl.geneSymbol }}
                 </mat-chip>
@@ -124,6 +126,7 @@
           [attr.colspan]="displayedColumns.length"
         >
           <div
+            *ngIf="row.dgvs"
             class="expand-row-wrapper"
             fxLayout="column"
             [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
@@ -133,8 +136,13 @@
                 DGV:
               </div>
               <mat-chip-list>
-                <mat-chip *ngFor="let dgv of row.dgvs" color="accent" selected>
-                  {{ dgv }}
+                <mat-chip
+                  *ngFor="let dgv of row.dgvs"
+                  color="accent"
+                  selected
+                  (click)="dgvLink(row.chromosome, dgv.variantAccession)"
+                >
+                  {{ dgv.variantAccession }}
                 </mat-chip>
               </mat-chip-list>
             </div>
@@ -150,6 +158,7 @@
           [attr.colspan]="displayedColumns.length"
         >
           <div
+            *ngIf="row.clinvar"
             class="expand-row-wrapper"
             fxLayout="column"
             [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
@@ -159,10 +168,26 @@
                 ClinVar:
               </div>
               <div class="expand-detail--data">
-                <mat-list>
-                  <mat-list-item>
-                    <div>OMIM</div>
-                    <div>
+                <div class="property-row" fxLayout="row wrap">
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="grid-color-header"
+                  >
+                    <div fxFlex="0 1 20%" class="grid-padding-header">OMIM</div>
+                    <div fxFlex="0 1 40%" class="grid-padding-header">
+                      Phenotype
+                    </div>
+                    <div fxFlex="0 1 40%" class="grid-padding-header">
+                      Clinical Significance
+                    </div>
+                  </div>
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="grid-color-data"
+                  >
+                    <div fxFlex="0 1 50%" class="grid-padding-data">
                       <mat-chip-list>
                         <mat-chip
                           *ngFor="let omimId of row.clinvar.omimIds"
@@ -173,45 +198,14 @@
                         </mat-chip>
                       </mat-chip-list>
                     </div>
-                  </mat-list-item>
-
-                  <mat-divider></mat-divider>
-
-                  <mat-list-item>
-                    <div>Phenotype</div>
-                    <div>
-                      <mat-chip-list>
-                        <mat-chip
-                          *ngFor="let phenotype of row.clinvar.phenotypes"
-                          color="accent"
-                          selected
-                        >
-                          {{ phenotype }}
-                        </mat-chip>
-                      </mat-chip-list>
+                    <div fxFlex="0 1 25%" class="grid-padding-data">
+                      {{ row.clinvar.phenotypes.join(', ') }}
                     </div>
-                  </mat-list-item>
-
-                  <mat-divider></mat-divider>
-
-                  <mat-list-item>
-                    <div>Clinical Significance</div>
-                    <div>
-                      <mat-chip-list>
-                        <mat-chip
-                          *ngFor="
-                            let clinicalSignificance of row.clinvar
-                              .clinicalSignificances
-                          "
-                          color="accent"
-                          selected
-                        >
-                          {{ clinicalSignificance }}
-                        </mat-chip>
-                      </mat-chip-list>
+                    <div fxFlex="0 1 25%" class="grid-padding-data">
+                      {{ row.clinvar.clinicalSignificances.join(', ') }}
                     </div>
-                  </mat-list-item>
-                </mat-list>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

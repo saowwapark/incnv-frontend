@@ -174,19 +174,33 @@
                   fxFlex="1 1 70%"
                   fxLayout="column"
                 >
-                  <div fxLayout="row" fxLayoutAlign="start center">
-                    <div fxFlex="1 1 50%" class="grid-header">File Name</div>
-                    <div fxFlex="1 1 25%" class="grid-header">File Info.</div>
-                    <div fxFlex="1 1 25%" class="grid-header">CNV Tool</div>
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="grid-color-header"
+                  >
+                    <div fxFlex="1 1 50%" class="grid-padding-header">
+                      File Name
+                    </div>
+                    <div fxFlex="1 1 25%" class="grid-padding-header">
+                      File Info.
+                    </div>
+                    <div fxFlex="1 1 25%" class="grid-padding-header">
+                      CNV Tool
+                    </div>
                   </div>
-                  <div fxLayout="row" fxLayoutAlign="start center">
-                    <div fxFlex="1 1 50%" class="grid-data">
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="grid-color-data"
+                  >
+                    <div fxFlex="1 1 50%" class="grid-padding-data">
                       {{ chosenFile.fileName | titlecase }}
                     </div>
-                    <div fxFlex="1 1 25%" class="grid-data">
+                    <div fxFlex="1 1 25%" class="grid-padding-data">
                       {{ chosenFile.fileInfo | titlecase }}
                     </div>
-                    <div fxFlex="1 1 25%" class="grid-data">
+                    <div fxFlex="1 1 25%" class="grid-padding-data">
                       {{ chosenFile.cnvToolName | titlecase }}
                     </div>
                   </div>
@@ -220,7 +234,7 @@
               <button
                 mat-raised-button
                 color="primary"
-                [routerLink]="['/muliple-analysis/analysis-process']"
+                [routerLink]="['/multiple-analysis/analysis-process']"
                 (click)="confirmConfig()"
               >
                 NEXT

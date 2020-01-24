@@ -1,5 +1,4 @@
 import { AnalysisProcessService } from '../analysis-process.service';
-import { FinalResultChart } from './final-result-chart';
 import {
   Component,
   OnInit,
@@ -16,13 +15,13 @@ import {
 } from '@angular/core';
 
 import { MatDialogRef, MatDialog } from '@angular/material';
-import { MergedChart } from './merged-chart';
+import { MergedChart } from './result-chart';
 import { ComparedChart } from './compared-chart';
 import {
   CnvGroup,
   RegionBp,
   CnvInfo,
-  FINAL_RESULT_ID
+  FINAL_RESULT_NAME
 } from 'src/app/analysis/analysis.model';
 import { AnnotationDialogComponent } from '../annotation-dialog/annotation-dialog.component';
 
@@ -35,7 +34,6 @@ export class MainChartComponent
   implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Input() comparedData: CnvGroup[];
   @Input() mergedData: CnvGroup;
-  @Input() height: number;
   @Input() selectedChrRegion: RegionBp;
   @Input() containerMargin: {
     top: number;
@@ -43,7 +41,6 @@ export class MainChartComponent
     bottom: number;
     left: number;
   };
-
   @Input() inputCnvs: CnvInfo[];
 
   @Output() selectCnvs = new EventEmitter<CnvInfo[]>();
@@ -100,7 +97,7 @@ export class MainChartComponent
     private service: AnalysisProcessService
   ) {
     this.finalResultData = new CnvGroup();
-    this.finalResultData.cnvGroupName = FINAL_RESULT_ID;
+    this.finalResultData.cnvGroupName = FINAL_RESULT_NAME;
     this.finalResultData.cnvInfos = [];
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -205,13 +202,13 @@ export class MainChartComponent
     if (this.finalResultChart) {
       this.finalResultChart.removeVis();
     }
-    this.finalResultChart = new FinalResultChart(
-      '2',
+    this.finalResultChart = new MergedChart(
+      '3',
       this.finalResultChartDiv.nativeElement,
       [this.finalResultData],
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      [FINAL_RESULT_ID],
+      [FINAL_RESULT_NAME],
       this.comparedData.length,
       'green'
     );

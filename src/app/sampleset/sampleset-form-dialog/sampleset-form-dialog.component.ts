@@ -53,7 +53,7 @@ export class SamplesetFormDialogComponent implements OnInit {
   onRemoveSample(index: number): void {
     if (index >= 0) {
       const samples = this.form.get('samples').value;
-      samples.value.splice(index, 1);
+      samples.splice(index, 1);
     }
   }
 

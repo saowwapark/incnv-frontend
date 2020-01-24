@@ -1,10 +1,10 @@
+import { MERGED_RESULT_NAME, FINAL_RESULT_NAME } from './../analysis.model';
 import {
   CnvInfo,
   RegionBp,
   CnvGroup,
   IndividualSampleConfig,
-  MERGED_RESULT_NAME,
-  FINAL_RESULT_NAME
+  MultipleSampleConfig
 } from '../analysis.model';
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 
@@ -19,12 +19,12 @@ import {
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
 
 @Component({
-  selector: 'app-individual-process',
-  templateUrl: './individual-process.component.html',
-  styleUrls: ['./individual-process.component.scss']
+  selector: 'app-multiple-process',
+  templateUrl: './multiple-process.component.html',
+  styleUrls: ['./multiple-process.component.scss']
 })
-export class IndividualProcessComponent implements OnInit, AfterViewInit {
-  individualConfig: IndividualSampleConfig;
+export class MultipleProcessComponent implements OnInit, AfterViewInit {
+  multipleConfig: MultipleSampleConfig;
   cnvTools: CnvGroup[];
   mergedTool: CnvGroup;
   selectedChrRegion: RegionBp;
@@ -34,20 +34,11 @@ export class IndividualProcessComponent implements OnInit, AfterViewInit {
   constructor(private service: AnalysisProcessService) {}
 
   ngOnInit() {
-    // // mock data
-    //  this.individualConfig.referenceGenome = chosenReferenceGenome;
-    //  this.individualConfig.samplesetName =
-    //    chosenSampleset.samplesetName;
-    //  this.individualConfig.sample = chosenSample;
-    //  this.individualConfig.uploadCnvToolResults = chosenFiles;
-    //  this.individualConfig.cnvType = chosenCnvType;
-    //  this.individualConfig.chromosome = chosenChr;
-
-    this.service.onIndividualSampleConfigChanged.subscribe(
-      (config: IndividualSampleConfig) => {
-        this.individualConfig = config;
+    this.service.onMultipleSampleConfigChanged.subscribe(
+      (config: MultipleSampleConfig) => {
+        this.multipleConfig = config;
         this.service
-          .getIndividualSampleData(this.individualConfig)
+          .getMultipleSampleData(this.multipleConfig)
           .subscribe(data => {
             this.cnvTools = data[0];
             this.mergedTool = data[1];

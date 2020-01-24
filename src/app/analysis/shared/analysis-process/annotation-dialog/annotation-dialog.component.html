@@ -61,31 +61,52 @@
           {{ cnvInfo.endBp | number }}</span
         >
         <form [formGroup]="selectForm" (ngSubmit)="selectBasepair()">
-          <div class="property-row" fxLayoutAlign=" center" fxLayout="row wrap">
-            <div class="property property-value">
-              <mat-form-field>
-                <input
-                  formControlName="selectedStartBp"
-                  matInput
-                  placeholder="start basepair"
-                  [textMask]="{ mask: numberMark }"
-                  unmaskNumeric
-                />
-              </mat-form-field>
-            </div>
-            <div class="property property-value">
-              <span> to </span>
-            </div>
-            <div class="property property-value">
-              <mat-form-field>
-                <input
-                  formControlName="selectedEndBp"
-                  matInput
-                  placeholder="end basepair"
-                  [textMask]="{ mask: numberMark }"
-                  unmaskNumeric
-                />
-              </mat-form-field>
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="property-row" fxLayoutAlign=" center" fxLayout="row">
+              <div
+                class="property property-value"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+              >
+                <mat-form-field appearance="outline">
+                  <mat-label>start basepair</mat-label>
+                  <input
+                    formControlName="selectedStartBp"
+                    matInput
+                    placeholder="start basepair"
+                    [textMask]="{ mask: numberMark }"
+                    unmaskNumeric
+                  />
+                  <mat-icon matSuffix (click)="copyPasteStartBp()"
+                    >file_copy</mat-icon
+                  >
+                </mat-form-field>
+              </div>
+              <div class="property property-value">
+                <span> to </span>
+              </div>
+              <div
+                class="property property-value"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+              >
+                <mat-form-field appearance="outline">
+                  <mat-label>end basepair</mat-label>
+                  <input
+                    formControlName="selectedEndBp"
+                    matInput
+                    placeholder="end basepair"
+                    [textMask]="{ mask: numberMark }"
+                    unmaskNumeric
+                  />
+                  <mat-icon
+                    matSuffix
+                    mat-raised-button
+                    (click)="copyPasteEndBp()"
+                    >file_copy</mat-icon
+                  >
+                </mat-form-field>
+              </div>
             </div>
 
             <button mat-raised-button color="primary">
@@ -98,30 +119,105 @@
 
     <mat-tab label="Ensembl">
       <p>Relatived Gene</p>
-      <div *ngFor="let ensembl of cnvInfo.ensembls">
-        <a
-          href="http://www.ensembl.org/id/{{ ensembl.geneId }}"
-          target="_blank"
-          >{{ ensembl.geneSymbol }}</a
-        >
-      </div>
+
+      <table mat-table [dataSource]="cnvInfo.ensembls">
+        <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="geneId">
+          <th mat-header-cell *matHeaderCellDef>Gene Id</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-chip-list>
+              <mat-chip
+                color="accent"
+                selected
+                (click)="ensemblLink(element.geneId)"
+              >
+                {{ element.geneId }}
+              </mat-chip>
+            </mat-chip-list>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="geneSymbol">
+          <th mat-header-cell *matHeaderCellDef>Gene Symbol</th>
+          <td mat-cell *matCellDef="let element">{{ element.geneSymbol }}</td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="startBp">
+          <th mat-header-cell *matHeaderCellDef>Start</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.basepair.startBp }}
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="endBp">
+          <th mat-header-cell *matHeaderCellDef>End</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.basepair.endBp }}
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="['geneId', 'geneSymbol', 'startBp', 'endBp']"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: ['geneId', 'geneSymbol', 'startBp', 'endBp']
+          "
+        ></tr>
+      </table>
     </mat-tab>
     <mat-tab label="DGV">
       <p>Related DGV</p>
-      <div *ngFor="let dgv of cnvInfo.dgvs">
-        <a
-          *ngIf="cnvInfo.referenceGenome === 'grch37'"
-          href="http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg19/?name={{ dgv }}"
-          target="_blank"
-          >{{ dgv }}
-        </a>
-
-        <a
-          *ngIf="cnvInfo.referenceGenome === 'grch38'"
-          href="http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg38/?name={{ dgv }}"
-          target="_blank"
-          >{{ dgv }}
-        </a>
+      <div class="property-row" fxLayout="column">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          class="grid-color-header"
+        >
+          <div fxFlex="0 1 30%" class="grid-padding-header property-name">
+            DGV
+          </div>
+          <div fxFlex="0 1 35%" class="grid-padding-header property-name">
+            Start
+          </div>
+          <div fxFlex="0 1 35%" class="grid-padding-header property-name">
+            End
+          </div>
+        </div>
+        <div
+          *ngFor="let dgv of cnvInfo.dgvs"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          class="grid-color-data"
+        >
+          <div fxFlex="0 1 30%" class="grid-padding-data property-value">
+            <mat-chip-list>
+              <mat-chip
+                color="accent"
+                selected
+                (click)="dgvLink(dgv.variantAccession)"
+                target="_blank"
+              >
+                {{ dgv.variantAccession }}
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+          <div fxFlex="0 1 35%" class="grid-padding-data property-value">
+            {{ dgv.basepair.startBp | number }}
+          </div>
+          <div fxFlex="0 1 35%" class="grid-padding-data property-value">
+            {{ dgv.basepair.endBp | number }}
+          </div>
+        </div>
       </div>
     </mat-tab>
     <mat-tab label="Clinvar">

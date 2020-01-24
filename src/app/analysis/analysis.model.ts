@@ -1,6 +1,6 @@
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
-export const MERGED_TOOL_ID = 'merged tools';
-export const FINAL_RESULT_ID = 'final result';
+export const MERGED_RESULT_NAME = 'merged result';
+export const FINAL_RESULT_NAME = 'final result';
 export const SELECTED_CNV_ID = 'selected CNV';
 
 export class IndividualSampleConfig {
@@ -64,7 +64,7 @@ export class CnvInfo {
   startBp?: number;
   endBp?: number;
   overlaps?: string[];
-  dgvs?: string[]; // dgv.variant_accession
+  dgvs?: DgvAnnotation[]; // dgv.variant_accession
   ensembls?: EnsemblAnnotation[]; // ensembl.gene_id
   clinvar?: ClinvarAnnotationList;
 }
@@ -83,10 +83,22 @@ export class ClinvarAnnotationList {
 export class EnsemblAnnotation {
   geneId?: string;
   geneSymbol?: string;
+  basepair?: RegionBp;
 
-  constructor(geneId?, geneSymbol?) {
+  constructor(geneId?, geneSymbol?, basepair?) {
     this.geneId = geneId || '';
     this.geneSymbol = geneSymbol || '';
+    this.basepair = basepair || {};
+  }
+}
+
+export class DgvAnnotation {
+  variantAccession?: number;
+  basepair?: RegionBp;
+
+  constructor(variantAccession?, basepair?) {
+    this.variantAccession = variantAccession || undefined;
+    this.basepair = basepair || {};
   }
 }
 

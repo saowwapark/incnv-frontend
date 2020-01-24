@@ -77,13 +77,11 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
         return;
       }
       // new selected startBp and endBp
-      this.service
-        .getCnvInfo(response)
-        .subscribe((updatedCnvInfo: CnvInfo) => {
-          this.dataSource[index] = { ...updatedCnvInfo };
-          this.dataSource = [...this.dataSource];
-          this.updateSelectedCnv.next([...this.dataSource]);
-        });
+      this.service.getCnvInfo(response).subscribe((updatedCnvInfo: CnvInfo) => {
+        this.dataSource[index] = { ...updatedCnvInfo };
+        this.dataSource = [...this.dataSource];
+        this.updateSelectedCnv.next([...this.dataSource]);
+      });
     });
   }
 
@@ -91,5 +89,18 @@ export class SelectedCnvComponent implements OnInit, OnChanges {
     this.dataSource.splice(index, 1);
     this.dataSource = [...this.dataSource];
     this.updateSelectedCnv.next([...this.dataSource]);
+  }
+
+  ensemblLink(geneId) {
+    const url = `http://www.ensembl.org/id/${geneId}`;
+    window.open(url, '_blank');
+  }
+  dgvLink(referenceGenome, variantAccession) {
+    if (referenceGenome === 'grch37') {
+      const url = `http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg19/?name=${variantAccession}`;
+      window.open(url, '_blank');
+    } else {
+      window.location.href = `http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg38/?name=${variantAccession}`;
+    }
   }
 }

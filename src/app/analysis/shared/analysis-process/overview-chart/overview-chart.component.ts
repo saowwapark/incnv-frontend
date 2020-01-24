@@ -24,6 +24,7 @@ export class OverviewChartComponent implements OnInit, OnChanges {
   @Input() mergedData: CnvGroup;
   @Input() chr: string;
   @Input() height: number;
+  @Input() yAxisUnit: string;
   @Output()
   selectChrRegion = new EventEmitter<RegionBp>();
   @Input() containerMargin: {
@@ -39,7 +40,6 @@ export class OverviewChartComponent implements OnInit, OnChanges {
 
   chrLength: number;
 
-  mergedToolId = 'merged tools';
   svg: d3.Selection<SVGSVGElement, CnvGroup, null, undefined>;
 
   @HostListener('window:resize', ['$event'])
@@ -69,7 +69,9 @@ export class OverviewChartComponent implements OnInit, OnChanges {
     this.overviewChart = new OverviewChart(
       this.overviewChartDiv.nativeElement,
       this.mergedData.cnvInfos,
+
       this.containerMargin,
+      this.yAxisUnit,
       [1, this.chrLength - 1]
     );
 

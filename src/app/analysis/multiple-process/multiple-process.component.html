@@ -3,7 +3,7 @@
   <div class="layout__header-container">
     <div class="layout__header-items">
       <!-- APP TITLE -->
-      <span class="h2">Individual Sample Analysis</span>
+      <span class="h2">Multiple Samples Analysis</span>
     </div>
   </div>
   <!-- / HEADER -->
@@ -16,37 +16,31 @@
         <div class="property-row" fxLayout="row">
           <div class="property property-name">Reference Genome:</div>
           <div class="property property-value">
-            {{ individualConfig.referenceGenome | uppercase }}
+            {{ multipleConfig.referenceGenome | uppercase }}
           </div>
         </div>
         <div class="property-row" fxLayout="row">
           <div class="property property-name">Chromosome:</div>
           <div class="property property-value">
-            {{ individualConfig.chromosome | uppercase }}
+            {{ multipleConfig.chromosome | uppercase }}
           </div>
         </div>
         <div fxLayout="row">
           <div class="property property-name">CNV Type:</div>
           <div class="property property-value">
-            {{ individualConfig.cnvType | titlecase }}
+            {{ multipleConfig.cnvType | titlecase }}
+          </div>
+        </div>
+        <div fxLayout="row">
+          <div class="property property-name">File Name:</div>
+          <div class="property property-value">
+            {{ multipleConfig.uploadCnvToolResult.fileName | titlecase }}
           </div>
         </div>
         <div fxLayout="row">
           <div class="property property-name">Sample Name:</div>
           <div class="property property-value">
-            {{ individualConfig.sample }}
-          </div>
-        </div>
-        <div fxLayout="row">
-          <div class="property property-name">File Name:</div>
-          <div
-            *ngFor="
-              let uploadCnvToolResult of individualConfig.uploadCnvToolResults
-            "
-          >
-            <div class="property property-value">
-              {{ uploadCnvToolResult.fileName }}
-            </div>
+            {{ multipleConfig.samples.join(', ') }}
           </div>
         </div>
       </div>
@@ -58,7 +52,7 @@
         [containerMargin]="containerMargin"
         [height]="300"
         [chr]="'1'"
-        [yAxisUnit]="'tools'"
+        [yAxisUnit]="'samples'"
         (selectChrRegion)="selectChrRegion($event)"
       ></app-overview-chart>
 
@@ -70,7 +64,8 @@
         [selectedChrRegion]="selectedChrRegion"
         [inputCnvs]="selectedCnvs"
         (selectCnvs)="selectCnvs($event)"
-      ></app-main-chart>
+      >
+      </app-main-chart>
 
       <h3>Selected Basepair</h3>
       <div fxLayout="row" fxLayoutAlign="end center">

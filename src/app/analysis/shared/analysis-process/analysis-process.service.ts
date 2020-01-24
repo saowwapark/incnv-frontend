@@ -16,16 +16,16 @@ import { map, tap } from 'rxjs/operators';
 })
 export class AnalysisProcessService {
   baseRouteUrl: string;
-  onIndividualConfigChanged: BehaviorSubject<IndividualSampleConfig>;
-  onMultipleConfigChanged: BehaviorSubject<MultipleSampleConfig>;
+  onIndividualSampleConfigChanged: BehaviorSubject<IndividualSampleConfig>;
+  onMultipleSampleConfigChanged: BehaviorSubject<MultipleSampleConfig>;
 
   constructor(private _http: HttpClient, private _constant: ConstantsService) {
     this.baseRouteUrl = `${this._constant.baseAppUrl}/api/analysises`;
-    this.onIndividualConfigChanged = new BehaviorSubject({});
-    this.onMultipleConfigChanged = new BehaviorSubject({});
+    this.onIndividualSampleConfigChanged = new BehaviorSubject({});
+    this.onMultipleSampleConfigChanged = new BehaviorSubject({});
   }
 
-  getIndividualData(
+  getIndividualSampleData(
     config: IndividualSampleConfig
   ): Observable<[CnvGroup[], CnvGroup]> {
     const options = {
@@ -46,24 +46,21 @@ export class AnalysisProcessService {
       .pipe(map(res => res['payload']));
   }
 
-  getMulitpleData(
+  getMultipleSampleData(
     config: MultipleSampleConfig
   ): Observable<[CnvGroup[], CnvGroup]> {
     const options = {
-      // headers: new HttpHeaders({
-      //   'Content-Type': 'application/json'
-      // }),
       params: {
         referenceGenome: config.referenceGenome,
         chromosome: config.chromosome,
         cnvType: config.cnvType,
-        samples: config.samples,
+        samples: JSON.stringify(config.samples),
         uploadCnvToolResult: JSON.stringify(config.uploadCnvToolResult)
       }
     };
     // actual url must not be longer than 2000 characters.
     return this._http
-      .get(`${this.baseRouteUrl}/multiple-analysis`, options)
+      .get(`${this.baseRouteUrl}/multiple-sample`, options)
       .pipe(map(res => res['payload']));
   }
 

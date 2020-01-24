@@ -18,6 +18,7 @@ import { SelectedCnvDialogComponent } from './shared/analysis-process/selected-c
 import { ChooseManySampleComponent } from './shared/analysis-configure/choose-many-sample/choose-many-sample.component';
 import { ChooseSamplesetResolver } from './shared/analysis-configure/choose-sampleset/choose-sampleset.resolver';
 import { ChooseOneFileComponent } from './shared/analysis-configure/choose-one-file/choose-one-file.component';
+import { MultipleProcessComponent } from './multiple-process/multiple-process.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ChooseOneFileComponent } from './shared/analysis-configure/choose-one-f
     AnalysisResultComponent,
     MultipleConfigureComponent,
     ChooseOneFileComponent,
-    ChooseManySampleComponent
+    ChooseManySampleComponent,
+    MultipleProcessComponent
   ],
   imports: [SharedModule, AnalysisRoutingModule, TextMaskModule],
   providers: [ChooseSamplesetResolver],
