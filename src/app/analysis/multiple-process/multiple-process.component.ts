@@ -6,7 +6,13 @@ import {
   IndividualSampleConfig,
   MultipleSampleConfig
 } from '../analysis.model';
-import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  AfterViewInit,
+  OnDestroy
+} from '@angular/core';
 
 import {
   chosenReferenceGenome,
@@ -17,35 +23,47 @@ import {
   chosenChr
 } from '../mock-data';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-multiple-process',
   templateUrl: './multiple-process.component.html',
   styleUrls: ['./multiple-process.component.scss']
 })
-export class MultipleProcessComponent implements OnInit, AfterViewInit {
+export class MultipleProcessComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   multipleConfig: MultipleSampleConfig;
   cnvTools: CnvGroup[];
   mergedTool: CnvGroup;
   selectedChrRegion: RegionBp;
   selectedCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
+  isLoading: BehaviorSubject<boolean>;
 
-  constructor(private service: AnalysisProcessService) {}
+  // private
+  private _unsubscribeAll: Subject<any>;
+
+  constructor(private service: AnalysisProcessService) {
+    this.isLoading = new BehaviorSubject(true);
+    this._unsubscribeAll = new Subject();
+  }
 
   ngOnInit() {
-    this.service.onMultipleSampleConfigChanged.subscribe(
-      (config: MultipleSampleConfig) => {
+    this.service.onMultipleSampleConfigChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config: MultipleSampleConfig) => {
         this.multipleConfig = config;
         this.service
           .getMultipleSampleData(this.multipleConfig)
+          .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(data => {
             this.cnvTools = data[0];
             this.mergedTool = data[1];
             this.containerMargin = this.calContainerMargin();
+            this.isLoading.next(false);
           });
-      }
-    );
+      });
   }
 
   selectChrRegion(selectedChrRegion: RegionBp) {
@@ -86,4 +104,13 @@ export class MultipleProcessComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {}
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
 }

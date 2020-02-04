@@ -108,7 +108,7 @@
           </div>
         </mat-step>
         <mat-step label="Choose Chromosome">
-          <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="20px" class="step__content-item">
             <mat-form-field appearance="outline">
               <mat-label>Chromosome...</mat-label>
               <app-filtered-select [options]="chrs" [(ngModel)]="chosenChr">
@@ -135,7 +135,7 @@
                   Reference Genome
                 </div>
                 <div class="property property-value" fxFlex="1 1 70%">
-                  {{ chosenReferenceGenome | uppercase }}
+                  {{ chosenReferenceGenome | grch }}
                 </div>
               </div>
 

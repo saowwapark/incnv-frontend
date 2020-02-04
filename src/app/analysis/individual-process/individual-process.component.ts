@@ -1,3 +1,4 @@
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
   CnvInfo,
   RegionBp,
@@ -6,7 +7,13 @@ import {
   MERGED_RESULT_NAME,
   FINAL_RESULT_NAME
 } from '../analysis.model';
-import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  AfterViewInit,
+  OnDestroy
+} from '@angular/core';
 
 import {
   chosenReferenceGenome,
@@ -17,21 +24,30 @@ import {
   chosenChr
 } from '../mock-data';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-individual-process',
   templateUrl: './individual-process.component.html',
   styleUrls: ['./individual-process.component.scss']
 })
-export class IndividualProcessComponent implements OnInit, AfterViewInit {
+export class IndividualProcessComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   individualConfig: IndividualSampleConfig;
   cnvTools: CnvGroup[];
   mergedTool: CnvGroup;
   selectedChrRegion: RegionBp;
   selectedCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
+  isLoading: BehaviorSubject<boolean>;
 
-  constructor(private service: AnalysisProcessService) {}
+  // private
+  private _unsubscribeAll: Subject<any>;
+
+  constructor(private service: AnalysisProcessService) {
+    this.isLoading = new BehaviorSubject(true);
+    this._unsubscribeAll = new Subject();
+  }
 
   ngOnInit() {
     // // mock data
@@ -43,18 +59,20 @@ export class IndividualProcessComponent implements OnInit, AfterViewInit {
     //  this.individualConfig.cnvType = chosenCnvType;
     //  this.individualConfig.chromosome = chosenChr;
 
-    this.service.onIndividualSampleConfigChanged.subscribe(
-      (config: IndividualSampleConfig) => {
+    this.service.onIndividualSampleConfigChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config: IndividualSampleConfig) => {
         this.individualConfig = config;
         this.service
           .getIndividualSampleData(this.individualConfig)
+          .pipe(takeUntil(this._unsubscribeAll))
           .subscribe(data => {
             this.cnvTools = data[0];
             this.mergedTool = data[1];
             this.containerMargin = this.calContainerMargin();
+            this.isLoading.next(false);
           });
-      }
-    );
+      });
   }
 
   selectChrRegion(selectedChrRegion: RegionBp) {
@@ -95,4 +113,13 @@ export class IndividualProcessComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {}
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
 }

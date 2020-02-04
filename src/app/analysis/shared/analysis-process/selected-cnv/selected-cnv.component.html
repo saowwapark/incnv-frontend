@@ -6,7 +6,7 @@
   </div>
 </ng-container>
 <ng-template #elseTemplate>
-  <div class="example-table-container">
+  <div class="table-container">
     <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
       <!-- No. Column -->
       <ng-container matColumnDef="no">
@@ -60,11 +60,29 @@
         <td mat-cell *matCellDef="let row">{{ row.cnvType }}</td>
       </ng-container>
 
-      <!-- CNV Type Column -->
-      <ng-container matColumnDef="overlaps">
+      <!-- Overlaps -->
+      <ng-container matColumnDef="overlappingNumbers">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Overlapping Numbers
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.overlaps.length }}
+        </td>
+      </ng-container>
+
+      <!-- CNV Tools -->
+      <ng-container matColumnDef="cnvTools">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Tools</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.overlaps.join(', ') }}
+          {{ row.overlaps.join('; ') }}
+        </td>
+      </ng-container>
+
+      <!-- Samples -->
+      <ng-container matColumnDef="samples">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Samples</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.overlaps.join('; ') }}
         </td>
       </ng-container>
 
@@ -140,7 +158,7 @@
                   *ngFor="let dgv of row.dgvs"
                   color="accent"
                   selected
-                  (click)="dgvLink(row.chromosome, dgv.variantAccession)"
+                  (click)="dgvLink(row.referenceGenome, dgv.variantAccession)"
                 >
                   {{ dgv.variantAccession }}
                 </mat-chip>
@@ -169,41 +187,37 @@
               </div>
               <div class="expand-detail--data">
                 <div class="property-row" fxLayout="row wrap">
-                  <div
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    class="grid-color-header"
-                  >
-                    <div fxFlex="0 1 20%" class="grid-padding-header">OMIM</div>
-                    <div fxFlex="0 1 40%" class="grid-padding-header">
-                      Phenotype
-                    </div>
-                    <div fxFlex="0 1 40%" class="grid-padding-header">
-                      Clinical Significance
-                    </div>
+                  <div class="property property-name" fxFlex="1 1 30%">
+                    OMIM
                   </div>
-                  <div
-                    fxLayout="row"
-                    fxLayoutAlign="start center"
-                    class="grid-color-data"
-                  >
-                    <div fxFlex="0 1 50%" class="grid-padding-data">
-                      <mat-chip-list>
-                        <mat-chip
-                          *ngFor="let omimId of row.clinvar.omimIds"
-                          color="accent"
-                          selected
-                        >
-                          {{ omimId }}
-                        </mat-chip>
-                      </mat-chip-list>
-                    </div>
-                    <div fxFlex="0 1 25%" class="grid-padding-data">
-                      {{ row.clinvar.phenotypes.join(', ') }}
-                    </div>
-                    <div fxFlex="0 1 25%" class="grid-padding-data">
-                      {{ row.clinvar.clinicalSignificances.join(', ') }}
-                    </div>
+                  <div class="property property-value" fxFlex="1 1 70%">
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let omimId of row.clinvar.omimIds"
+                        (click)="clinvarLink(omimId)"
+                        color="accent"
+                        selected
+                        >{{ omimId }}</mat-chip
+                      >
+                    </mat-chip-list>
+                  </div>
+                </div>
+
+                <div class="property-row" fxLayout="row wrap">
+                  <div class="property property-name" fxFlex="1 1 30%">
+                    Phenotype
+                  </div>
+                  <div class="property property-value" fxFlex="1 1 70%">
+                    {{ row.clinvar.phenotypes.join('; ') }}
+                  </div>
+                </div>
+
+                <div class="property-row" fxLayout="row wrap">
+                  <div class="property property-name" fxFlex="1 1 30%">
+                    Clinical Significance
+                  </div>
+                  <div class="property property-value" fxFlex="1 1 70%">
+                    {{ row.clinvar.clinicalSignificances.join('; ') }}
                   </div>
                 </div>
               </div>

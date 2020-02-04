@@ -11,79 +11,88 @@
   <!-- CONTENT -->
 
   <div class="layout__content-container--default ">
-    <div class="layout__content-items" fxLayout="column" fxLayoutGap="32px">
-      <div class="brief" fxLayout="row" fxLayoutAlign="space-between center">
-        <div class="property-row" fxLayout="row">
-          <div class="property property-name">Reference Genome:</div>
-          <div class="property property-value">
-            {{ multipleConfig.referenceGenome | uppercase }}
-          </div>
-        </div>
-        <div class="property-row" fxLayout="row">
-          <div class="property property-name">Chromosome:</div>
-          <div class="property property-value">
-            {{ multipleConfig.chromosome | uppercase }}
-          </div>
-        </div>
-        <div fxLayout="row">
-          <div class="property property-name">CNV Type:</div>
-          <div class="property property-value">
-            {{ multipleConfig.cnvType | titlecase }}
-          </div>
-        </div>
-        <div fxLayout="row">
-          <div class="property property-name">File Name:</div>
-          <div class="property property-value">
-            {{ multipleConfig.uploadCnvToolResult.fileName | titlecase }}
-          </div>
-        </div>
-        <div fxLayout="row">
-          <div class="property property-name">Sample Name:</div>
-          <div class="property property-value">
-            {{ multipleConfig.samples.join(', ') }}
-          </div>
-        </div>
-      </div>
-
-      <h3>Overview Chart</h3>
-      <p>Please drag a region of interest.</p>
-      <app-overview-chart
-        [mergedData]="mergedTool"
-        [containerMargin]="containerMargin"
-        [height]="300"
-        [chr]="'1'"
-        [yAxisUnit]="'samples'"
-        (selectChrRegion)="selectChrRegion($event)"
-      ></app-overview-chart>
-
-      <h3>Main Chart</h3>
-      <app-main-chart
-        [comparedData]="cnvTools"
-        [mergedData]="mergedTool"
-        [containerMargin]="containerMargin"
-        [selectedChrRegion]="selectedChrRegion"
-        [inputCnvs]="selectedCnvs"
-        (selectCnvs)="selectCnvs($event)"
-      >
-      </app-main-chart>
-
-      <h3>Selected Basepair</h3>
-      <div fxLayout="row" fxLayoutAlign="end center">
-        <button
-          mat-button
-          mat-raised-button
-          color="primary"
-          (click)="exportCnvInfos()"
-        >
-          Export Result
-        </button>
-      </div>
-
-      <app-selected-cnv
-        [dataSource]="selectedCnvs"
-        (updateSelectedCnv)="selectCnvs($event)"
-      ></app-selected-cnv>
+    <div
+      class="spinner-container"
+      *ngIf="isLoading | async; else loadingSuccess"
+    >
+      <mat-spinner></mat-spinner>
     </div>
+    <ng-template #loadingSuccess>
+      <div class="layout__content-items" fxLayout="column" fxLayoutGap="32px">
+        <h3>Overview Configuration</h3>
+        <div class="brief" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="property-row" fxLayout="row">
+            <div class="property property-name">Reference Genome:</div>
+            <div class="property property-value">
+              {{ multipleConfig.referenceGenome | grch }}
+            </div>
+          </div>
+          <div class="property-row" fxLayout="row">
+            <div class="property property-name">Chromosome:</div>
+            <div class="property property-value">
+              {{ multipleConfig.chromosome | uppercase }}
+            </div>
+          </div>
+          <div fxLayout="row">
+            <div class="property property-name">CNV Type:</div>
+            <div class="property property-value">
+              {{ multipleConfig.cnvType | titlecase }}
+            </div>
+          </div>
+          <div fxLayout="row">
+            <div class="property property-name">File Name:</div>
+            <div class="property property-value">
+              {{ multipleConfig.uploadCnvToolResult.fileName | titlecase }}
+            </div>
+          </div>
+          <!-- <div fxLayout="row">
+            <div class="property property-name">Sample Name:</div>
+            <div class="property property-value">
+              {{ multipleConfig.samples.join(', ') }}
+            </div>
+          </div> -->
+        </div>
+
+        <h3>Overview Chart</h3>
+        <app-overview-chart
+          [mergedData]="mergedTool"
+          [containerMargin]="containerMargin"
+          [height]="300"
+          [chr]="'1'"
+          [yAxisUnit]="'samples'"
+          (selectChrRegion)="selectChrRegion($event)"
+        ></app-overview-chart>
+
+        <h3>Main Chart</h3>
+        <app-main-chart
+          [comparedData]="cnvTools"
+          [mergedData]="mergedTool"
+          [containerMargin]="containerMargin"
+          [selectedChrRegion]="selectedChrRegion"
+          [inputCnvs]="selectedCnvs"
+          (selectCnvs)="selectCnvs($event)"
+        >
+        </app-main-chart>
+
+        <h3>Selected CNVs</h3>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button
+            mat-button
+            mat-raised-button
+            color="primary"
+            (click)="exportCnvInfos()"
+          >
+            Export Result
+          </button>
+        </div>
+
+        <app-selected-cnv
+          [analysisType]="'multipleSamples'"
+          [selectedCnvs]="selectedCnvs"
+          (updateSelectedCnv)="selectCnvs($event)"
+        ></app-selected-cnv>
+      </div>
+    </ng-template>
   </div>
   <!-- / CONTENT -->
 </div>

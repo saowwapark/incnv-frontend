@@ -1,22 +1,17 @@
 import { UploadCnvToolResult } from '../../shared/models/upload-cnv-tool-result.model';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Sampleset } from '../../sampleset/sampleset.model';
 import { IndividualSampleConfig } from '../analysis.model';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-individual-configure',
   templateUrl: './individual-configure.component.html',
   styleUrls: ['./individual-configure.component.scss']
 })
-export class IndividualConfigureComponent implements OnInit {
+export class IndividualConfigureComponent implements OnInit, OnDestroy {
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   chosenReferenceGenome: string;
@@ -27,7 +22,12 @@ export class IndividualConfigureComponent implements OnInit {
   chosenChr: string;
   chrs: string[];
 
+  // private
+  private _unsubscribeAll: Subject<any>;
+
   constructor(private service: AnalysisProcessService) {
+    this._unsubscribeAll = new Subject();
+
     this.chosenSampleset = new Sampleset();
     this.chosenSampleset.samples = [];
     this.chosenChr = '';
@@ -78,5 +78,14 @@ export class IndividualConfigureComponent implements OnInit {
       this.chosenSample
     );
     this.service.onIndividualSampleConfigChanged.next(individualConfig);
+  }
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }

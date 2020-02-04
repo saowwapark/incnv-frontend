@@ -122,7 +122,7 @@
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
   <button
     *ngIf="action !== 'edit'"
-    mat-stroked-button
+    mat-raised-button
     color="primary"
     (click)="matDialogRef.close(form)"
     [disabled]="f.invalid"

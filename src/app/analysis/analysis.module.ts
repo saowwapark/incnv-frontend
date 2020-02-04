@@ -19,6 +19,7 @@ import { ChooseManySampleComponent } from './shared/analysis-configure/choose-ma
 import { ChooseSamplesetResolver } from './shared/analysis-configure/choose-sampleset/choose-sampleset.resolver';
 import { ChooseOneFileComponent } from './shared/analysis-configure/choose-one-file/choose-one-file.component';
 import { MultipleProcessComponent } from './multiple-process/multiple-process.component';
+import { MergedTableComponent } from './shared/analysis-process/merged-table/merged-table.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { MultipleProcessComponent } from './multiple-process/multiple-process.co
     MultipleConfigureComponent,
     ChooseOneFileComponent,
     ChooseManySampleComponent,
-    MultipleProcessComponent
+    MultipleProcessComponent,
+    MergedTableComponent
   ],
   imports: [SharedModule, AnalysisRoutingModule, TextMaskModule],
   providers: [ChooseSamplesetResolver],

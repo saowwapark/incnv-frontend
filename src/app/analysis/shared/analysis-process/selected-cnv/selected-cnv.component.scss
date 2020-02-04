@@ -24,16 +24,23 @@ table {
   @include table-column(10%);
 }
 .mat-column-startBp {
-  @include table-column(20%);
+  @include table-column(15%);
 }
 .mat-column-endBp {
-  @include table-column(20%);
+  @include table-column(15%);
 }
 .mat-column-cnvType {
   @include table-column(10%);
 }
-.mat-column-overlaps {
-  @include table-column(20%);
+.mat-column-overlappingNumbers {
+  @include table-column(10%);
+}
+// table will choose one between cnvTools and samples
+.mat-column-cnvTools {
+@include table-column(20%);
+}
+.mat-column-samples {
+@include table-column(20%);
 }
 .mat-column-edit {
   @include table-column(5%);

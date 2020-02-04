@@ -20,8 +20,8 @@ export class TabFileMappingFormDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private _data: any,
-    private _fb: FormBuilder,
-    public matDialogRef: MatDialogRef<TabFileMappingFormDialogComponent>
+    public matDialogRef: MatDialogRef<TabFileMappingFormDialogComponent>,
+    private _fb: FormBuilder
   ) {}
 
   ngOnInit() {

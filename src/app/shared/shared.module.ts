@@ -1,3 +1,4 @@
+import { GrchPipe } from './../utils/grch.pipe';
 import { UnmaskNumericDirective } from './directives/unmask-numeric.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectedBarComponent } from './../shared/components/selected-bar/selected-bar.component';
@@ -11,7 +12,8 @@ import { FilteredSelectComponent } from './components/filtered-select/filtered-s
   declarations: [
     SelectedBarComponent,
     FilteredSelectComponent,
-    UnmaskNumericDirective
+    UnmaskNumericDirective,
+    GrchPipe
   ],
   imports: [
     CommonModule,
@@ -24,6 +26,7 @@ import { FilteredSelectComponent } from './components/filtered-select/filtered-s
     SelectedBarComponent,
     FilteredSelectComponent,
     UnmaskNumericDirective,
+    GrchPipe,
     CommonModule,
     MaterialModule,
     FormsModule,

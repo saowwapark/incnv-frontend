@@ -16,7 +16,7 @@
           Reference Genome
         </div>
         <div class="property property-value" fxFlex="1 1 70%">
-          {{ cnvInfo.referenceGenome }}
+          {{ cnvInfo.referenceGenome | grch }}
         </div>
       </div>
       <div class="property-row" fxLayout="row wrap">
@@ -225,13 +225,15 @@
       <div class="property-row" fxLayout="row wrap">
         <div class="property property-name" fxFlex="1 1 30%">OMIM</div>
         <div class="property property-value" fxFlex="1 1 70%">
-          <div *ngFor="let omimId of cnvInfo.clinvar.omimIds">
-            <a
-              href="https://omim.org/search/?search={{ omimId }}"
-              target="_blank"
-              >{{ omimId }}</a
+          <mat-chip-list>
+            <mat-chip
+              *ngFor="let omimId of cnvInfo.clinvar.omimIds"
+              (click)="clinvarLink(omimId)"
+              color="accent"
+              selected
+              >{{ omimId }}</mat-chip
             >
-          </div>
+          </mat-chip-list>
         </div>
       </div>
 

@@ -40,7 +40,6 @@ export class AnnotationDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     { title, cnvInfo, selectedCnvRegions }: any,
-    public dialogRef: MatDialogRef<AnnotationDialogComponent>,
     public matDialogRef: MatDialogRef<AnnotationDialogComponent>,
     private fb: FormBuilder
   ) {
@@ -152,7 +151,7 @@ export class AnnotationDialogComponent implements OnInit {
     clonedCnvInfo.dgvs = [];
     clonedCnvInfo.ensembls = [];
     clonedCnvInfo.clinvar = {};
-    this.dialogRef.close(clonedCnvInfo);
+    this.matDialogRef.close(clonedCnvInfo);
   }
 
   getErrorMessage() {
@@ -171,16 +170,21 @@ export class AnnotationDialogComponent implements OnInit {
     this.selectForm.controls['selectedEndBp'].setValue(this.cnvInfo.endBp);
   }
 
-  ensemblLink(geneId) {
+  ensemblLink(geneId: string) {
     const url = `http://www.ensembl.org/id/${geneId}`;
     window.open(url, '_blank');
   }
-  dgvLink(variantAccession) {
+  dgvLink(variantAccession: string) {
     if (this.cnvInfo.referenceGenome === 'grch37') {
       const url = `http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg19/?name=${variantAccession}`;
       window.open(url, '_blank');
-    } else {
-      window.location.href = `http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg38/?name=${variantAccession}`;
+    } else if (this.cnvInfo.referenceGenome === 'grch38') {
+      const url = `http://dgv.tcag.ca/gb2/gbrowse/dgv2_hg38/?name=${variantAccession}`;
+      window.open(url, '_blank');
     }
+  }
+  clinvarLink(omimId: string) {
+    const url = `https://omim.org/search/?search=${omimId}`;
+    window.open(url, '_blank');
   }
 }
