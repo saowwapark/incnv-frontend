@@ -56,7 +56,8 @@ export class MergedTableComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.createCustomSort();
+    this.createCustomFilter();
   }
 
   ngOnChanges() {
@@ -89,5 +90,36 @@ export class MergedTableComponent implements OnInit, OnChanges {
   clinvarLink(omimId: string) {
     const url = `https://omim.org/search/?search=${omimId}`;
     window.open(url, '_blank');
+  }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  createCustomSort() {
+    this.dataSource.sortingDataAccessor = (item: CnvInfo, property) => {
+      // property = this.sortBy;
+      // console.log('item: '+JSON.stringify(item)+' '+' property: '+ property);
+      switch (property) {
+        case 'overlappingNumbers': {
+          return item.overlaps.length;
+        }
+
+        default: {
+          return item[property];
+        }
+      }
+    };
+    this.dataSource.sort = this.sort;
+  }
+
+  createCustomFilter() {
+    this.dataSource.filterPredicate = (data: CnvInfo, filter: string) => {
+      for (const ensembl of data.ensembls) {
+        if (ensembl.geneSymbol.toLocaleUpperCase() === filter) {
+          return true;
+        }
+        // return ensembl.geneSymbol.indexOf(filter) !== -1;
+      }
+    };
   }
 }

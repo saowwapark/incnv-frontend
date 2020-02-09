@@ -6,10 +6,10 @@ export class MergedChart {
   _id: string;
   _parentElement; // angular native element
   _data: CnvGroup[];
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName) // set of tool id;
-  _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
-  _maxOverlap;
-  _color;
+  _domainOnY: string[]; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName) // set of tool id;
+  _domainOnX: number[]; // domainOnX = [this.regionStartBp, this.regionEndBp]
+  _maxOverlap: number;
+  _color: string;
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
   scaleY: d3.ScaleBand<string>;
@@ -30,10 +30,10 @@ export class MergedChart {
     parentElement,
     data: CnvGroup[],
     containerMargin,
-    domainOnX,
-    domainOnY,
-    maxOverlap,
-    color
+    domainOnX: number[],
+    domainOnY: string[],
+    maxOverlap: number,
+    color: string
   ) {
     this._id = id;
     this._parentElement = parentElement;
@@ -110,7 +110,7 @@ export class MergedChart {
     yAxisGroup.call(yAxis);
   }
 
-  private createMergedColorScale(color) {
+  private createMergedColorScale(color: string) {
     return d3
       .scaleLinear<string>()
       .domain([0, this._maxOverlap])

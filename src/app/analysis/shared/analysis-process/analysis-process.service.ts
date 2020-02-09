@@ -2,7 +2,8 @@ import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-resul
 import {
   CnvGroup,
   IndividualSampleConfig,
-  MultipleSampleConfig
+  MultipleSampleConfig,
+  DgvAnnotation
 } from '../../analysis.model';
 import { CnvInfo } from 'src/app/analysis/analysis.model';
 import { Injectable } from '@angular/core';
@@ -62,6 +63,20 @@ export class AnalysisProcessService {
     return this._http
       .get(`${this.baseRouteUrl}/multiple-sample`, options)
       .pipe(map(res => res['payload']));
+  }
+
+  getDgvs(
+    referenceGenome: string,
+    chromosome: string
+  ): Observable<DgvAnnotation[]> {
+    const url = `${this.baseRouteUrl}/dgvs`;
+    const options = {
+      params: {
+        referenceGenome: referenceGenome,
+        chromosome: chromosome
+      }
+    };
+    return this._http.get(url, options).pipe(map(res => res['payload']));
   }
 
   getCnvInfos(cnvInfos: CnvInfo[]) {

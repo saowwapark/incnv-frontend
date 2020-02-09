@@ -79,6 +79,8 @@ export class MainChartComponent
 
   finalResultData: CnvGroup;
 
+  maxOverlap: number;
+
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
 
   @HostListener('window:resize', ['$event'])
@@ -108,6 +110,10 @@ export class MainChartComponent
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
         switch (propName) {
+          case 'mergedData':
+            this.maxOverlap = this.findMaxOverlapNumber();
+            break;
+
           case 'selectedChrRegion':
             if (this.selectedChrRegion) {
               this.createComparedChart();
@@ -146,7 +152,8 @@ export class MainChartComponent
       this.comparedData,
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      this.comparedData.map(tool => tool.cnvGroupName)
+      this.comparedData.map(tool => tool.cnvGroupName),
+      this.maxOverlap
     );
 
     this.comparedChart.onClickSubbars((cnvGroupName, data) => {
@@ -163,6 +170,15 @@ export class MainChartComponent
     });
   }
 
+  findMaxOverlapNumber() {
+    let max = 0;
+    for (const cnvInfo of this.mergedData.cnvInfos) {
+      if (max < cnvInfo.overlaps.length) {
+        max = cnvInfo.overlaps.length;
+      }
+    }
+    return max;
+  }
   createMergedChart() {
     if (!this.mergedChartDiv) {
       return;
@@ -177,7 +193,7 @@ export class MainChartComponent
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
       [this.mergedData.cnvGroupName],
-      this.comparedData.length,
+      this.maxOverlap,
       'red'
     );
 
@@ -209,7 +225,7 @@ export class MainChartComponent
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
       [FINAL_RESULT_NAME],
-      this.comparedData.length,
+      this.maxOverlap,
       'green'
     );
 

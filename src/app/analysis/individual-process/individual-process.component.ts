@@ -1,11 +1,18 @@
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  BehaviorSubject,
+  forkJoin,
+  ObservableInput
+} from 'rxjs';
 import {
   CnvInfo,
   RegionBp,
   CnvGroup,
   IndividualSampleConfig,
   MERGED_RESULT_NAME,
-  FINAL_RESULT_NAME
+  FINAL_RESULT_NAME,
+  DgvAnnotation
 } from '../analysis.model';
 import {
   Component,
@@ -24,7 +31,7 @@ import {
   chosenChr
 } from '../mock-data';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-individual-process',
@@ -33,6 +40,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class IndividualProcessComponent
   implements OnInit, AfterViewInit, OnDestroy {
+  dgvs: DgvAnnotation[];
   individualConfig: IndividualSampleConfig;
   cnvTools: CnvGroup[];
   mergedTool: CnvGroup;
@@ -63,15 +71,28 @@ export class IndividualProcessComponent
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config: IndividualSampleConfig) => {
         this.individualConfig = config;
-        this.service
-          .getIndividualSampleData(this.individualConfig)
+        const observables$ = [
+          this.service.getDgvs(
+            this.individualConfig.referenceGenome,
+            this.individualConfig.chromosome
+          ),
+          this.service.getIndividualSampleData(this.individualConfig)
+        ];
+
+        forkJoin(observables$)
           .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(data => {
-            this.cnvTools = data[0];
-            this.mergedTool = data[1];
-            this.containerMargin = this.calContainerMargin();
-            this.isLoading.next(false);
-          });
+          .subscribe(
+            ([dgvs, individualSample]: [
+              DgvAnnotation[],
+              [CnvGroup[], CnvGroup]
+            ]) => {
+              this.dgvs = dgvs;
+              this.cnvTools = individualSample[0];
+              this.mergedTool = individualSample[1];
+              this.containerMargin = this.calContainerMargin();
+              this.isLoading.next(false);
+            }
+          );
       });
   }
 

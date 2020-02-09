@@ -5,12 +5,14 @@ export class ComparedChart {
   _id: string;
   _parentElement; // angular native element
   _data: CnvGroup[];
-  _domainOnY; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName) // set of tool id;
-  _domainOnX; // domainOnX = [this.regionStartBp, this.regionEndBp]
+  _domainOnY: string[]; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName) // set of tool id;
+  _domainOnX: number[]; // domainOnX = [this.regionStartBp, this.regionEndBp]
+  _maxOverlap: number;
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
   scaleY: d3.ScaleBand<string>;
   colorScale;
+  colorOpacityScale;
   xAxis;
   yAxis;
 
@@ -28,14 +30,16 @@ export class ComparedChart {
     parentElement,
     data: CnvGroup[],
     containerMargin,
-    domainOnX,
-    domainOnY
+    domainOnX: number[],
+    domainOnY: string[],
+    maxOverlap: number
   ) {
     this._id = id;
     this._parentElement = parentElement;
     this._data = data;
     this._domainOnX = domainOnX;
     this._domainOnY = domainOnY;
+    this._maxOverlap = maxOverlap;
 
     // this.domainOnY = domainOnY;
     this.initVis(containerMargin);
@@ -132,6 +136,13 @@ export class ComparedChart {
       .range(d3.schemeCategory10);
   }
 
+  private createColorOpacityScale() {
+    this.colorOpacityScale = d3
+      .scaleLinear<number>()
+      .domain([0, this._maxOverlap])
+      .range([0, 1]);
+  }
+
   public drawData() {
     const bars = this.generateBars();
 
@@ -198,7 +209,11 @@ export class ComparedChart {
           .select(n[i].parentNode)
           .datum() as CnvGroup;
         const cnvGroupName = parentData.cnvGroupName;
+
         return this.colorScale(cnvGroupName) as string;
+      })
+      .attr('fill-opacity', () => {
+        return this.colorOpacityScale(1);
       })
       .attr('stroke', (d, i, n) => {
         const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
@@ -221,6 +236,7 @@ export class ComparedChart {
     this.subbars
       .on('mouseover', (d, i, n) => {
         // change color subbar
+        d3.select(n[i]).raise();
         d3.select(n[i])
           .transition()
           .duration(300)
@@ -235,7 +251,11 @@ export class ComparedChart {
           .duration(300)
           .attr('fill', () => {
             const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
-            return this.colorScale(parentData.cnvGroupName);
+            const cnvGroupName = parentData.cnvGroupName;
+            return this.colorScale(cnvGroupName) as string;
+          })
+          .attr('fill-opacity', () => {
+            return this.colorOpacityScale(1);
           })
           .attr('stroke-opacity', '0');
 
@@ -284,6 +304,7 @@ export class ComparedChart {
     this.generateAxisX();
     this.generateAxisY();
     this.createColorScale();
+    this.createColorOpacityScale();
 
     this.generateTooltip();
     this.drawData();
