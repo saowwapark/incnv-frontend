@@ -22,7 +22,7 @@ const routes: Routes = [
     component: IndividualProcessComponent
   },
   {
-    path: 'multiple-analysis/analysis-process',
+    path: 'multiple-sample/analysis-process',
     component: MultipleProcessComponent
   }
 ];

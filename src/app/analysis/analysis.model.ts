@@ -1,6 +1,6 @@
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
-export const MERGED_RESULT_NAME = 'merged result';
-export const FINAL_RESULT_NAME = 'final result';
+export const MERGED_RESULT_NAME = 'merged CNV';
+export const FINAL_RESULT_NAME = 'final CNV';
 export const SELECTED_CNV_ID = 'selected CNV';
 
 export class IndividualSampleConfig {
@@ -57,6 +57,13 @@ export class CnvGroup {
   cnvInfos?: CnvInfo[]; // annotation for a given cnv tool.
 }
 
+export class Sequence {
+  chromosome?: string;
+  startBp?: number;
+  endBp?: number;
+  sequence?: string;
+}
+
 export class CnvInfo {
   referenceGenome?: string;
   chromosome?: string;
@@ -67,6 +74,9 @@ export class CnvInfo {
   dgvs?: DgvAnnotation[]; // dgv.variant_accession
   ensembls?: EnsemblAnnotation[]; // ensembl.gene_id
   clinvar?: ClinvarAnnotationList;
+  leftFlanking?: Sequence;
+  rightFlanking?: Sequence;
+  isSelected?: boolean;
 }
 
 export class ClinvarAnnotationList {
@@ -83,22 +93,26 @@ export class ClinvarAnnotationList {
 export class EnsemblAnnotation {
   geneId?: string;
   geneSymbol?: string;
-  basepair?: RegionBp;
+  startBp?: number;
+  endBp?: number;
 
-  constructor(geneId?, geneSymbol?, basepair?) {
+  constructor(geneId?, geneSymbol?, startBp?, endBp?) {
     this.geneId = geneId || '';
     this.geneSymbol = geneSymbol || '';
-    this.basepair = basepair || {};
+    this.startBp = startBp || undefined;
+    this.endBp = endBp || undefined;
   }
 }
 
 export class DgvAnnotation {
-  variantAccession?: number;
-  basepair?: RegionBp;
+  variantAccession?: string;
+  startBp?: number;
+  endBp?: number;
 
-  constructor(variantAccession?, basepair?) {
+  constructor(variantAccession?, startBp?, endBp?) {
     this.variantAccession = variantAccession || undefined;
-    this.basepair = basepair || {};
+    this.startBp = startBp || undefined;
+    this.endBp = endBp || undefined;
   }
 }
 
@@ -110,4 +124,14 @@ export class RegionBp {
     this.startBp = startBp;
     this.endBp = endBp;
   }
+}
+
+export class DgvVariant {
+  referenceGenome?: string;
+  chromosome?: string;
+  startBp?: number;
+  endBp?: number;
+  variantAccession?: string;
+  variantType?: string;
+  variantSubtype?: string;
 }

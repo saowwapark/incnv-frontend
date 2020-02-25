@@ -8,7 +8,8 @@ import {
   HostListener,
   OnChanges,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import * as d3 from 'd3';
 import { CnvGroup, CnvInfo } from '../../../analysis.model';
@@ -18,24 +19,27 @@ import { HUMAN_CHROMOSOME } from '../../../chromosome.model';
 @Component({
   selector: 'app-overview-chart',
   templateUrl: './overview-chart.component.html',
-  styleUrls: ['./overview-chart.component.scss']
+  styleUrls: ['./overview-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverviewChartComponent implements OnInit, OnChanges {
+  readonly color = '#d32f2f';
   @Input() mergedData: CnvGroup;
-  @Input() chr: string;
-  @Input() height: number;
+  @Input() chromosome: string;
   @Input() yAxisUnit: string;
-  @Output()
-  selectChrRegion = new EventEmitter<RegionBp>();
+  @Input() yAxisMaxVaule: number;
   @Input() containerMargin: {
     top: number;
     right: number;
     bottom: number;
     left: number;
   };
+
+  @Output()
+  selectChrRegion = new EventEmitter<RegionBp>();
+
   @ViewChild('overviewChartDiv', { static: true })
   private overviewChartDiv: ElementRef;
-
   private overviewChart;
 
   chrLength: number;
@@ -49,19 +53,24 @@ export class OverviewChartComponent implements OnInit, OnChanges {
       this.createOverviewChart();
     }
   }
+
   constructor() {}
+
+  /********************* Life Cycle Hook ********************/
   ngOnChanges(): void {
     if (!this.mergedData) {
       return;
     }
 
-    if (this.chr) {
-      this.chrLength = HUMAN_CHROMOSOME[`chr${this.chr.toUpperCase()}`].length;
+    if (this.chromosome) {
+      this.chrLength =
+        HUMAN_CHROMOSOME[`chr${this.chromosome.toUpperCase()}`].length;
       this.createOverviewChart();
     }
   }
   ngOnInit() {}
 
+  /*********************** Function **********************/
   createOverviewChart() {
     if (this.overviewChart) {
       this.overviewChart.removeVis();
@@ -72,7 +81,9 @@ export class OverviewChartComponent implements OnInit, OnChanges {
 
       this.containerMargin,
       this.yAxisUnit,
-      [1, this.chrLength - 1]
+      [1, this.chrLength - 1],
+      [0, this.yAxisMaxVaule],
+      this.color
     );
 
     this.overviewChart.createBrush((sx1, sx2) => {

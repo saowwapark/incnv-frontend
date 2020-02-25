@@ -1,4 +1,8 @@
-import { MERGED_RESULT_NAME, FINAL_RESULT_NAME } from './../analysis.model';
+import {
+  MERGED_RESULT_NAME,
+  FINAL_RESULT_NAME,
+  DgvVariant
+} from './../analysis.model';
 import {
   CnvInfo,
   RegionBp,
@@ -14,17 +18,10 @@ import {
   OnDestroy
 } from '@angular/core';
 
-import {
-  chosenReferenceGenome,
-  chosenSampleset,
-  chosenSample,
-  chosenFiles,
-  chosenCnvType,
-  chosenChr
-} from '../mock-data';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Subject, forkJoin, throwError } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-multiple-process',
@@ -33,8 +30,9 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class MultipleProcessComponent
   implements OnInit, AfterViewInit, OnDestroy {
+  dgvVariants: DgvVariant[];
   multipleConfig: MultipleSampleConfig;
-  cnvTools: CnvGroup[];
+  cnvSamples: CnvGroup[];
   mergedTool: CnvGroup;
   selectedChrRegion: RegionBp;
   selectedCnvs: CnvInfo[];
@@ -44,7 +42,7 @@ export class MultipleProcessComponent
   // private
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private service: AnalysisProcessService) {
+  constructor(private service: AnalysisProcessService, private router: Router) {
     this.isLoading = new BehaviorSubject(true);
     this._unsubscribeAll = new Subject();
   }
@@ -54,15 +52,44 @@ export class MultipleProcessComponent
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config: MultipleSampleConfig) => {
         this.multipleConfig = config;
-        this.service
-          .getMultipleSampleData(this.multipleConfig)
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(data => {
-            this.cnvTools = data[0];
-            this.mergedTool = data[1];
-            this.containerMargin = this.calContainerMargin();
-            this.isLoading.next(false);
-          });
+        const observables$ = [
+          this.service.getDgvVariants(
+            this.multipleConfig.referenceGenome,
+            this.multipleConfig.chromosome
+          ),
+          this.service.getMultipleSampleData(this.multipleConfig)
+        ];
+
+        if (!this.multipleConfig.referenceGenome) {
+          this.router.navigate(['/multiple-sample']);
+        } else {
+          forkJoin(observables$)
+            .pipe(
+              catchError(err => {
+                this.router.navigate(['/multiple-sample']);
+                return throwError(err);
+              }),
+              takeUntil(this._unsubscribeAll)
+            )
+            .subscribe(
+              ([dgvs, individualSample]: [
+                DgvVariant[],
+                [CnvGroup[], CnvGroup]
+              ]) => {
+                this.dgvVariants = dgvs;
+                this.cnvSamples = individualSample[0];
+                this.mergedTool = individualSample[1];
+                this.containerMargin = this.calContainerMargin();
+                this.isLoading.next(false);
+              }
+            );
+        }
+      });
+
+    this.service.onSelectedCnvChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(cnvInfos => {
+        this.selectedCnvs = cnvInfos;
       });
   }
 
@@ -70,19 +97,10 @@ export class MultipleProcessComponent
     this.selectedChrRegion = selectedChrRegion;
   }
 
-  selectCnvs(selectedCnvs: CnvInfo[]) {
-    this.selectedCnvs = [...selectedCnvs];
-  }
-
-  exportCnvInfos() {
-    this.service.downloadCnvInfos(this.selectedCnvs).subscribe(() => {
-      console.log('export success');
-    });
-  }
   private calContainerMargin() {
     // max character lenght
     let maxLength = 0;
-    for (const tool of this.cnvTools) {
+    for (const tool of this.cnvSamples) {
       const length = tool.cnvGroupName.length;
       if (length > maxLength) {
         maxLength = length;

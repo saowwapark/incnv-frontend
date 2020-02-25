@@ -84,7 +84,7 @@
       <div>
         <mat-form-field appearance="outline">
           <mat-label>Tag Description ...</mat-label>
-          <mat-chip-list #tagList>
+          <mat-chip-list #tagDescriptionList>
             <mat-chip
               color="accent"
               selected
@@ -99,7 +99,7 @@
 
             <input
               formControlName="tagDescriptions"
-              [matChipInputFor]="tagList"
+              [matChipInputFor]="tagDescriptionList"
               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
               matChipInputAddOnBlur="true"
               (matChipInputTokenEnd)="onAddTag($event)"

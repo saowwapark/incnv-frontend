@@ -72,3 +72,6 @@ export const isIncludedInList = (value: string, list: string[]): boolean => {
   });
   return included;
 };
+
+export const findDuplicates = (arr: any[]) =>
+  arr.filter((item: any, index: number) => arr.indexOf(item) !== index);

@@ -36,14 +36,21 @@
         </mat-step>
         <mat-step label="Choose Sample Set">
           <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
-            <app-choose-sampleset (selectSampleset)="setSampleset($event)">
+            <app-choose-sampleset
+              [selectedSampleset]="chosenSampleset"
+              (selectedSamplesetChange)="setSampleset($event)"
+            >
             </app-choose-sampleset>
           </div>
           <div fxLayout="row" fxLayoutAlign="start center">
             <button mat-button color="primary" matStepperPrevious>
               BACK
             </button>
-            <button matStepperNext mat-raised-button color="primary">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="validateChosenSampleset()"
+            >
               NEXT
             </button>
           </div>
@@ -52,14 +59,19 @@
           <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
             <app-choose-many-sample
               [samples]="chosenSampleset.samples"
-              (selectSamples)="setSamples($event)"
+              [selectedSamples]="chosenSamples"
+              (selectedSamplesChange)="setSamples($event)"
             >
             </app-choose-many-sample>
             <div fxLayout="row" fxLayoutAlign="start center">
               <button mat-button color="primary" matStepperPrevious>
                 BACK
               </button>
-              <button mat-raised-button color="primary" matStepperNext>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="validateChosenSamples()"
+              >
                 NEXT
               </button>
             </div>
@@ -71,14 +83,18 @@
               class="step__content-item"
               [samplesetId]="chosenSampleset.samplesetId"
               [referenceGenome]="chosenReferenceGenome"
-              (selectFile)="setSelectedFile($event)"
+              [(selectedFile)]="chosenFile"
             >
             </app-choose-one-file>
             <div fxLayout="row" fxLayoutAlign="start center">
               <button mat-button color="primary" matStepperPrevious>
                 BACK
               </button>
-              <button mat-raised-button color="primary" matStepperNext>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="validateChosenFile()"
+              >
                 NEXT
               </button>
             </div>
@@ -108,7 +124,12 @@
           </div>
         </mat-step>
         <mat-step label="Choose Chromosome">
-          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="20px" class="step__content-item">
+          <div
+            fxLayout="column"
+            fxLayoutAlign="start start"
+            fxLayoutGap="20px"
+            class="step__content-item"
+          >
             <mat-form-field appearance="outline">
               <mat-label>Chromosome...</mat-label>
               <app-filtered-select [options]="chrs" [(ngModel)]="chosenChr">
@@ -118,7 +139,11 @@
               <button mat-button color="primary" matStepperPrevious>
                 BACK
               </button>
-              <button mat-raised-button color="primary" matStepperNext>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="validateChosenChromosome()"
+              >
                 NEXT
               </button>
             </div>

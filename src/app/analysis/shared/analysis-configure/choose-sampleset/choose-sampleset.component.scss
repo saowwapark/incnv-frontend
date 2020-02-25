@@ -1,6 +1,5 @@
 table {
   width: 100%;
-  height: 500px;
 }
 
 @mixin table-column($size) {
@@ -20,17 +19,13 @@ table {
 }
 
 .mat-column-select {
-  @include table-column(5%);
-}
-.mat-column-samplesetName {
   @include table-column(10%);
 }
-.mat-column-description {
-  @include table-column(20%);
+.mat-column-samplesetName {
+  @include table-column(30%);
 }
-
-.mat-column-samples {
-  @include table-column(65%);
+.mat-column-description {
+  @include table-column(60%);
 }
 
 .description:first-letter {

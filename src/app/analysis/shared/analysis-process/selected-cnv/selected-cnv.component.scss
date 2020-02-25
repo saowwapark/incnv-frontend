@@ -37,14 +37,14 @@ table {
 }
 // table will choose one between cnvTools and samples
 .mat-column-cnvTools {
-@include table-column(20%);
+  @include table-column(25%);
 }
 .mat-column-samples {
-@include table-column(20%);
+  @include table-column(25%);
 }
-.mat-column-edit {
-  @include table-column(5%);
-}
+// .mat-column-edit {
+//   @include table-column(5%);
+// }
 .mat-column-delete {
   @include table-column(5%);
 }

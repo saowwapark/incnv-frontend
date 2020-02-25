@@ -1,13 +1,34 @@
-<ng-container *ngIf="!dataSource; else elseTemplate">
+<ng-container *ngIf="!dataSource.data || dataSource.data.length === 0">
   <div class="warning__container--not-show-data mat-elevation-z8">
     <div class="warning__item--not-show-data">
       Please select CNV results.
     </div>
   </div>
 </ng-container>
-<ng-template #elseTemplate>
+
+<div
+  [style.height]="
+    !dataSource.data || dataSource.data.length === 0 ? '0px' : 'auto'
+  "
+>
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button
+      mat-button
+      mat-raised-button
+      color="primary"
+      (click)="exportCnvInfos()"
+    >
+      Export Result
+    </button>
+  </div>
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      multiTemplateDataRows
+      matSort
+      [trackBy]="trackByFn"
+    >
       <!-- No. Column -->
       <ng-container matColumnDef="no">
         <th mat-header-cell *matHeaderCellDef>No.</th>
@@ -65,7 +86,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Overlapping Numbers
         </th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row" class="data-right">
           {{ row.overlaps.length }}
         </td>
       </ng-container>
@@ -86,21 +107,135 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="edit">
-        <th mat-header-cell *matHeaderCellDef>Edit</th>
-        <td mat-cell *matCellDef="let row; let i = dataIndex">
-          <button mat-icon-button (click)="editRow(row, i)">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+      <!-- <ng-container matColumnDef="edit">
+          <th mat-header-cell *matHeaderCellDef>Edit</th>
+          <td mat-cell *matCellDef="let row; let i = dataIndex">
+            <button mat-icon-button (click)="editRow(row, i)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container> -->
 
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
         <td mat-cell *matCellDef="let i = dataIndex">
-          <button mat-icon-button (click)="deleteRow(i)">
+          <button mat-icon-button color="warn" (click)="deleteRow(i)">
             <mat-icon>delete</mat-icon>
           </button>
+        </td>
+      </ng-container>
+
+      <!-- expandedFlankings column (colspan = all columns -->
+      <ng-container matColumnDef="expandedFlankings">
+        <td
+          mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length"
+        >
+          <div
+            *ngIf="row.leftFlanking || row.rightFlanking"
+            class="expand-row-wrapper"
+            fxLayout="column"
+            [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
+          >
+            <div class="expand-row">
+              <div class="expand-detail--header">
+                Flanking Regions:
+              </div>
+
+              <div fxLayout="column" fxLayoutAlign="start stretch">
+                <div aria-label="Left flanking region">
+                  <div class="property-row" fxLayout="row wrap">
+                    <div class="property property-name">
+                      Left flanking region
+                    </div>
+                    <div class="property property-value">
+                      (chr{{ row.chromosome | uppercase }}:
+                      {{ row.leftFlanking.startBp | number }} -
+                      {{ row.leftFlanking.endBp | number }})
+                    </div>
+                  </div>
+                  <div
+                    class="property-row"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="10px"
+                  >
+                    <mat-form-field appearance="fill" style="width: 100%">
+                      <textarea
+                        #leftFlanking
+                        readonly
+                        matInput
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="3"
+                        >{{ row.leftFlanking.sequence }}
+                                                </textarea
+                      >
+                    </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="start end">
+                      <button
+                        mat-icon-button
+                        class="material-icons-two-tone"
+                        color="accent"
+                        aria-label="copy icon for left flanking"
+                      >
+                        <mat-icon [ngxClipboard]="leftFlanking"
+                          >file_copy</mat-icon
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div aria-label="Right flanking region">
+                  <div
+                    class="property-row"
+                    fxLayout="row"
+                    fxLayoutAlign=" center"
+                  >
+                    <div class="property property-name">
+                      Right flanking region
+                    </div>
+                    <div class="property property-value">
+                      (chr{{ row.chromosome | uppercase }}:
+                      {{ row.rightFlanking.startBp | number }} -
+                      {{ row.rightFlanking.endBp | number }})
+                    </div>
+                  </div>
+                  <div
+                    class="property-row"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="10px"
+                  >
+                    <mat-form-field appearance="fill" style="width: 100%">
+                      <textarea
+                        #rightFlanking
+                        readonly
+                        matInput
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="3"
+                        >{{ row.rightFlanking.sequence }}</textarea
+                      >
+                    </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="start end">
+                      <button
+                        mat-icon-button
+                        color="accent"
+                        aria-label="copy icon for right flanking "
+                      >
+                        <mat-icon [ngxClipboard]="rightFlanking"
+                          >file_copy</mat-icon
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </td>
       </ng-container>
 
@@ -126,6 +261,7 @@
                   *ngFor="let ensembl of row.ensembls"
                   color="accent"
                   selected
+                  class="cursor-pointer"
                   (click)="ensemblLink(ensembl.geneId)"
                 >
                   {{ ensembl.geneSymbol }}
@@ -158,6 +294,7 @@
                   *ngFor="let dgv of row.dgvs"
                   color="accent"
                   selected
+                  class="cursor-pointer"
                   (click)="dgvLink(row.referenceGenome, dgv.variantAccession)"
                 >
                   {{ dgv.variantAccession }}
@@ -197,6 +334,7 @@
                         (click)="clinvarLink(omimId)"
                         color="accent"
                         selected
+                        class="cursor-pointer"
                         >{{ omimId }}</mat-chip
                       >
                     </mat-chip-list>
@@ -229,10 +367,20 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr
         mat-row
+        *matRowDef="let row; columns: ['expandedFlankings']"
+        class="expand-row"
+      ></tr>
+      <tr
+        mat-row
         *matRowDef="let element; columns: displayedColumns"
         class="default-row"
         [class.expanded-row]="expandedElement === element"
         (click)="expandedElement = expandedElement === element ? null : element"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedFlankings']"
+        class="expand-row"
       ></tr>
       <tr
         mat-row
@@ -250,5 +398,12 @@
         class="expand-row"
       ></tr>
     </table>
+
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSizeOptions]="[5, 10, 25, 50, 100]"
+      class="paginator-sticky"
+    >
+    </mat-paginator>
   </div>
-</ng-template>
+</div>

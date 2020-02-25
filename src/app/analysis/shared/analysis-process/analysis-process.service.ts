@@ -1,3 +1,4 @@
+import { DgvVariant } from './../../analysis.model';
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 import {
   CnvGroup,
@@ -7,21 +8,31 @@ import {
 } from '../../analysis.model';
 import { CnvInfo } from 'src/app/analysis/analysis.model';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  throwError,
+  TimeoutError
+} from 'rxjs';
 import { ConstantsService } from 'src/app/shared/services/constants.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, timeout, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalysisProcessService {
   baseRouteUrl: string;
+  onSelectedCnvChanged: Subject<CnvInfo[]>;
+  onSelectedCnv: Subject<CnvInfo>;
   onIndividualSampleConfigChanged: BehaviorSubject<IndividualSampleConfig>;
   onMultipleSampleConfigChanged: BehaviorSubject<MultipleSampleConfig>;
 
   constructor(private _http: HttpClient, private _constant: ConstantsService) {
     this.baseRouteUrl = `${this._constant.baseAppUrl}/api/analysises`;
+    this.onSelectedCnv = new Subject();
+    this.onSelectedCnvChanged = new Subject();
     this.onIndividualSampleConfigChanged = new BehaviorSubject({});
     this.onMultipleSampleConfigChanged = new BehaviorSubject({});
   }
@@ -29,46 +40,62 @@ export class AnalysisProcessService {
   getIndividualSampleData(
     config: IndividualSampleConfig
   ): Observable<[CnvGroup[], CnvGroup]> {
-    const options = {
-      // headers: new HttpHeaders({
-      //   'Content-Type': 'application/json'
-      // }),
-      params: {
-        referenceGenome: config.referenceGenome,
-        chromosome: config.chromosome,
-        cnvType: config.cnvType,
-        sample: config.sample,
-        uploadCnvToolResults: JSON.stringify(config.uploadCnvToolResults)
-      }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    const data = {
+      referenceGenome: config.referenceGenome,
+      chromosome: config.chromosome,
+      cnvType: config.cnvType,
+      sample: config.sample,
+      uploadCnvToolResults: config.uploadCnvToolResults
     };
-    // actual url must not be longer than 2000 characters.
+    // actual http get url must not be longer than 2000 characters.
     return this._http
-      .get(`${this.baseRouteUrl}/individual-sample`, options)
-      .pipe(map(res => res['payload']));
+      .post(`${this.baseRouteUrl}/individual-sample`, data, {
+        headers: headers
+      })
+      .pipe(
+        timeout(600000),
+        map(res => res['payload']),
+        catchError(error => {
+          // Error...
+          // Handle 'timeout over' error
+          if (error instanceof TimeoutError) {
+            return throwError('Timeout Exception 600000ms');
+          }
+
+          // Return other errors
+          return throwError(error);
+        })
+      );
   }
 
   getMultipleSampleData(
     config: MultipleSampleConfig
   ): Observable<[CnvGroup[], CnvGroup]> {
-    const options = {
-      params: {
-        referenceGenome: config.referenceGenome,
-        chromosome: config.chromosome,
-        cnvType: config.cnvType,
-        samples: JSON.stringify(config.samples),
-        uploadCnvToolResult: JSON.stringify(config.uploadCnvToolResult)
-      }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    const data = {
+      referenceGenome: config.referenceGenome,
+      chromosome: config.chromosome,
+      cnvType: config.cnvType,
+      samples: config.samples,
+      uploadCnvToolResult: config.uploadCnvToolResult
     };
-    // actual url must not be longer than 2000 characters.
+    // actual http get url must not be longer than 2000 characters.
     return this._http
-      .get(`${this.baseRouteUrl}/multiple-sample`, options)
+      .post(`${this.baseRouteUrl}/multiple-sample`, data, {
+        headers: headers
+      })
       .pipe(map(res => res['payload']));
   }
 
-  getDgvs(
+  getDgvVariants(
     referenceGenome: string,
     chromosome: string
-  ): Observable<DgvAnnotation[]> {
+  ): Observable<DgvVariant[]> {
     const url = `${this.baseRouteUrl}/dgvs`;
     const options = {
       params: {

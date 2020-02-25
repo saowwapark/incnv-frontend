@@ -25,40 +25,4 @@
       </div>
     </div>
   </div>
-
-  <h3>New Selected CNV</h3>
-  <form #f="ngForm" onsubmit="selectBasepair(f)">
-    <div class="property-row" fxLayoutAlign=" center" fxLayout="row nowrap">
-      <div class="property property-value">
-        <mat-form-field>
-          <input
-            name="selectedStartBp"
-            matInput
-            placeholder="start basepair"
-            [textMask]="{ mask: numberMark }"
-            unmaskNumeric
-            ngModel
-          />
-        </mat-form-field>
-      </div>
-      <div class="property property-value">
-        <span> to </span>
-      </div>
-      <div class="property property-value">
-        <mat-form-field>
-          <input
-            name="selectedEndBp"
-            matInput
-            placeholder="end basepair"
-            [textMask]="{ mask: numberMark }"
-            unmaskNumeric
-            ngModel
-          />
-        </mat-form-field>
-      </div>
-      <button mat-raised-button color="primary" type="submit">
-        SELECT
-      </button>
-    </div>
-  </form>
 </div>

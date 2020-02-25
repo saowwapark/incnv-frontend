@@ -7,11 +7,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ChooseOneSampleComponent implements OnInit {
   @Input() samples: string[];
-  @Output() selectSample = new EventEmitter<string>();
-  selectedSample: string;
-  constructor() {
-    this.selectedSample = '';
-  }
+  @Input() selectedSample: string;
+  @Output() selectedSampleChange = new EventEmitter<string>();
+  constructor() {}
 
   ngOnInit() {}
 }

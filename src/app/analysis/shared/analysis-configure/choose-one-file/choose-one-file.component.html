@@ -12,18 +12,20 @@
       <input matInput (keyup)="applyFilter($event.target.value)" />
     </mat-form-field>
   </div>
-  <div class="table-container mat-elevation-z2" *ngIf="dataSource">
+  <div class="table-container mat-elevation-z2">
     <table mat-table [dataSource]="dataSource" matSort>
       <!-- Radio Column -->
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let upload" class="select">
-          <mat-radio-button
-            [value]="upload"
-            #chosenSampleset
-            (change)="selectFile.next($event.value)"
-          >
-          </mat-radio-button>
+          <mat-radio-group [(ngModel)]="selectedFile">
+            <mat-radio-button
+              [value]="upload"
+              #chosenSampleset
+              (change)="selectedFileChange.next($event.value)"
+            >
+            </mat-radio-button>
+          </mat-radio-group>
         </td>
       </ng-container>
 
@@ -70,7 +72,7 @@
 
     <mat-paginator
       [length]="dataSource.data.length"
-      [pageSize]="30"
+      [pageSizeOptions]="[5, 10, 25, 50, 100]"
       class="paginator-sticky"
     ></mat-paginator>
   </div>

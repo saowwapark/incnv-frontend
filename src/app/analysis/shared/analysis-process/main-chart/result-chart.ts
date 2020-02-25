@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { CnvGroup, CnvInfo } from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
+import { filterDataInRegion } from './../visualizeBp.utility';
 
 export class MergedChart {
   _id: string;
@@ -13,6 +14,7 @@ export class MergedChart {
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
   scaleY: d3.ScaleBand<string>;
+  colorOpacityScale;
   xAxis;
   yAxis;
 
@@ -46,9 +48,26 @@ export class MergedChart {
     // this.domainOnY = domainOnY;
     this.initVis(containerMargin);
   }
+
+  private calContainerHeight(containerMargin) {
+    const barNumber = this._data.length;
+    const xAxisBarHeight = 20;
+    const dataBarHeight = 30; // approximately with inner padding
+    const innerPaddingHeight = 0.3 * dataBarHeight;
+    const innerPaddingNumber = barNumber === 0 ? 0 : barNumber - 1;
+    const outterPaddingHeight = 0.2 * dataBarHeight;
+    return (
+      containerMargin.top +
+      containerMargin.bottom +
+      xAxisBarHeight +
+      barNumber * dataBarHeight
+      // innerPaddingHeight * innerPaddingNumber +
+      // 2 * outterPaddingHeight
+    );
+  }
   private generateGraphContainer(containerMargin) {
     const width = this._parentElement.offsetWidth;
-    const height = this._parentElement.offsetHeight;
+    const height = this.calContainerHeight(containerMargin);
 
     // select the svg container
     this.svg = d3
@@ -110,18 +129,25 @@ export class MergedChart {
     yAxisGroup.call(yAxis);
   }
 
-  private createMergedColorScale(color: string) {
+  // private createMergedColorScale(color: string) {
+  //   return d3
+  //     .scaleLinear<string>()
+  //     .domain([0, this._maxOverlap])
+  //     .range(['white', color]);
+  // }
+
+  private createColorOpacityScale() {
     return d3
-      .scaleLinear<string>()
+      .scaleLinear<number>()
       .domain([0, this._maxOverlap])
-      .range(['white', color]);
+      .range([0, 1]);
   }
 
   public drawData() {
     const bars = this.generateBars();
-    const mergedColorScale = this.createMergedColorScale(this._color);
-    this.subbars = this.generateSubbars(bars, mergedColorScale);
-    this.addEventToSubbars(mergedColorScale);
+    this.colorOpacityScale = this.createColorOpacityScale();
+    this.subbars = this.generateSubbars(bars);
+    this.addEventToSubbars();
   }
 
   private generateBars() {
@@ -151,13 +177,17 @@ export class MergedChart {
     return bars;
   }
 
-  private generateSubbars(bars, mergedColorScale) {
+  private generateSubbars(bars) {
     const subbars = bars
 
       .selectAll('rect.subbar')
 
       .data((d: CnvGroup) => {
-        return d.cnvInfos;
+        return filterDataInRegion(
+          d.cnvInfos,
+          this._domainOnX[0],
+          this._domainOnX[1]
+        );
       })
       .join('rect')
       .attr('class', 'subbar');
@@ -178,14 +208,11 @@ export class MergedChart {
         const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
         return this.scaleY(parentData.cnvGroupName);
       })
-      .attr('fill', (d: CnvInfo, i, n) => {
-        const color = mergedColorScale(d.overlaps.length);
-        return color;
+      .attr('fill', this._color)
+      .attr('fill-opacity', (d: CnvInfo, i, n) => {
+        return this.colorOpacityScale(d.overlaps.length);
       })
-      .attr('stroke', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
-        return this._color;
-      })
+      .attr('stroke', this._color)
       .attr('stroke-opacity', '0');
 
     return subbars;
@@ -198,10 +225,10 @@ export class MergedChart {
     });
   }
 
-  private addEventToSubbars(mergedColorScale) {
+  private addEventToSubbars() {
     // Add Events
     this.subbars
-      .on('mouseover', (d, i, n) => {
+      .on('mouseover', (d: CnvInfo, i, n) => {
         // change color subbar
         d3.select(n[i])
           .transition()
@@ -210,15 +237,14 @@ export class MergedChart {
           .attr('stroke-opacity', '1')
           .style('cursor', 'pointer');
       })
-      .on('mouseout', (d, i, n) => {
+      .on('mouseout', (d: CnvInfo, i, n) => {
         // subbar
         d3.select(n[i])
           .transition()
           .duration(300)
-          .attr('fill', () => {
-            const color = mergedColorScale(d.overlaps.length);
-
-            return color;
+          .attr('fill', this._color)
+          .attr('fill-opacity', () => {
+            return this.colorOpacityScale(d.overlaps.length);
           })
           .attr('stroke-opacity', '0');
 

@@ -20,6 +20,7 @@ import { ChooseSamplesetResolver } from './shared/analysis-configure/choose-samp
 import { ChooseOneFileComponent } from './shared/analysis-configure/choose-one-file/choose-one-file.component';
 import { MultipleProcessComponent } from './multiple-process/multiple-process.component';
 import { MergedTableComponent } from './shared/analysis-process/merged-table/merged-table.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,12 @@ import { MergedTableComponent } from './shared/analysis-process/merged-table/mer
     MultipleProcessComponent,
     MergedTableComponent
   ],
-  imports: [SharedModule, AnalysisRoutingModule, TextMaskModule],
+  imports: [
+    SharedModule,
+    AnalysisRoutingModule,
+    TextMaskModule,
+    ClipboardModule
+  ],
   providers: [ChooseSamplesetResolver],
   entryComponents: [AnnotationDialogComponent, SelectedCnvDialogComponent]
 })

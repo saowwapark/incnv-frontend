@@ -7,6 +7,7 @@ export class OverviewChart {
   _yAxisUnit;
   _domainOnX;
   _domainOnY;
+  _color: string;
 
   graphContainer;
   clipPath;
@@ -29,16 +30,32 @@ export class OverviewChart {
     containerMargin,
     yUnit,
     domainOnX,
-    domainOnY?
+    domainOnY,
+    color: string
   ) {
     this._parentElement = parentElement;
     this._data = data;
     this._yAxisUnit = yUnit;
     this._domainOnX = domainOnX;
-    this._domainOnY = domainOnY || [0, d3.max(data, d => d.overlaps.length)];
+    this._domainOnY = domainOnY;
+    this._color = color;
 
     this.initVis(containerMargin);
   }
+
+  private calContainerHeight(containerMargin) {
+    const maxY = this._domainOnY[1];
+    const xAxisBarHeight = 20;
+    const dataBarHeight = 20; // approximately with inner padding
+
+    return (
+      containerMargin.top +
+      containerMargin.bottom +
+      xAxisBarHeight +
+      maxY * dataBarHeight
+    );
+  }
+
   private generateGraphContainer(containerMargin) {
     // const parentElement = d3.select(this._parentElementName);
     // const width = parentElement.attr('width');
@@ -46,7 +63,7 @@ export class OverviewChart {
     // const y = parentElement.attr('y');
 
     const width = this._parentElement.offsetWidth;
-    const height = this._parentElement.offsetHeight;
+    const height = this.calContainerHeight(containerMargin);
     // select the svg container
     this.svg = d3
       .select(this._parentElement)
@@ -145,7 +162,7 @@ export class OverviewChart {
         'width',
         (d: CnvInfo) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
       )
-      .attr('fill', 'red');
+      .attr('fill', this._color);
   }
 
   private brushed(callback) {

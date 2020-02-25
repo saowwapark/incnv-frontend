@@ -1,0 +1,40 @@
+<div id="history-upload-cnv-tool-result" class="layout--absolute-1vh">
+  <!-- HEADER -->
+  <div class="layout__header-container">
+    <div class="layout__header-items">
+      <!-- APP TITLE -->
+      <span class="h2">My File</span>
+
+      <!-- SEARCH -->
+      <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
+        <input class="search-input" placeholder="Search..." #filterInput />
+
+        <mat-icon class="search-icon">search</mat-icon>
+      </div>
+    </div>
+  </div>
+  <!-- / HEADER -->
+
+  <!-- SELECTED BAR -->
+  <app-selected-bar
+    *ngIf="selectedUploads.length > 0"
+    [selectedData]="selectedUploads"
+    [selectedBarType]="2"
+    (submitEmitter)="onSubmitAllSelected($event)"
+    (deselectAllEmitter)="onDelselectedAll()"
+    [@slideInTop]
+  >
+  </app-selected-bar>
+  <!-- / SELECTED BAR -->
+
+  <!-- CONTENT -->
+  <div class="layout__content-container--scrollbar ">
+    <div class="layout__content-items">
+      <app-my-file-upload-cnv-tool-result-list></app-my-file-upload-cnv-tool-result-list>
+    </div>
+  </div>
+
+  <!-- / CONTENT -->
+
+  <!-- / ADD SAMPLESET BUTTON -->
+</div>

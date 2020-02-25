@@ -41,10 +41,10 @@ export const navigationData: Navigation[] = [
             url: '/configurefile'
           },
           {
-            id: 'history',
-            title: 'History',
+            id: 'myFiles',
+            title: 'My Files',
             type: 'item',
-            url: '/uploadhistory'
+            url: '/myfiles'
           }
         ]
       }
@@ -68,7 +68,7 @@ export const navigationData: Navigation[] = [
         title: 'Multiple Samples',
         type: 'item',
         icon: 'school',
-        url: '/multiple-analysis'
+        url: '/multiple-sample'
       }
     ]
   }

@@ -1,98 +1,104 @@
-import {
-  Observable,
-  Subject,
-  BehaviorSubject,
-  forkJoin,
-  ObservableInput
-} from 'rxjs';
+import { DgvVariant } from './../analysis.model';
+import { Subject, BehaviorSubject, forkJoin, throwError } from 'rxjs';
+
 import {
   CnvInfo,
   RegionBp,
   CnvGroup,
   IndividualSampleConfig,
   MERGED_RESULT_NAME,
-  FINAL_RESULT_NAME,
-  DgvAnnotation
+  FINAL_RESULT_NAME
 } from '../analysis.model';
-import {
-  Component,
-  Input,
-  OnInit,
-  AfterViewInit,
-  OnDestroy
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 
-import {
-  chosenReferenceGenome,
-  chosenSampleset,
-  chosenSample,
-  chosenFiles,
-  chosenCnvType,
-  chosenChr
-} from '../mock-data';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, catchError } from 'rxjs/operators';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate
+} from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-individual-process',
   templateUrl: './individual-process.component.html',
-  styleUrls: ['./individual-process.component.scss']
+  styleUrls: ['./individual-process.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      )
+    ])
+  ]
 })
 export class IndividualProcessComponent
   implements OnInit, AfterViewInit, OnDestroy {
-  dgvs: DgvAnnotation[];
+  dgvVariants: DgvVariant[];
   individualConfig: IndividualSampleConfig;
   cnvTools: CnvGroup[];
   mergedTool: CnvGroup;
   selectedChrRegion: RegionBp;
-  selectedCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
   isLoading: BehaviorSubject<boolean>;
+  selectedCnvs: CnvInfo[];
 
   // private
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private service: AnalysisProcessService) {
+  constructor(private service: AnalysisProcessService, private router: Router) {
     this.isLoading = new BehaviorSubject(true);
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
-    // // mock data
-    //  this.individualConfig.referenceGenome = chosenReferenceGenome;
-    //  this.individualConfig.samplesetName =
-    //    chosenSampleset.samplesetName;
-    //  this.individualConfig.sample = chosenSample;
-    //  this.individualConfig.uploadCnvToolResults = chosenFiles;
-    //  this.individualConfig.cnvType = chosenCnvType;
-    //  this.individualConfig.chromosome = chosenChr;
-
     this.service.onIndividualSampleConfigChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config: IndividualSampleConfig) => {
         this.individualConfig = config;
         const observables$ = [
-          this.service.getDgvs(
+          this.service.getDgvVariants(
             this.individualConfig.referenceGenome,
             this.individualConfig.chromosome
           ),
           this.service.getIndividualSampleData(this.individualConfig)
         ];
 
-        forkJoin(observables$)
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(
-            ([dgvs, individualSample]: [
-              DgvAnnotation[],
-              [CnvGroup[], CnvGroup]
-            ]) => {
-              this.dgvs = dgvs;
-              this.cnvTools = individualSample[0];
-              this.mergedTool = individualSample[1];
-              this.containerMargin = this.calContainerMargin();
-              this.isLoading.next(false);
-            }
-          );
+        if (!this.individualConfig.referenceGenome) {
+          this.router.navigate(['/individual-sample']);
+        } else {
+          forkJoin(observables$)
+            .pipe(
+              catchError(err => {
+                this.router.navigate(['/individual-sample']);
+                return throwError(err);
+              }),
+              takeUntil(this._unsubscribeAll)
+            )
+            .subscribe(
+              ([dgvs, individualSample]: [
+                DgvVariant[],
+                [CnvGroup[], CnvGroup]
+              ]) => {
+                this.dgvVariants = dgvs;
+                this.cnvTools = individualSample[0];
+                this.mergedTool = individualSample[1];
+                this.containerMargin = this.calContainerMargin();
+                this.isLoading.next(false);
+              }
+            );
+        }
+      });
+
+    this.service.onSelectedCnvChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(cnvInfos => {
+        this.selectedCnvs = cnvInfos;
       });
   }
 
@@ -100,15 +106,6 @@ export class IndividualProcessComponent
     this.selectedChrRegion = selectedChrRegion;
   }
 
-  selectCnvs(selectedCnvs: CnvInfo[]) {
-    this.selectedCnvs = [...selectedCnvs];
-  }
-
-  exportCnvInfos() {
-    this.service.downloadCnvInfos(this.selectedCnvs).subscribe(() => {
-      console.log('export success');
-    });
-  }
   private calContainerMargin() {
     // max character lenght
     let maxLength = 0;

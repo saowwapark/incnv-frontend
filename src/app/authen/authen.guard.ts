@@ -19,7 +19,7 @@ export class AuthenGuard implements CanActivate {
   ): Observable<boolean> | Promise<boolean> | boolean {
     this.authService.isAuthen$.subscribe((isAuthen: boolean) => {
       if (!isAuthen) {
-        this.router.navigate(['/login']);
+        this.router.navigate(['login']);
       }
     });
     return this.authService.isAuthen$;

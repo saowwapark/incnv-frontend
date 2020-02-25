@@ -1,64 +1,20 @@
 <!-- HEADER -->
 
-<div fxLayout="column" fxLayoutAlign="start">
-  <!-- APP TITLE -->
-  <span style="font-size: 2rem">Reformat File</span>
-
-  <div fxLayout="row" fxLayoutAlign="space-between center">
-    <!-- Filter -->
-    <mat-form-field>
-      <input matInput placeholder="Filter..." #filterInput />
-    </mat-form-field>
-
-    <div>
-      <button
-        mat-raised-button
-        mat-raised-button
-        color="primary"
-        (click)="goToNextStep()"
-      >
-        Confirm
-      </button>
-      <button mat-button (click)="goToPreviousStep()">
-        Cancel
-      </button>
-    </div>
+<div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="20px">
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <button
+      mat-raised-button
+      mat-raised-button
+      color="primary"
+      (click)="goToNextStep()"
+    >
+      Confirm
+    </button>
+    <button mat-button (click)="goToPreviousStep()">
+      Cancel
+    </button>
   </div>
+  <app-reformat-cnv-tool-result-table
+    [uploadCnvToolResultId]="uploadCnvToolResultId"
+  ></app-reformat-cnv-tool-result-table>
 </div>
-
-<!-- / HEADER -->
-
-<!-- SELECTED BAR -->
-<app-selected-bar
-  *ngIf="selectedResults.length > 0"
-  [selectedData]="selectedResults"
-  [selectedBarType]="2"
-  (submitEmitter)="onSubmitAllSelected($event)"
-  (deselectAllEmitter)="onDelselectedAll()"
-  [@slideInTop]
->
-</app-selected-bar>
-<!-- / SELECTED BAR -->
-
-<!-- CONTENT -->
-<div class="layout__content-container--scrollbar ">
-  <div class="layout__content-items">
-    <app-reformat-list
-      [uploadCnvToolResultId]="uploadCnvToolResultId"
-    ></app-reformat-list>
-  </div>
-</div>
-
-<!-- / CONTENT -->
-
-<!-- ADD SAMPLESET BUTTON -->
-<button
-  mat-fab
-  class="accent"
-  id="add-sampleset-button"
-  aria-label="add data"
-  (click)="onAddData()"
->
-  <mat-icon>add</mat-icon>
-</button>
-<!-- / ADD SAMPLESET BUTTON -->

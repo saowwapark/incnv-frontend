@@ -73,7 +73,6 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(() => {
         this._samplesetService.getIdAndNames().subscribe(sampleset => {
           this.samplesets = sampleset;
-          console.log('onTriggerDataChanged');
         });
       });
 
@@ -103,7 +102,7 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
       fileName: [this.uploadPost.fileName, Validators.required],
       uploadedFile: [this.uploadPost.uploadedFile, Validators.required],
       fileInfo: [],
-      referenceGenome: [],
+      referenceGenome: ['grch37'],
 
       cnvToolName: [null, Validators.required],
       tabFileMapping: [], // only 'file_type' is Tab File Format

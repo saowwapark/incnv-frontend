@@ -11,7 +11,59 @@
       <input matInput (keyup)="applyFilter($event.target.value)" />
     </mat-form-field>
   </div>
-  <div class="table-container mat-elevation-z2" *ngIf="dataSource">
+
+  <!-- Choose File -->
+  <div *ngIf="selectedFiles.length > 0">
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="property-row" fxLayout="row wrap">
+        <div class="property property-name" fxFlex="1 1 100%">
+          Selected Files
+        </div>
+      </div>
+      <div class="property-row" fxLayout="row wrap">
+        <div
+          class="property property-value"
+          fxFlex="1 1 100%"
+          fxLayout="column"
+        >
+          <div
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="grid-color-header"
+          >
+            <div fxFlex="0 1 50%" class="grid-padding-header">
+              File Name
+            </div>
+            <div fxFlex="0 1 25%" class="grid-padding-header">
+              File Info.
+            </div>
+            <div fxFlex="0 1 25%" class="grid-padding-header">
+              CNV Tool
+            </div>
+          </div>
+          <div
+            *ngFor="let chosenFile of selectedFiles"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="grid-color-data"
+          >
+            <div fxFlex="0 1 50%" class="grid-padding-data">
+              {{ chosenFile.fileName | titlecase }}
+            </div>
+            <div fxFlex="0 1 25%" class="grid-padding-data">
+              {{ chosenFile.fileInfo | titlecase }}
+            </div>
+            <div fxFlex="0 1 25%" class="grid-padding-data">
+              {{ chosenFile.cnvToolName | titlecase }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container mat-elevation-z2">
     <table mat-table [dataSource]="dataSource" matSort>
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
@@ -76,7 +128,7 @@
 
     <mat-paginator
       [length]="dataSource.data.length"
-      [pageSize]="30"
+      [pageSizeOptions]="[5, 10, 25, 50, 100]"
       class="paginator-sticky"
     ></mat-paginator>
   </div>

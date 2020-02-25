@@ -1,14 +1,264 @@
+<!-- onpush -->
 <div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start stretch">
-  <div fxLayout="row" fxLayoutAlign="space-between center">
-    <mat-form-field fxFlex="1 1 100%" appearance="outline">
-      <mat-label>Search...</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput (keyup)="applyFilter($event.target.value)" />
-    </mat-form-field>
-  </div>
-
+  <mat-accordion [multi]="true">
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Search</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 1 90%">
+            <mat-form-field
+              aria-label="search-ensembl"
+              fxFlex="1 1 92%"
+              appearance="outline"
+            >
+              <mat-label>Search Ensembl...</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <mat-chip-list #searchEnsembl>
+                <mat-chip
+                  color="accent"
+                  selected
+                  *ngFor="
+                    let filterValue of filteredEnsembl.filterValues;
+                    let i = index
+                  "
+                  selectable="false"
+                  [removable]="true"
+                  (removed)="
+                    onRemoveFilterValue(i, filteredEnsembl.filterValues)
+                  "
+                >
+                  {{ filterValue }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  [matChipInputFor]="searchEnsembl"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  matChipInputAddOnBlur="true"
+                  (matChipInputTokenEnd)="
+                    onAddFilterValue($event, filteredEnsembl.filterValues)
+                  "
+                />
+              </mat-chip-list>
+            </mat-form-field>
+            <div fxFlex="1 1 8%">
+              <button
+                mat-icon-button
+                color="warn"
+                aria-label="clear search keywords"
+                (click)="onClearFilterValues(filteredEnsembl.filterValues)"
+              >
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 10%">
+            <div>AND</div>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 1 90%">
+            <mat-form-field
+              aria-label="search-dgv"
+              fxFlex="1 1 92%"
+              appearance="outline"
+            >
+              <mat-label>Search DGV...</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <mat-chip-list #searchDGV>
+                <mat-chip
+                  color="accent"
+                  selected
+                  *ngFor="
+                    let filterValue of filteredDgv.filterValues;
+                    let i = index
+                  "
+                  selectable="false"
+                  [removable]="true"
+                  (removed)="onRemoveFilterValue(i, filteredDgv.filterValues)"
+                >
+                  {{ filterValue }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  [matChipInputFor]="searchDGV"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  matChipInputAddOnBlur="true"
+                  (matChipInputTokenEnd)="
+                    onAddFilterValue($event, filteredDgv.filterValues)
+                  "
+                />
+              </mat-chip-list>
+            </mat-form-field>
+            <div fxFlex="1 1 8%">
+              <button
+                mat-icon-button
+                color="warn"
+                aria-label="clear search keywords"
+                (click)="onClearFilterValues(filteredDgv.filterValues)"
+              >
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 10%">
+            <div>AND</div>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 1 90%">
+            <mat-form-field
+              aria-label="search-clinvar-omim-id"
+              fxFlex="1 1 92%"
+              appearance="outline"
+            >
+              <mat-label>Search ClinVar (OMIM ID)...</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <mat-chip-list #searchClinvarOmimId>
+                <mat-chip
+                  color="accent"
+                  selected
+                  *ngFor="
+                    let filterValue of filteredClinvarOmimId.filterValues;
+                    let i = index
+                  "
+                  selectable="false"
+                  [removable]="true"
+                  (removed)="
+                    onRemoveFilterValue(i, filteredClinvarOmimId.filterValues)
+                  "
+                >
+                  {{ filterValue }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  [matChipInputFor]="searchClinvarOmimId"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  matChipInputAddOnBlur="true"
+                  (matChipInputTokenEnd)="
+                    onAddFilterValue($event, filteredClinvarOmimId.filterValues)
+                  "
+                />
+              </mat-chip-list>
+            </mat-form-field>
+            <div fxFlex="1 1 8%">
+              <button
+                mat-icon-button
+                color="warn"
+                aria-label="clear search keywords"
+                (click)="
+                  onClearFilterValues(filteredClinvarOmimId.filterValues)
+                "
+              >
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 10%">
+            <div>AND</div>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 1 90%">
+            <mat-form-field
+              aria-label="search-clinvar-omim-phenotype"
+              fxFlex="1 1 92%"
+              appearance="outline"
+            >
+              <mat-label>Search ClinVar (Phenotype)...</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <mat-chip-list #searchClinvarOmimPhenotype>
+                <mat-chip
+                  color="accent"
+                  selected
+                  *ngFor="
+                    let filterValue of filteredClinvarPhenotype.filterValues;
+                    let i = index
+                  "
+                  selectable="false"
+                  [removable]="true"
+                  (removed)="
+                    onRemoveFilterValue(
+                      i,
+                      filteredClinvarPhenotype.filterValues
+                    )
+                  "
+                >
+                  {{ filterValue }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  [matChipInputFor]="searchClinvarOmimPhenotype"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  matChipInputAddOnBlur="true"
+                  (matChipInputTokenEnd)="
+                    onAddFilterValue(
+                      $event,
+                      filteredClinvarPhenotype.filterValues
+                    )
+                  "
+                />
+              </mat-chip-list>
+            </mat-form-field>
+            <div fxFlex="1 1 8%">
+              <button
+                mat-icon-button
+                color="warn"
+                aria-label="clear search keywords"
+                (click)="
+                  onClearFilterValues(filteredClinvarOmimId.filterValues)
+                "
+              >
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 10%">
+            <div>AND</div>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <button
+          mat-button
+          mat-raised-button
+          color="primary"
+          (click)="applyFilter()"
+        >
+          Search
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      multiTemplateDataRows
+      matSort
+      [trackBy]="trackByFn"
+    >
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="toggleRow($event.checked, row)"
+            [checked]="selection.isSelected(row)"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
       <!-- No. Column -->
       <ng-container matColumnDef="no">
         <th mat-header-cell *matHeaderCellDef>No.</th>
@@ -66,7 +316,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Overlapping Numbers
         </th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row" class="data-right">
           {{ row.overlaps.length }}
         </td>
       </ng-container>
@@ -84,6 +334,120 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Samples</th>
         <td mat-cell *matCellDef="let row">
           {{ row.overlaps.join('; ') }}
+        </td>
+      </ng-container>
+
+      <!-- expandedFlankings column (colspan = all columns) -->
+      <ng-container matColumnDef="expandedFlankings">
+        <td
+          mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length"
+        >
+          <div
+            *ngIf="row.leftFlanking || row.rightFlanking"
+            class="expand-row-wrapper"
+            fxLayout="column"
+            [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
+          >
+            <div class="expand-row">
+              <div class="expand-detail--header">
+                Flanking Regions:
+              </div>
+
+              <div fxLayout="column" fxLayoutAlign="start stretch">
+                <div aria-label="Left flanking region">
+                  <div class="property-row" fxLayout="row wrap">
+                    <div class="property property-name">
+                      Left flanking region
+                    </div>
+                    <div class="property property-value">
+                      (chr{{ row.chromosome | uppercase }}:
+                      {{ row.leftFlanking.startBp | number }} -
+                      {{ row.leftFlanking.endBp | number }})
+                    </div>
+                  </div>
+                  <div
+                    class="property-row"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="10px"
+                  >
+                    <mat-form-field appearance="fill" style="width: 100%">
+                      <textarea
+                        #leftFlanking
+                        readonly
+                        matInput
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="3"
+                        >{{ row.leftFlanking.sequence }}
+                                          </textarea
+                      >
+                    </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="start end">
+                      <button
+                        mat-icon-button
+                        class="material-icons-two-tone"
+                        color="accent"
+                        aria-label="copy icon for left flanking"
+                      >
+                        <mat-icon [ngxClipboard]="leftFlanking"
+                          >file_copy</mat-icon
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div aria-label="Right flanking region">
+                  <div
+                    class="property-row"
+                    fxLayout="row"
+                    fxLayoutAlign=" center"
+                  >
+                    <div class="property property-name">
+                      Right flanking region
+                    </div>
+                    <div class="property property-value">
+                      (chr{{ row.chromosome | uppercase }}:
+                      {{ row.rightFlanking.startBp | number }} -
+                      {{ row.rightFlanking.endBp | number }})
+                    </div>
+                  </div>
+                  <div
+                    class="property-row"
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    fxLayoutGap="10px"
+                  >
+                    <mat-form-field appearance="fill" style="width: 100%">
+                      <textarea
+                        #rightFlanking
+                        readonly
+                        matInput
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="3"
+                        >{{ row.rightFlanking.sequence }}</textarea
+                      >
+                    </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="start end">
+                      <button
+                        mat-icon-button
+                        color="accent"
+                        aria-label="copy icon for right flanking "
+                      >
+                        <mat-icon [ngxClipboard]="rightFlanking"
+                          >file_copy</mat-icon
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </td>
       </ng-container>
 
@@ -109,6 +473,7 @@
                   *ngFor="let ensembl of row.ensembls"
                   color="accent"
                   selected
+                  class="cursor-pointer"
                   (click)="ensemblLink(ensembl.geneId)"
                 >
                   {{ ensembl.geneSymbol }}
@@ -141,6 +506,7 @@
                   *ngFor="let dgv of row.dgvs"
                   color="accent"
                   selected
+                  class="cursor-pointer"
                   (click)="dgvLink(row.referenceGenome, dgv.variantAccession)"
                 >
                   {{ dgv.variantAccession }}
@@ -177,9 +543,10 @@
                     <mat-chip-list>
                       <mat-chip
                         *ngFor="let omimId of row.clinvar.omimIds"
-                        (click)="clinvarLink(omimId)"
                         color="accent"
                         selected
+                        class="cursor-pointer"
+                        (click)="clinvarLink(omimId)"
                         >{{ omimId }}</mat-chip
                       >
                     </mat-chip-list>
@@ -217,6 +584,12 @@
         [class.expanded-row]="expandedElement === element"
         (click)="expandedElement = expandedElement === element ? null : element"
       ></tr>
+
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedFlankings']"
+        class="expand-row"
+      ></tr>
       <tr
         mat-row
         *matRowDef="let row; columns: ['expandedEnsembls']"
@@ -236,8 +609,9 @@
 
     <mat-paginator
       [length]="dataSource.data.length"
-      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSizeOptions]="[5, 10, 25, 50, 100]"
       class="paginator-sticky"
-    ></mat-paginator>
+    >
+    </mat-paginator>
   </div>
 </div>

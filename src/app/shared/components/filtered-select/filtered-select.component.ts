@@ -59,7 +59,7 @@ export class FilteredSelectComponent
   @ViewChild('input', { static: false })
   input: ElementRef;
   filteredOptions: any[];
-  selectedOption: any;
+  @Input() selectedOption: any;
   @Output() selectionChange = new EventEmitter();
 
   /************************************** Property for MatFormFieldControl **********************************/
@@ -188,6 +188,7 @@ export class FilteredSelectComponent
   /********************** Life Cycle Hook ********************************/
   ngOnChanges() {
     this.filteredOptions = [...this.options];
+    this.filterSelectGroup.get('selectControl').setValue(this.selectedOption);
   }
   ngOnInit() {}
   ngAfterViewInit() {

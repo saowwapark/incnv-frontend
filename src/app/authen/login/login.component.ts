@@ -1,14 +1,14 @@
-import { AuthenService } from "../authen.service";
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FormGroup, FormControl, Validators, NgForm } from "@angular/forms";
-import { Router } from "@angular/router";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { AuthenService } from '../authen.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
@@ -20,10 +20,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loginForm = new FormGroup({
-      username: new FormControl("", {
+      username: new FormControl('', {
         validators: [Validators.required]
       }),
-      password: new FormControl("", { validators: [Validators.required] })
+      password: new FormControl('', { validators: [Validators.required] })
     });
   }
 
@@ -37,10 +37,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({
         next: () => {
-          this._router.navigate(["/configurefile"]);
+          this._router.navigate(['/configurefile']);
         },
         error: () => {
-          console.log("cannot login");
+          console.log('cannot login');
         }
       });
   }

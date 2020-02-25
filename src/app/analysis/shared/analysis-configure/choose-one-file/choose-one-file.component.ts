@@ -5,7 +5,8 @@ import {
   Input,
   OnChanges,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,17 +16,20 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { myAnimations } from 'src/app/shared/animations';
 import { AnalysisConfigureService } from '../analysis-configure.service';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-choose-one-file',
   templateUrl: './choose-one-file.component.html',
   styleUrls: ['./choose-one-file.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: myAnimations
 })
 export class ChooseOneFileComponent implements OnChanges, OnDestroy {
   @Input() samplesetId: number;
   @Input() referenceGenome: string;
-  @Output() selectFile = new EventEmitter<UploadCnvToolResult>();
+  @Input() selectedFile: UploadCnvToolResult;
+  @Output() selectedFileChange = new EventEmitter<UploadCnvToolResult>();
   displayedColumns = [
     'select',
     'fileName',
@@ -35,12 +39,15 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
     'createdDate'
   ];
 
-  dataSource: MatTableDataSource<UploadCnvToolResult>;
+  dataSource: MatTableDataSource<UploadCnvToolResult> = new MatTableDataSource(
+    []
+  );
   selection = new SelectionModel<UploadCnvToolResult>(true, []);
   selectedFiles: UploadCnvToolResult[];
   isLoadingResults = true;
 
   @ViewChild(MatSort, { static: true }) matSort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -61,6 +68,7 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
       .subscribe(UploadCnvToolResults => {
         this.dataSource = new MatTableDataSource(UploadCnvToolResults);
         this.dataSource.sort = this.matSort;
+        this.dataSource.paginator = this.paginator;
       });
   }
 

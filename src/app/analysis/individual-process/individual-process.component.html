@@ -20,88 +20,134 @@
 
     <ng-template #loadingSuccess>
       <div class="layout__content-items" fxLayout="column" fxLayoutGap="32px">
-        <h3>Overview Configuration</h3>
-        <div class="brief" fxLayout="row" fxLayoutAlign="space-between center">
-          <div fxLayout="row">
-            <div class="property property-name">Reference Genome:</div>
-            <div class="property property-value">
-              {{ individualConfig.referenceGenome | grch }}
-            </div>
-          </div>
-          <div fxLayout="row">
-            <div class="property property-name">Chromosome:</div>
-            <div class="property property-value">
-              {{ individualConfig.chromosome | uppercase }}
-            </div>
-          </div>
-          <div fxLayout="row">
-            <div class="property property-name">CNV Type:</div>
-            <div class="property property-value">
-              {{ individualConfig.cnvType | titlecase }}
-            </div>
-          </div>
-          <div fxLayout="row">
-            <div class="property property-name">Sample Name:</div>
-            <div class="property property-value">
-              {{ individualConfig.sample }}
-            </div>
-          </div>
-          <!-- <div fxLayout="row">
-            <div class="property property-name">File Name:</div>
-            <div
-              *ngFor="
-                let uploadCnvToolResult of individualConfig.uploadCnvToolResults
-              "
-            >
-              <div class="property property-value">
-                {{ uploadCnvToolResult.fileName }}
+        <mat-accordion [multi]="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Overview Configuration</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column" fxLayoutAlign=" stretch">
+              <div
+                aria-label="brief individual configuration"
+                fxLayout="row"
+                fxLayoutAlign="space-between center"
+              >
+                <div fxLayout="row">
+                  <div class="property property-name">Reference Genome:</div>
+                  <div class="property property-value">
+                    {{ individualConfig.referenceGenome | grch }}
+                  </div>
+                </div>
+                <div fxLayout="row">
+                  <div class="property property-name">Chromosome:</div>
+                  <div class="property property-value">
+                    {{ individualConfig.chromosome | uppercase }}
+                  </div>
+                </div>
+                <div fxLayout="row">
+                  <div class="property property-name">CNV Type:</div>
+                  <div class="property property-value">
+                    {{ individualConfig.cnvType | titlecase }}
+                  </div>
+                </div>
+                <div fxLayout="row">
+                  <div class="property property-name">Sample Name:</div>
+                  <div class="property property-value">
+                    {{ individualConfig.sample }}
+                  </div>
+                </div>
+              </div>
+              <div aria-label="brief individual configuration">
+                <!-- Choose File -->
+                <div class="property-row" fxLayout="row wrap">
+                  <div class="property property-name" fxFlex="1 1 30%">
+                    Files:
+                  </div>
+                  <div
+                    class="property property-value"
+                    fxFlex="1 1 70%"
+                    fxLayout="column"
+                  >
+                    <div
+                      fxLayout="row"
+                      fxLayoutAlign="start center"
+                      class="grid-color-header"
+                    >
+                      <div fxFlex="0 1 50%" class="grid-padding-header">
+                        File Name
+                      </div>
+                      <div fxFlex="0 1 25%" class="grid-padding-header">
+                        File Info.
+                      </div>
+                      <div fxFlex="0 1 25%" class="grid-padding-header">
+                        CNV Tool
+                      </div>
+                    </div>
+                    <div
+                      *ngFor="
+                        let chosenFile of individualConfig.uploadCnvToolResults
+                      "
+                      fxLayout="row"
+                      fxLayoutAlign="start center"
+                      class="grid-color-data"
+                    >
+                      <div fxFlex="0 1 50%" class="grid-padding-data">
+                        {{ chosenFile.fileName | titlecase }}
+                      </div>
+                      <div fxFlex="0 1 25%" class="grid-padding-data">
+                        {{ chosenFile.fileInfo | titlecase }}
+                      </div>
+                      <div fxFlex="0 1 25%" class="grid-padding-data">
+                        {{ chosenFile.cnvToolName | titlecase }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div> -->
-        </div>
-
-        <h3>Overview Chart</h3>
-        <app-overview-chart
-          [mergedData]="mergedTool"
-          [containerMargin]="containerMargin"
-          [height]="300"
-          [chr]="'1'"
-          [yAxisUnit]="'tools'"
-          (selectChrRegion)="selectChrRegion($event)"
-        ></app-overview-chart>
-
-        <h3>All Merged CNVs</h3>
-        <app-merged-table [cnvInfos]="mergedTool.cnvInfos"></app-merged-table>
-
-        <h3>Main Chart</h3>
-        <app-main-chart
-          [comparedData]="cnvTools"
-          [mergedData]="mergedTool"
-          [containerMargin]="containerMargin"
-          [selectedChrRegion]="selectedChrRegion"
-          [inputCnvs]="selectedCnvs"
-          (selectCnvs)="selectCnvs($event)"
-        >
-        </app-main-chart>
-
-        <h3>Selected CNVs</h3>
-        <div fxLayout="row" fxLayoutAlign="end center">
-          <button
-            mat-button
-            mat-raised-button
-            color="primary"
-            (click)="exportCnvInfos()"
-          >
-            Export Result
-          </button>
-        </div>
-
-        <app-selected-cnv
-          [selectedCnvs]="selectedCnvs"
-          (updateSelectedCnv)="selectCnvs($event)"
-        ></app-selected-cnv>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Overview Chart</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-overview-chart
+              [yAxisMaxVaule]="cnvTools.length"
+              [mergedData]="mergedTool"
+              [containerMargin]="containerMargin"
+              [chromosome]="individualConfig.chromosome"
+              [yAxisUnit]="'tools'"
+              (selectChrRegion)="selectChrRegion($event)"
+            ></app-overview-chart>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>All Merged CNVs</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-merged-table
+              [cnvInfos]="mergedTool.cnvInfos"
+            ></app-merged-table>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Main Chart</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-main-chart
+              [chromosome]="individualConfig.chromosome"
+              [dgvVaraints]="dgvVariants"
+              [comparedData]="cnvTools"
+              [mergedData]="mergedTool"
+              [containerMargin]="containerMargin"
+              [selectedChrRegion]="selectedChrRegion"
+            >
+            </app-main-chart>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Selected CNVs</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-selected-cnv></app-selected-cnv>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
     </ng-template>
   </div>
-  <!-- / CONTENT -->
 </div>

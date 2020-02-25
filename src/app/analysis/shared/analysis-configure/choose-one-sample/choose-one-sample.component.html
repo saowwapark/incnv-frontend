@@ -3,7 +3,7 @@
   <app-filtered-select
     [options]="samples"
     [(ngModel)]="selectedSample"
-    (selectionChange)="selectSample.next(selectedSample)"
+    (selectionChange)="selectedSampleChange.next(selectedSample)"
   >
   </app-filtered-select>
 </mat-form-field>

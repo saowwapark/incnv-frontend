@@ -1,3 +1,4 @@
+import { MatPaginator } from '@angular/material/paginator';
 import {
   Component,
   OnInit,
@@ -7,7 +8,10 @@ import {
   Input,
   OnChanges,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  SimpleChanges
 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,12 +26,15 @@ import { AnalysisConfigureService } from '../analysis-configure.service';
   selector: 'app-choose-many-file',
   templateUrl: './choose-many-file.component.html',
   styleUrls: ['./choose-many-file.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: myAnimations
 })
-export class ChooseManyFileComponent implements OnChanges, OnDestroy {
+export class ChooseManyFileComponent implements OnChanges, OnInit, OnDestroy {
   @Input() samplesetId: number;
+  @Input() sample: string;
   @Input() referenceGenome: string;
-  @Output() selectFiles = new EventEmitter<UploadCnvToolResult[]>();
+  @Input() selectedFiles: UploadCnvToolResult[];
+  @Output() selectedFilesChange = new EventEmitter<UploadCnvToolResult[]>();
   displayedColumns = [
     'select',
     'fileName',
@@ -37,18 +44,26 @@ export class ChooseManyFileComponent implements OnChanges, OnDestroy {
     'createdDate'
   ];
 
-  dataSource: MatTableDataSource<UploadCnvToolResult>;
+  dataSource: MatTableDataSource<UploadCnvToolResult> = new MatTableDataSource(
+    []
+  );
   selection = new SelectionModel<UploadCnvToolResult>(true, []);
-  selectedFiles: UploadCnvToolResult[];
   isLoadingResults = true;
 
   @ViewChild(MatSort, { static: true }) matSort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   // Private
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private _service: AnalysisConfigureService) {
-    this.selectedFiles = [];
+  /**
+   *
+   * constructor
+   */
+  constructor(
+    private detectorRef: ChangeDetectorRef,
+    private _service: AnalysisConfigureService
+  ) {
     this._unsubscribeAll = new Subject();
   }
 
@@ -56,13 +71,37 @@ export class ChooseManyFileComponent implements OnChanges, OnDestroy {
   // @ Lifecycle hooks
   // -----------------------------------------------------------------------------------------------------
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void {
+    for (const propName in changes) {
+      if (changes.hasOwnProperty(propName)) {
+        switch (propName) {
+          case 'samplesetId':
+            this.updateDatasource();
+            this.selection.deselect(...this.selectedFiles);
+            this.selectedFiles = [];
+            break;
+          case 'sample':
+            this.selection.deselect(...this.selectedFiles);
+            this.selectedFiles = [];
+            break;
+          case 'selectedFiles':
+            this.selection.select(...this.selectedFiles);
+            break;
+        }
+      }
+    }
+  }
+
+  ngOnInit(): void {}
+
+  updateDatasource() {
     this._service
       .getUploadCnvToolResults(this.referenceGenome, this.samplesetId)
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(UploadCnvToolResults => {
-        this.dataSource = new MatTableDataSource(UploadCnvToolResults);
+      .subscribe(uploadCnvToolResults => {
+        this.dataSource = new MatTableDataSource(uploadCnvToolResults);
         this.dataSource.sort = this.matSort;
+        this.dataSource.paginator = this.paginator;
       });
   }
 
@@ -94,12 +133,12 @@ export class ChooseManyFileComponent implements OnChanges, OnDestroy {
           this.selection.select(sampleset)
         );
     this.selectedFiles = this.selection.selected;
-    this.selectFiles.emit(this.selectedFiles);
+    this.selectedFilesChange.emit(this.selectedFiles);
   }
 
   toggleRow(upload: UploadCnvToolResult) {
     this.selection.toggle(upload);
     this.selectedFiles = this.selection.selected;
-    this.selectFiles.emit(this.selectedFiles);
+    this.selectedFilesChange.emit(this.selectedFiles);
   }
 }

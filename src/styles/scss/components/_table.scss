@@ -1,6 +1,6 @@
 .table-container {
   position: relative;
-  max-height: 700px;
+  // max-height: 700px;
   overflow: auto;
 }
 table {
@@ -32,9 +32,21 @@ tr.expand-row {
   opacity: 0.5;
 }
 tr.default-row:not(.expand-row):hover {
-  background: #777;
+  background: rgb(173, 173, 173);
 }
 
 tr.default-row:not(.expand-row):active {
   background: #efefef;
+}
+
+.header-right .mat-sort-header-container {
+  display: flex !important;
+  justify-content: flex-end !important;
+  text-align: right;
+  padding-right: 40px;
+}
+
+.data-right {
+  text-align: right;
+  padding-right: 58px !important;
 }

@@ -39,119 +39,30 @@ export class AnnotationDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    { title, cnvInfo, selectedCnvRegions }: any,
-    public matDialogRef: MatDialogRef<AnnotationDialogComponent>,
-    private fb: FormBuilder
+    { title, cnvInfo }: any,
+    public matDialogRef: MatDialogRef<AnnotationDialogComponent>
   ) {
     this.dialogTitle = title;
     this.cnvInfo = cnvInfo;
-    this.selectedCnvRegions = selectedCnvRegions;
-    this.numberMark = createNumberMask({
-      prefix: '',
-      suffix: '',
-      includeThousandsSeparator: true,
-      thousandsSeparatorSymbol: ',',
-      allowDecimal: false,
-      allowNegative: false
-    });
 
     if (title === MERGED_RESULT_NAME || title === SELECTED_CNV_ID) {
       this.isSelectable = true;
     } else {
       this.isSelectable = false;
     }
-    this.selectForm = this.createSelectForm();
   }
 
   ngOnInit() {
     this.matDialogRef.addPanelClass('annotation-dialog');
   }
 
-  // createSelectForm() {
-  //   const selectForm = this.fb.group({
-  //     selectedStartBp: [
-  //       '',
-  //       [
-  //         Validators.min(this.cnvInfo.startBp),
-  //         Validators.max(this.cnvInfo.endBp)
-  //       ]
-  //     ],
-  //     selectedEndBp: [
-  //       '',
-  //       [
-  //         Validators.min(this.cnvInfo.startBp),
-  //         Validators.max(this.cnvInfo.endBp)
-  //       ]
-  //     ]
-  //   });
-  //   if (this.selectedCnvRegions && this.selectedCnvRegions.length > 0) {
-  //     selectForm.setValidators([
-  //       this.duplicationValidator(this.selectedCnvRegions)
-  //     ]);
-  //     selectForm.updateValueAndValidity();
-  //   }
-  //   return selectForm;
-  // }
-
-  createSelectForm() {
-    const selectForm = this.fb.group({
-      selectedStartBp: [
-        '',
-        [
-          Validators.min(this.cnvInfo.startBp),
-          Validators.max(this.cnvInfo.endBp)
-        ]
-      ],
-      selectedEndBp: [
-        '',
-        [
-          Validators.min(this.cnvInfo.startBp),
-          Validators.max(this.cnvInfo.endBp)
-        ]
-      ]
-    });
-    // if (this.selectedCnvRegions && this.selectedCnvRegions.length > 0) {
-    //   selectForm.setValidators([
-    //     this.duplicationValidator(this.selectedCnvRegions)
-    //   ]);
-    //   selectForm.updateValueAndValidity();
-    // }
-    return selectForm;
-  }
-
-  duplicationValidator = (regionBps: RegionBp[]): ValidatorFn => {
-    return (g: FormGroup) => {
-      for (const regionBp of regionBps) {
-        const unmaskNumericPattern = /\D/g;
-
-        const selectedStartBp = g.controls['selectedStartBp'].value.replace(
-          unmaskNumericPattern,
-          ''
-        );
-        const selectedEndBp = g.controls['selectedEndBp'].value.replace(
-          unmaskNumericPattern,
-          ''
-        );
-        if (
-          selectedStartBp === regionBp.startBp &&
-          selectedEndBp === regionBp.endBp
-        ) {
-          return {
-            duplicated: { valid: false }
-          };
-        }
-      }
-    };
-  };
-
-  selectBasepair() {
-    const clonedCnvInfo = { ...this.cnvInfo } as CnvInfo;
-    clonedCnvInfo.startBp = this.selectForm.controls['selectedStartBp'].value;
-    clonedCnvInfo.endBp = this.selectForm.controls['selectedEndBp'].value;
-    clonedCnvInfo.dgvs = [];
-    clonedCnvInfo.ensembls = [];
-    clonedCnvInfo.clinvar = {};
-    this.matDialogRef.close(clonedCnvInfo);
+  selectCnv(checked: boolean) {
+    if (checked === true) {
+      this.cnvInfo.isSelected = true;
+    } else {
+      this.cnvInfo.isSelected = false;
+    }
+    this.matDialogRef.close(this.cnvInfo);
   }
 
   getErrorMessage() {

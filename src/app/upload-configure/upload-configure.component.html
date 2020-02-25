@@ -37,7 +37,13 @@
           >
             Upload again
           </button>
-          <button mat-button>Go to analysis</button>
+          <button
+            mat-button
+            [routerLink]="['/myfiles']"
+            routerLinkActive="active"
+          >
+            Go to My Files
+          </button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>

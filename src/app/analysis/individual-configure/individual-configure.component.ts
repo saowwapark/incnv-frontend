@@ -1,15 +1,24 @@
 import { UploadCnvToolResult } from '../../shared/models/upload-cnv-tool-result.model';
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Sampleset } from '../../sampleset/sampleset.model';
 import { IndividualSampleConfig } from '../analysis.model';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
 import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-individual-configure',
   templateUrl: './individual-configure.component.html',
-  styleUrls: ['./individual-configure.component.scss']
+  styleUrls: ['./individual-configure.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IndividualConfigureComponent implements OnInit, OnDestroy {
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
@@ -25,11 +34,18 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
   // private
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private service: AnalysisProcessService) {
+  constructor(
+    private dialog: MatDialog,
+    private service: AnalysisProcessService
+  ) {
     this._unsubscribeAll = new Subject();
 
+    this.chosenReferenceGenome = 'grch37';
     this.chosenSampleset = new Sampleset();
     this.chosenSampleset.samples = [];
+    this.chosenSample = '';
+    this.chosenFiles = [];
+    this.chosenCnvType = 'duplication';
     this.chosenChr = '';
     this.chrs = [];
   }
@@ -45,20 +61,28 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
     this.chrs.push('x');
     this.chrs.push('y');
   }
+  goToPreviousStep() {
+    this.stepper.previous();
+  }
   goToNexStep() {
     this.stepper.next();
   }
 
   setSampleset(sampleset: Sampleset) {
-    if (sampleset) {
+    if (sampleset && sampleset !== this.chosenSampleset) {
+      // update chosen sampleset
+      this.chosenSampleset = sampleset;
+
+      // clear independent values -> chosenSample
+      this.chosenSample = '';
+    } else {
       this.chosenSampleset = sampleset;
     }
   }
-  goToPreviousStep() {
-    this.stepper.previous();
-  }
+
   setSample(sample: string) {
-    if (sample) {
+    if (sample && sample !== this.chosenSample) {
+      // update chosen sample
       this.chosenSample = sample;
     }
   }
@@ -78,6 +102,49 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
       this.chosenSample
     );
     this.service.onIndividualSampleConfigChanged.next(individualConfig);
+  }
+
+  validateChosenSampleset() {
+    if (!this.chosenSampleset.samplesetId) {
+      const errorMessage = 'Please select one sample set.';
+      this.openErrorDialog(errorMessage);
+    } else {
+      this.stepper.next();
+    }
+  }
+  validateChosenSample() {
+    if (this.chosenSample.length === 0) {
+      const errorMessage = 'Please select one sample.';
+      this.openErrorDialog(errorMessage);
+    } else {
+      this.stepper.next();
+    }
+  }
+  validateChosenFiles() {
+    if (this.chosenFiles.length < 2) {
+      const errorMessage = 'Please select at least two files.';
+      this.openErrorDialog(errorMessage);
+    } else {
+      this.stepper.next();
+    }
+  }
+  validateChosenChromosome() {
+    if (this.chosenChr.length === 0) {
+      const errorMessage = 'Please select one chromosome.';
+      this.openErrorDialog(errorMessage);
+    } else {
+      this.stepper.next();
+    }
+  }
+
+  openErrorDialog(errorMessage: string) {
+    this.dialog.open(ErrorDialogComponent, {
+      panelClass: 'dialog-warning',
+      disableClose: false,
+      data: {
+        errorMessage: errorMessage
+      }
+    });
   }
 
   /**

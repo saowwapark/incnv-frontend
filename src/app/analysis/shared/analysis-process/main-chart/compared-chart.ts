@@ -1,3 +1,4 @@
+import { filterDataInRegion } from './../visualizeBp.utility';
 import * as d3 from 'd3';
 import { CnvGroup, CnvInfo } from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
@@ -8,11 +9,13 @@ export class ComparedChart {
   _domainOnY: string[]; // domainOnY = this.cnvTools.map(tool => tool.cnvGroupName) // set of tool id;
   _domainOnX: number[]; // domainOnX = [this.regionStartBp, this.regionEndBp]
   _maxOverlap: number;
+  _colors: string[];
   graphContainer;
   scaleX: d3.ScaleLinear<number, number>;
   scaleY: d3.ScaleBand<string>;
   colorScale;
   colorOpacityScale;
+
   xAxis;
   yAxis;
 
@@ -32,7 +35,8 @@ export class ComparedChart {
     containerMargin,
     domainOnX: number[],
     domainOnY: string[],
-    maxOverlap: number
+    maxOverlap: number,
+    colors: string[]
   ) {
     this._id = id;
     this._parentElement = parentElement;
@@ -40,6 +44,7 @@ export class ComparedChart {
     this._domainOnX = domainOnX;
     this._domainOnY = domainOnY;
     this._maxOverlap = maxOverlap;
+    this._colors = colors;
 
     // this.domainOnY = domainOnY;
     this.initVis(containerMargin);
@@ -66,7 +71,6 @@ export class ComparedChart {
     // const height = this._parentElement.offsetHeight;
     const height = this.calContainerHeight(containerMargin);
 
-    console.log(this._parentElement.id);
     // select the svg container
     this.svg = d3
       .select(this._parentElement)
@@ -133,7 +137,7 @@ export class ComparedChart {
     this.colorScale = d3
       .scaleOrdinal()
       .domain(this._domainOnY)
-      .range(d3.schemeCategory10);
+      .range(this._colors);
   }
 
   private createColorOpacityScale() {
@@ -183,7 +187,11 @@ export class ComparedChart {
       .selectAll('rect.subbar')
 
       .data((d: CnvGroup) => {
-        return d.cnvInfos;
+        return filterDataInRegion(
+          d.cnvInfos,
+          this._domainOnX[0],
+          this._domainOnX[1]
+        );
       })
       .join('rect')
       .attr('class', 'subbar');

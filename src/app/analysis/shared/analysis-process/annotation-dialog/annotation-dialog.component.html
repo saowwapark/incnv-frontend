@@ -10,111 +10,123 @@
 <div mat-dialog-content>
   <mat-tab-group>
     <mat-tab label="Feature">
-      <h3>General Information</h3>
-      <div class="property-row" fxLayout="row wrap">
-        <div class="property property-name" fxFlex="1 1 30%">
-          Reference Genome
-        </div>
-        <div class="property property-value" fxFlex="1 1 70%">
-          {{ cnvInfo.referenceGenome | grch }}
-        </div>
-      </div>
-      <div class="property-row" fxLayout="row wrap">
-        <div class="property property-name" fxFlex="1 1 30%">Chromosome</div>
-        <div class="property property-value" fxFlex="1 1 70%">
-          {{ cnvInfo.chromosome }}
-        </div>
-      </div>
-      <div class="property-row" fxLayout="row wrap">
-        <div class="property property-name" fxFlex="1 1 30%">
-          Start Basepair
-        </div>
-        <div class="property property-value" fxFlex="1 1 70%">
-          {{ cnvInfo.startBp | number }}
-        </div>
-      </div>
-      <div class="property-row" fxLayout="row wrap">
-        <div class="property property-name" fxFlex="1 1 30%">End Basepair</div>
-        <div class="property property-value" fxFlex="1 1 70%">
-          {{ cnvInfo.endBp | number }}
-        </div>
-      </div>
-      <div class="property-row" fxLayout="row wrap">
-        <div class="property property-name" fxFlex="1 1 30%">CNV Type</div>
-        <div class="property property-value" fxFlex="1 1 70%">
-          {{ cnvInfo.cnvType }}
-        </div>
-      </div>
+      <mat-accordion [multi]="true">
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>General Information</mat-panel-title>
+          </mat-expansion-panel-header>
 
-      <div *ngIf="isSelectable">
-        <div class="property-row" fxLayout="row wrap">
-          <div class="property property-name" fxFlex="1 1 30%">
-            Overlap Tools
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Reference Genome
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ cnvInfo.referenceGenome | grch }}
+            </div>
           </div>
-          <div class="property property-value" fxFlex="1 1 70%">
-            {{ cnvInfo.overlaps.join('; ') }}
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Chromosome
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ cnvInfo.chromosome }}
+            </div>
           </div>
-        </div>
-        <h3>Select Basepair</h3>
-        <span
-          >Please select number in range {{ cnvInfo.startBp | number }} to
-          {{ cnvInfo.endBp | number }}</span
-        >
-        <form [formGroup]="selectForm" (ngSubmit)="selectBasepair()">
-          <div fxLayout="row" fxLayoutAlign="space-between center">
-            <div class="property-row" fxLayoutAlign=" center" fxLayout="row">
-              <div
-                class="property property-value"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-              >
-                <mat-form-field appearance="outline">
-                  <mat-label>start basepair</mat-label>
-                  <input
-                    formControlName="selectedStartBp"
-                    matInput
-                    placeholder="start basepair"
-                    [textMask]="{ mask: numberMark }"
-                    unmaskNumeric
-                  />
-                  <mat-icon matSuffix (click)="copyPasteStartBp()"
-                    >file_copy</mat-icon
-                  >
-                </mat-form-field>
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              Start Basepair
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ cnvInfo.startBp | number }}
+            </div>
+          </div>
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              End Basepair
+            </div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ cnvInfo.endBp | number }}
+            </div>
+          </div>
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">CNV Type</div>
+            <div class="property property-value" fxFlex="1 1 70%">
+              {{ cnvInfo.cnvType }}
+            </div>
+          </div>
+
+          <div *ngIf="isSelectable">
+            <div class="property-row" fxLayout="row wrap">
+              <div class="property property-name" fxFlex="1 1 30%">
+                Overlap Tools
               </div>
-              <div class="property property-value">
-                <span> to </span>
-              </div>
-              <div
-                class="property property-value"
-                fxLayout="row"
-                fxLayoutAlign="start center"
-              >
-                <mat-form-field appearance="outline">
-                  <mat-label>end basepair</mat-label>
-                  <input
-                    formControlName="selectedEndBp"
-                    matInput
-                    placeholder="end basepair"
-                    [textMask]="{ mask: numberMark }"
-                    unmaskNumeric
-                  />
-                  <mat-icon
-                    matSuffix
-                    mat-raised-button
-                    (click)="copyPasteEndBp()"
-                    >file_copy</mat-icon
-                  >
-                </mat-form-field>
+              <div class="property property-value" fxFlex="1 1 70%">
+                {{ cnvInfo.overlaps.join('; ') }}
               </div>
             </div>
-
-            <button mat-raised-button color="primary">
-              SELECT
-            </button>
           </div>
-        </form>
-      </div>
+
+          <div class="property-row" fxLayout="row wrap">
+            <div class="property property-name" fxFlex="1 1 30%">
+              <mat-checkbox
+                (change)="selectCnv($event.checked)"
+                [checked]="cnvInfo.isSelected"
+                >Select CNV</mat-checkbox
+              >
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header
+            ><mat-panel-title>Flanking Regions</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div aria-label="Left flanking region">
+            <div class="property-row" fxLayout="row wrap">
+              <div class="property property-name">Left flanking region</div>
+              <div class="property property-value">
+                (chr{{ cnvInfo.chromosome | uppercase }}:
+                {{ cnvInfo.leftFlanking.startBp | number }} -
+                {{ cnvInfo.leftFlanking.endBp | number }})
+              </div>
+            </div>
+            <div class="property-row" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-form-field appearance="fill" style="width: 100%">
+                <textarea #leftFlanking readonly matInput cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="3">{{ cnvInfo.leftFlanking.sequence }}
+                          </textarea>
+              </mat-form-field>
+              <div fxLayout="row" fxLayoutAlign="start end">
+                <button mat-icon-button class="material-icons-two-tone" color="accent" aria-label="copy icon for left flanking">
+                  <mat-icon [ngxClipboard]="leftFlanking">file_copy</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+          <div aria-label="Right flanking region">
+            <div class="property-row" fxLayout="row" fxLayoutAlign=" center">
+              <div class="property property-name">Right flanking region</div>
+              <div class="property property-value">
+                (chr{{ cnvInfo.chromosome | uppercase }}:
+                {{ cnvInfo.rightFlanking.startBp | number }} -
+                {{ cnvInfo.rightFlanking.endBp | number }})
+              </div>
+            </div>
+            <div class="property-row" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-form-field appearance="fill" style="width: 100%">
+                <textarea #rightFlanking readonly matInput cdkTextareaAutosize cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="3">{{ cnvInfo.rightFlanking.sequence }}</textarea>
+              </mat-form-field>
+              <div fxLayout="row" fxLayoutAlign="start end">
+                <button mat-icon-button class="material-icons-two-tone" color="accent" aria-label="copy icon for right flanking ">
+                  <mat-icon [ngxClipboard]="rightFlanking">file_copy</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </mat-expansion-panel>
+      </mat-accordion>
     </mat-tab>
 
     <mat-tab label="Ensembl">
@@ -124,33 +136,34 @@
         <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
-        <!-- Position Column -->
+        <!-- Gene Id Column -->
         <ng-container matColumnDef="geneId">
-          <th mat-header-cell *matHeaderCellDef>Gene Id</th>
+          <th mat-header-cell *matHeaderCellDef>Gene Symbol</th>
           <td mat-cell *matCellDef="let element">
             <mat-chip-list>
               <mat-chip
                 color="accent"
                 selected
+                class="cursor-pointer"
                 (click)="ensemblLink(element.geneId)"
-              >
-                {{ element.geneId }}
+              >{{ element.geneSymbol }}
+
               </mat-chip>
             </mat-chip-list>
           </td>
         </ng-container>
 
-        <!-- Name Column -->
+        <!-- Gene Symbol Column -->
         <ng-container matColumnDef="geneSymbol">
-          <th mat-header-cell *matHeaderCellDef>Gene Symbol</th>
-          <td mat-cell *matCellDef="let element">{{ element.geneSymbol }}</td>
+          <th mat-header-cell *matHeaderCellDef>Gene Id</th>
+          <td mat-cell *matCellDef="let element">{{ element.geneId }}</td>
         </ng-container>
 
         <!-- Weight Column -->
         <ng-container matColumnDef="startBp">
           <th mat-header-cell *matHeaderCellDef>Start</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.basepair.startBp }}
+            {{ element.startBp | number }}
           </td>
         </ng-container>
 
@@ -158,7 +171,7 @@
         <ng-container matColumnDef="endBp">
           <th mat-header-cell *matHeaderCellDef>End</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.basepair.endBp }}
+            {{ element.endBp | number }}
           </td>
         </ng-container>
 
@@ -177,48 +190,53 @@
     </mat-tab>
     <mat-tab label="DGV">
       <p>Related DGV</p>
-      <div class="property-row" fxLayout="column">
-        <div
-          fxLayout="row"
-          fxLayoutAlign="start center"
-          class="grid-color-header"
-        >
-          <div fxFlex="0 1 30%" class="grid-padding-header property-name">
-            DGV
-          </div>
-          <div fxFlex="0 1 35%" class="grid-padding-header property-name">
-            Start
-          </div>
-          <div fxFlex="0 1 35%" class="grid-padding-header property-name">
-            End
-          </div>
-        </div>
-        <div
-          *ngFor="let dgv of cnvInfo.dgvs"
-          fxLayout="row"
-          fxLayoutAlign="start center"
-          class="grid-color-data"
-        >
-          <div fxFlex="0 1 30%" class="grid-padding-data property-value">
+
+      <table mat-table [dataSource]="cnvInfo.dgvs">
+        <!-- variantAccession Column -->
+        <ng-container matColumnDef="variantAccession">
+          <th mat-header-cell *matHeaderCellDef>Gene Id</th>
+          <td mat-cell *matCellDef="let element">
             <mat-chip-list>
               <mat-chip
                 color="accent"
                 selected
-                (click)="dgvLink(dgv.variantAccession)"
-                target="_blank"
+                class="cursor-pointer"
+                (click)="dgvLink(element.variantAccession)"
               >
-                {{ dgv.variantAccession }}
+                {{ element.variantAccession }}
               </mat-chip>
             </mat-chip-list>
-          </div>
-          <div fxFlex="0 1 35%" class="grid-padding-data property-value">
-            {{ dgv.basepair.startBp | number }}
-          </div>
-          <div fxFlex="0 1 35%" class="grid-padding-data property-value">
-            {{ dgv.basepair.endBp | number }}
-          </div>
-        </div>
-      </div>
+          </td>
+        </ng-container>
+
+        <!-- startBp Column -->
+        <ng-container matColumnDef="startBp">
+          <th mat-header-cell *matHeaderCellDef>Start</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.startBp | number }}
+          </td>
+        </ng-container>
+
+        <!-- endBp Column -->
+        <ng-container matColumnDef="endBp">
+          <th mat-header-cell *matHeaderCellDef>End</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.endBp | number }}
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="['variantAccession', 'startBp', 'endBp']"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: ['variantAccession', 'startBp', 'endBp']
+          "
+        ></tr>
+      </table>
     </mat-tab>
     <mat-tab label="Clinvar">
       <p>Related Clinvar</p>
@@ -231,6 +249,7 @@
               (click)="clinvarLink(omimId)"
               color="accent"
               selected
+              class="cursor-pointer"
               >{{ omimId }}</mat-chip
             >
           </mat-chip-list>

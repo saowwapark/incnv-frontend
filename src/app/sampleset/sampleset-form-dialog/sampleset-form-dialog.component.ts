@@ -18,7 +18,7 @@ export class SamplesetFormDialogComponent implements OnInit {
   form: FormGroup;
   dialogTitle: string;
 
-  // Tag
+  // mat-chip
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
 
   constructor(

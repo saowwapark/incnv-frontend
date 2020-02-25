@@ -8,10 +8,13 @@ const routes: Routes = [
   {
     path: '',
     component: SamplesetComponent,
-    //   canActivate: [AuthenGuard],
+    // canActivate: [AuthenGuard],
     resolve: { samplesets: SamplesetResolver }
   },
-  { path: 'sampleset/:id', component: SamplesetComponent }
+  {
+    path: 'sampleset/:id',
+    component: SamplesetComponent
+  }
 ];
 
 @NgModule({

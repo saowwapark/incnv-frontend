@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'myProject';
+  title = 'inCNV';
 
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;

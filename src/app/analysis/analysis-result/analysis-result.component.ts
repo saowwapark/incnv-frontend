@@ -7,7 +7,7 @@ import {
   OnChanges
 } from '@angular/core';
 import { CnvInfo } from '../analysis.model';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SelectedCnvDialogComponent } from '../shared/analysis-process/selected-cnv/selected-cnv-dialog/selected-cnv-dialog.component';
 
 @Component({
