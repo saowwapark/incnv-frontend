@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthenModule } from './authen/authen.module';
 import { AnalysisModule } from './analysis/analysis.module';
 import { SharedModule } from './shared/shared.module';
+import { ReformatCnvToolResultModule } from './reformat-cnv-tool-result/reformat-cnv-tool-result.module';
 
 import { NavigationModule } from './navigation/navigation.module';
 
@@ -26,12 +27,10 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 
 import { AuthenInterceptor } from './authen/authen-interceptor';
 
-import { LayoutComponent } from './layout/layout.component';
-
 /** Services or Resolvers */
 import { ConstantsService } from './shared/services/constants.service';
 import { TabFileMappingService } from './tab-file-mapping/tab-file-mapping.service';
-import { UploadHistoryModule } from './upload-history/ีupload-history.module';
+import { MyFileModule } from './my-file/my-file.module';
 import { SamplesetService } from './sampleset/sampleset.service';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 
@@ -58,7 +57,6 @@ import { UIService } from './shared/services/ui.service';
     ConfirmDialogComponent,
     ErrorDialogComponent,
 
-    LayoutComponent,
     WelcomeMenuComponent,
     HomeContentComponent,
     HomeMenuComponent
@@ -74,13 +72,15 @@ import { UIService } from './shared/services/ui.service';
     SharedModule,
     AnalysisModule,
     NavigationModule,
-    UploadHistoryModule,
+    MyFileModule,
+    ReformatCnvToolResultModule,
 
     // app routing must be last
     AppRoutingModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
     TabFileMappingService,
     ConstantsService,
     SamplesetService,

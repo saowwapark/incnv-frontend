@@ -8,7 +8,9 @@ import {
   Optional,
   Self,
   OnDestroy,
-  AfterViewInit
+  AfterViewInit,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -57,7 +59,8 @@ export class FilteredSelectComponent
   @ViewChild('input', { static: false })
   input: ElementRef;
   filteredOptions: any[];
-  selectedOption: any;
+  @Input() selectedOption: any;
+  @Output() selectionChange = new EventEmitter();
 
   /************************************** Property for MatFormFieldControl **********************************/
   static nextId = 0;
@@ -185,6 +188,7 @@ export class FilteredSelectComponent
   /********************** Life Cycle Hook ********************************/
   ngOnChanges() {
     this.filteredOptions = [...this.options];
+    this.filterSelectGroup.get('selectControl').setValue(this.selectedOption);
   }
   ngOnInit() {}
   ngAfterViewInit() {

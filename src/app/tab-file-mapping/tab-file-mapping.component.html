@@ -1,31 +1,40 @@
-<div class="page-layout">
+<div class="layout--absolute-1vh">
   <!-- HEADER -->
-  <div class="header__container">
-    <div class="header__items" fxLayout="row" fxLayoutAlign="start">
-      <h2>Tab File Mapping</h2>
+  <div class="layout__header-container">
+    <div class="layout__header-items">
+      <!-- APP TITLE -->
+      <span class="h2">File Mapping</span>
+
       <!-- SEARCH -->
-      <div class="search">
-        <mat-icon>search</mat-icon>
+      <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
         <input
+          class="search-input"
+          type="search"
           [formControl]="searchInput"
-          placeholder="Search for a CNV Tool"
+          placeholder="Search CNV tools..."
         />
+        <mat-icon class="search-icon">search</mat-icon>
       </div>
     </div>
   </div>
 
-  <!---- TAB FILE MAPPING -->
-  <app-tab-file-mapping-list></app-tab-file-mapping-list>
+  <!-- CONTENT -->
+  <div class="layout__content-container--scrollbar ">
+    <div class="layout__content-items">
+      <!---- TAB FILE MAPPING -->
+      <app-tab-file-mapping-list></app-tab-file-mapping-list>
+    </div>
 
-  <!-- ADD TabFileMapping Tool BUTTON -->
-  <button
-    mat-fab
-    class="accent"
-    id="add-tab-file-mapping-button"
-    aria-label="add tabFileMapping"
-    (click)="onAddTabFileMapping()"
-  >
-    <mat-icon>add</mat-icon>
-  </button>
-  <!-- / ADD TabFileMapping Tool BUTTON -->
+    <!-- ADD TabFileMapping Tool BUTTON -->
+    <button
+      mat-fab
+      class="accent"
+      id="add-tab-file-mapping-button"
+      aria-label="add tabFileMapping"
+      (click)="onAddTabFileMapping()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+    <!-- / ADD TabFileMapping Tool BUTTON -->
+  </div>
 </div>

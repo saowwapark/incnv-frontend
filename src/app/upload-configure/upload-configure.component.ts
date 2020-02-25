@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { PreviewReformatCnvToolResultService } from './preview-reformat-cnv-tool-result/preview-reformat-cnv-tool-result.service';
+
 import { UploadFormService } from './configure-upload-cnv-tool-result/upload-form/upload-form.service';
 import { merge, Observable } from 'rxjs';
+import { ReformatCnvToolResultService } from '../reformat-cnv-tool-result/reformat-cnv-tool-result.service';
 
 @Component({
   selector: 'upload-configure',
@@ -12,7 +13,7 @@ import { merge, Observable } from 'rxjs';
 export class UploadConfigureComponent {
   uploadCnvToolResultId: number;
   constructor(
-    private _uploadReformatService: PreviewReformatCnvToolResultService,
+    private _reformatService: ReformatCnvToolResultService,
     private _uploadFormService: UploadFormService
   ) {}
 
@@ -37,7 +38,7 @@ export class UploadConfigureComponent {
     const deleteUpload$ = this._uploadFormService.deleteUploadCnvToolResult(
       this.uploadCnvToolResultId
     );
-    const deleteReformat$ = this._uploadReformatService.deleteReformatByUploadId(
+    const deleteReformat$ = this._reformatService.deleteReformatByUploadId(
       this.uploadCnvToolResultId
     );
     return merge(deleteUpload$, deleteReformat$);

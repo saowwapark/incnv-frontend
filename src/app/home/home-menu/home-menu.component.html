@@ -1,18 +1,20 @@
-<mat-toolbar color="primary">
-  <div class="menu_logo">
-    <a routerLink="/">
-      <div class="menu__logo-box--home">
-        <img
-          class="logo-box"
-          src="../../../assets/static/images/logo-white.png"
-          alt="Logo"
-          class="menu__logo-img"
-        />
-      </div>
+<div
+  class="top-menu__container"
+  fxLayoutAlign="row"
+  fxLayoutAlign="space-between center"
+>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <a mat-button style="color: white" routerLink="/home">
+      <img
+        src="../../assets/static/images/incnv-logo.svg"
+        alt="Home"
+        class="top-menu__logo-img"
+      />inCNV
     </a>
   </div>
-  <ul fxFlex fxLayout fxLayoutAlign="flex-end" class="menu__buttons">
-    <li><a routerLink="/signup">Signup</a></li>
-    <li><a routerLink="/login">Login</a></li>
-  </ul>
-</mat-toolbar>
+
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <a mat-button style="color: white" routerLink="/signup">Signup</a>
+    <a mat-button style="color: white" routerLink="/login">Login</a>
+  </div>
+</div>

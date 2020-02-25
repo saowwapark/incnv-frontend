@@ -2,19 +2,27 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:600');
 
-@import '../scss/base/animations';
-@import '../scss/base/base';
-@import '../scss/base/typography';
-
 @import '../scss/abstracts/variables';
 @import '../scss/abstracts/mixins';
 
-@import '../scss/layout/menu';
+@import '../scss/base/animations';
+@import '../scss/base/base';
+@import '../scss/base/typography';
+@import '../scss/base/utilities';
+
 @import '../scss/layout/navigation';
+@import '../scss/layout/layout';
+@import '../scss/layout/container';
 
 @import '../scss/pages/home';
 @import '../scss/components/dialog';
 @import '../scss/components/card';
+@import '../scss/components/search';
+@import '../scss/components/table';
+@import '../scss/components/top-menu';
+@import '../scss/components/grid';
+@import '../scss/components/spinner';
+@import '../scss/components/icon';
 
 // input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
 //   border: 1px solid red

@@ -11,20 +11,22 @@ export class UploadCnvToolResult {
   tagDescriptions: string[]; // can be null
   createDate: Date;
   modifyDate: Date;
-  constructor(upload) {
+  constructor(upload?) {
     {
-      this.uploadCnvToolResultId = upload.uploadCnvToolResultId;
-      this.fileName = upload.fileName || '';
-      this.fileInfo = upload.fileInfo || '';
-      this.referenceGenome = upload.referenceGenome || '';
-      this.cnvToolName = upload.cnvToolName || '';
-      this.tabFileMappingId = upload.tabFileMappingId;
-      this.tabFileMappingName = upload.tabFileMappingName || '';
-      this.samplesetId = upload.samplesetId;
-      this.samplesetName = upload.samplesetName || '';
-      this.tagDescriptions = upload.tagDescriptions || '';
-      this.createDate = upload.createDate;
-      this.modifyDate = upload.modifyDate;
+      if (upload) {
+        this.uploadCnvToolResultId = upload.uploadCnvToolResultId || 0;
+        this.fileName = upload.fileName || '';
+        this.fileInfo = upload.fileInfo || '';
+        this.referenceGenome = upload.referenceGenome || '';
+        this.cnvToolName = upload.cnvToolName || '';
+        this.tabFileMappingId = upload.tabFileMappingId;
+        this.tabFileMappingName = upload.tabFileMappingName || '';
+        this.samplesetId = upload.samplesetId;
+        this.samplesetName = upload.samplesetName || '';
+        this.tagDescriptions = upload.tagDescriptions || '';
+        this.createDate = upload.createDate;
+        this.modifyDate = upload.modifyDate;
+      }
     }
   }
 }

@@ -1,22 +1,27 @@
-<mat-toolbar color="primary">
-  <div>
+<div
+  class="top-menu__container"
+  fxLayoutAlign="row"
+  fxLayoutAlign="space-between center"
+>
+  <div class="left">
     <button mat-icon-button (click)="onToggleNavigation()">
-      <mat-icon>menu</mat-icon>
+      <mat-icon style="color: white;">menu</mat-icon>
     </button>
   </div>
-  <div fxFlex fxLayout fxLayoutAlign="flex-end" class="menu__buttons">
-    <div class="menu_logo">
-      <a routerLink="/">
-        <img
-          class="logo-box"
-          src="../../assets/static/images/logo-white.png"
-          alt="Logo"
-          class="menu__logo-img"
-        />
-      </a>
-    </div>
-    <ul fxLayout fxLayoutGap="10px">
-      <li><a (click)="onLogout()">Logout</a></li>
-    </ul>
+  <div
+    class="right top-menu__buttons"
+    fxFlex
+    fxLayout="row"
+    fxLayoutAlign="end center"
+  >
+    <a mat-button style="color: white" routerLink="/home">
+      <img
+        src="../../assets/static/images/incnv-logo.svg"
+        alt="Logo"
+        class="top-menu__logo-img"
+      />inCNV
+    </a>
+
+    <a mat-button style="color: white" (click)="onLogout()">Logout</a>
   </div>
-</mat-toolbar>
+</div>

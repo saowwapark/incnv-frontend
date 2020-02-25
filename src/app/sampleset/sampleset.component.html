@@ -1,14 +1,16 @@
-<div id="sampleset" class="page-layout my-theme">
+<div id="sampleset" class="layout--absolute-1vh">
   <!-- HEADER -->
-  <div class="header__container">
-    <div class="header__items" fxLayout="row" fxLayoutAlign="start">
+  <div class="layout__header-container">
+    <div class="layout__header-items">
       <!-- APP TITLE -->
-      <span style="font-size: 2rem">Sample Set</span>
+      <span class="h2">Sample Set</span>
 
-      <!-- Filter -->
-      <mat-form-field>
-        <input matInput placeholder="Filter..." #filterInput />
-      </mat-form-field>
+      <!-- SEARCH -->
+      <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
+        <input class="search-input" placeholder="Search..." #filterInput />
+
+        <mat-icon class="search-icon">search</mat-icon>
+      </div>
     </div>
   </div>
   <!-- / HEADER -->
@@ -25,8 +27,8 @@
   <!-- / SELECTED BAR -->
 
   <!-- CONTENT -->
-  <div class="content__container--scrollbar ">
-    <div class="content__items">
+  <div class="layout__content-container--scrollbar ">
+    <div class="layout__content-items">
       <app-sampleset-list [samplesets]="samplesets"></app-sampleset-list>
     </div>
   </div>

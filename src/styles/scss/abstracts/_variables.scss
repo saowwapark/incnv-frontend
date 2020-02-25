@@ -1,9 +1,11 @@
+@import './../theme';
+
 $color-text-dark: yellow;
 
 //COLORS
-$color-primary: #1976d2;
-$color-primary-light: #2196f3;
-$color-primary-dark: #0d47a1;
+$color-primary: mat-color($primary); // #1976d2
+$color-primary-light: mat-color($primary, lighter); //#2196f3
+$color-primary-dark: mat-color($primary, darker); //#0d47a1
 
 $color-blue-1: #039be5; //light-blue-600
 
@@ -17,4 +19,6 @@ $gutter-vertical: 8rem;
 $gutter-horizontal: 2rem;
 
 // SIZES
-$menu-height: 64px;
+$top-menu-height: 5rem;
+$header-container-height: 8rem;
+$icon-size: 24px;

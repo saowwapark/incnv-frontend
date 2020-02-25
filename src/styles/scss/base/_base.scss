@@ -15,7 +15,7 @@ html {
   // This defines what 1rem is
   font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
   height: 100%;
-  width: 100;
+  width: 100%;
 }
 body {
   display: flex;
@@ -35,55 +35,3 @@ mat-sidenav-content.mat-drawer-content {
   overflow-y: hidden !important;
 }
 
-.layout {
-  display: block;
-
-  .menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    @include mat-elevation(6);
-    z-index: 2;
-  }
-  .page-layout {
-    // margin-top: 64px;
-    overflow: auto;
-    position: absolute;
-    top: $menu-height;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    height: calc(100% - #{$menu-height});
-
-    > .header__container {
-      position: relative;
-      background-color: mat-color($primary);
-      color: white;
-      width: 100%;
-      > .header__items {
-        padding: 3rem;
-      }
-    }
-    > .content__container--default {
-      width: 100%;
-      flex: 1 1 auto;
-    }
-    // Scrollbar
-    > .content__container--scrollbar {
-      position: relative;
-      width: 100%;
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      overflow-x: hidden;
-      overflow-y: auto;
-      > .content__items {
-        margin: 3rem;
-        flex: 1 1 auto;
-      }
-    }
-  }
-}

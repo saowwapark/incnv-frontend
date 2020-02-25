@@ -1,3 +1,5 @@
+import { GrchPipe } from './../utils/grch.pipe';
+import { UnmaskNumericDirective } from './directives/unmask-numeric.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectedBarComponent } from './../shared/components/selected-bar/selected-bar.component';
 import { NgModule } from '@angular/core';
@@ -7,7 +9,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FilteredSelectComponent } from './components/filtered-select/filtered-select.component';
 
 @NgModule({
-  declarations: [SelectedBarComponent, FilteredSelectComponent],
+  declarations: [
+    SelectedBarComponent,
+    FilteredSelectComponent,
+    UnmaskNumericDirective,
+    GrchPipe
+  ],
   imports: [
     CommonModule,
     MaterialModule,
@@ -18,9 +25,12 @@ import { FilteredSelectComponent } from './components/filtered-select/filtered-s
   exports: [
     SelectedBarComponent,
     FilteredSelectComponent,
+    UnmaskNumericDirective,
+    GrchPipe,
     CommonModule,
     MaterialModule,
     FormsModule,
+    ReactiveFormsModule,
     FlexLayoutModule
   ]
 })

@@ -1,23 +1,23 @@
-<div class="page-layout">
+<div class="layout--absolute-1vh">
   <!-- HEADER -->
-  <div class="header__container">
-    <div class="header__items">
+  <div class="layout__header-container">
+    <div class="layout__header-items">
       <!-- APP TITLE -->
-      <h2>Configure Files</h2>
+      <span class="h2">Configure Files</span>
     </div>
   </div>
 
   <!-- CONTENT -->
   <div>
     <mat-horizontal-stepper #stepper linear="false">
-      <mat-step label="Upload File">
+      <mat-step label="Upload CNV Tool Result">
         <app-upload-form
           fxLayout="column"
           fxLayoutAlign="space-between center"
           (confirmClicked)="goToReformatStep($event)"
         ></app-upload-form>
       </mat-step>
-      <mat-step label="Reformat File">
+      <mat-step label="Edited/Reformatted File">
         <app-preview-reformat-cnv-tool-result
           *ngIf="uploadCnvToolResultId"
           [uploadCnvToolResultId]="uploadCnvToolResultId"
@@ -37,7 +37,13 @@
           >
             Upload again
           </button>
-          <button mat-button>Go to analysis</button>
+          <button
+            mat-button
+            [routerLink]="['/myfiles']"
+            routerLinkActive="active"
+          >
+            Go to My Files
+          </button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>

@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline">
+  <mat-label>Sample...</mat-label>
+  <app-filtered-select
+    [options]="samples"
+    [(ngModel)]="selectedSample"
+    (selectionChange)="selectedSampleChange.next(selectedSample)"
+  >
+  </app-filtered-select>
+</mat-form-field>

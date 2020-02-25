@@ -1,0 +1,38 @@
+<div *ngIf="!selectedChrRegion">
+  <div class="warning__container--not-show-data mat-elevation-z8">
+    <div class="warning__item--not-show-data">
+      Selected region of interest.
+    </div>
+  </div>
+</div>
+<div [style.height]="!selectedChrRegion ? '0px' : 'auto'">
+  <div fxLayout="row">
+    <div *ngIf="selectedChrRegion">
+      <div class="property property-value" style="color: #980000">
+        Please click on merged result chart to select CNVs.
+      </div>
+    </div>
+  </div>
+  <div #dgvChartDiv onResize class="one-chart"></div>
+  <div #comparedChartDiv onResize class="multiple-chart"></div>
+  <div #mergedChartDiv onResize class="one-chart"></div>
+</div>
+
+<!-- final cnv -->
+<div>
+  <div *ngIf="selectedChrRegion && this.finalResultData.cnvInfos.length === 0">
+    <div class="warning__container--not-show-data mat-elevation-z8">
+      <div class="warning__item--not-show-data">
+        Selected CNVs
+      </div>
+    </div>
+  </div>
+  <div
+    [ngClass]="{
+      'no-height':
+        selectedChrRegion && this.finalResultData.cnvInfos.length === 0
+    }"
+  >
+    <div #finalResultChartDiv onResize class="one-chart"></div>
+  </div>
+</div>

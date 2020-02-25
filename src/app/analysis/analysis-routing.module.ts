@@ -1,18 +1,29 @@
-import { AnalysisProcessComponent } from './analysis-process/analaysis-process.component';
-import { ChooseSamplesetResolver } from './analysis-configure/choose-sampleset/choose-sampleset.resolver';
+import { IndividualProcessComponent } from './individual-process/individual-process.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AnalysisConfigureComponent } from './analysis-configure/analysis-configure.component';
+import { IndividualConfigureComponent } from './individual-configure/individual-configure.component';
+import { MultipleConfigureComponent } from './multiple-configure/multiple-configure.component';
+import { ChooseSamplesetResolver } from './shared/analysis-configure/choose-sampleset/choose-sampleset.resolver';
+import { MultipleProcessComponent } from './multiple-process/multiple-process.component';
 
 const routes: Routes = [
   {
-    path: 'analysis',
-    component: AnalysisConfigureComponent,
+    path: 'individual-sample',
+    component: IndividualConfigureComponent,
     resolve: { samplesets: ChooseSamplesetResolver }
   },
   {
-    path: 'analysis/analysis-process',
-    component: AnalysisProcessComponent
+    path: 'multiple-analysis',
+    component: MultipleConfigureComponent,
+    resolve: { samplesets: ChooseSamplesetResolver }
+  },
+  {
+    path: 'individual-sample/analysis-process',
+    component: IndividualProcessComponent
+  },
+  {
+    path: 'multiple-sample/analysis-process',
+    component: MultipleProcessComponent
   }
 ];
 @NgModule({

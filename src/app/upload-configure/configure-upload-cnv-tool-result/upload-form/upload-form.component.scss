@@ -1,25 +1,10 @@
 @import '~@angular/material/theming';
 
-::ng-deep .mat-dialog-container {
-  padding: 0 !important;
-}
-
-::ng-deep .mat-dialog {
-  padding: 0 !important;
-}
-
-::ng-deep .mat-dialog-content {
-  margin: 0 !important;
-  padding: 16px !important;
-  background-color: white !important;
-}
-
-::ng-deep .mat-dialog-actions {
-  margin: 0px !important;
-  background-color: white !important;
-}
-
 input[type='file'] {
   // visibility: hidden;
   display: none;
+}
+
+mat-form-field {
+  width: 400px;
 }
