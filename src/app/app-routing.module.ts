@@ -43,7 +43,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes, { enableTracing: false,useHash: true })],
+  imports: [RouterModule.forRoot(appRoutes, { enableTracing: false })],
   exports: [RouterModule],
   providers: [AuthenGuard]
 })
