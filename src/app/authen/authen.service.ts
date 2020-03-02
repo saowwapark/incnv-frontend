@@ -82,7 +82,7 @@ export class AuthenService {
     this.isAuthenSubject.next(false);
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
-    this._router.navigate(['/']);
+    this._router.navigate(['/home']);
   }
   /**
    * Set authentication timer and logout when token expires

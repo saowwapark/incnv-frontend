@@ -21,84 +21,89 @@
     <ng-template #loadingSuccess>
       <div class="layout__content-items" fxLayout="column" fxLayoutGap="32px">
         <mat-accordion [multi]="true">
-          <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel [expanded]="true" hideToggle="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Overview Configuration</mat-panel-title>
             </mat-expansion-panel-header>
-            <div fxLayout="column" fxLayoutAlign=" stretch">
-              <div
-                aria-label="brief individual configuration"
-                fxLayout="row"
-                fxLayoutAlign="space-between center"
-              >
-                <div fxLayout="row">
-                  <div class="property property-name">Reference Genome:</div>
-                  <div class="property property-value">
-                    {{ individualConfig.referenceGenome | grch }}
-                  </div>
+            <div
+              aria-label="brief individual configuration"
+              fxLayout="column"
+              fxLayoutAlign=" stretch"
+            >
+              <div fxLayout="row" class="indent">
+                <div class="property property-name" fxFlex="1 1 20%">
+                  Reference Genome:
                 </div>
-                <div fxLayout="row">
-                  <div class="property property-name">Chromosome:</div>
-                  <div class="property property-value">
-                    {{ individualConfig.chromosome | uppercase }}
-                  </div>
-                </div>
-                <div fxLayout="row">
-                  <div class="property property-name">CNV Type:</div>
-                  <div class="property property-value">
-                    {{ individualConfig.cnvType | titlecase }}
-                  </div>
-                </div>
-                <div fxLayout="row">
-                  <div class="property property-name">Sample Name:</div>
-                  <div class="property property-value">
-                    {{ individualConfig.sample }}
-                  </div>
+                <div class="property property-value" fxFlex="1 1 80%">
+                  {{ individualConfig.referenceGenome | grch }}
                 </div>
               </div>
-              <div aria-label="brief individual configuration">
-                <!-- Choose File -->
-                <div class="property-row" fxLayout="row wrap">
-                  <div class="property property-name" fxFlex="1 1 30%">
-                    Files:
+              <div fxLayout="row" class="indent">
+                <div class="property property-name" fxFlex="1 1 20%">
+                  Chromosome:
+                </div>
+                <div class="property property-value" fxFlex="1 1 80%">
+                  {{ individualConfig.chromosome | uppercase }}
+                </div>
+              </div>
+              <div fxLayout="row" class="indent">
+                <div class="property property-name" fxFlex="1 1 20%">
+                  CNV Type:
+                </div>
+                <div class="property property-value" fxFlex="1 1 80%">
+                  {{ individualConfig.cnvType | titlecase }}
+                </div>
+              </div>
+              <div fxLayout="row" class="indent">
+                <div class="property property-name" fxFlex="1 1 20%">
+                  Sample Name:
+                </div>
+                <div class="property property-value" fxFlex="1 1 80%">
+                  {{ individualConfig.sample }}
+                </div>
+              </div>
+
+              <!-- Choose File -->
+              <div fxLayout="row wrap" class="indent">
+                <div class="property property-name" fxFlex="1 1 20%">
+                  Files:
+                </div>
+                <div
+                  class="property property-value"
+                  fxFlex="1 1 80%"
+                  fxLayout="column"
+                >
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="grid-color-header"
+                  >
+                    <div fxFlex="0 1 50%" class="grid-padding-header">
+                      File Name
+                    </div>
+                    <div fxFlex="0 1 25%" class="grid-padding-header">
+                      File Info.
+                    </div>
+                    <div fxFlex="0 1 25%" class="grid-padding-header">
+                      CNV Tool
+                    </div>
                   </div>
                   <div
-                    class="property property-value"
-                    fxFlex="1 1 70%"
-                    fxLayout="column"
+                    *ngFor="
+                      let chosenFile of individualConfig.uploadCnvToolResults
+                    "
+                    fxLayout="row"
+                    fxLayoutAlign="start center"
+                    class="grid-color-data"
                   >
-                    <div
-                      fxLayout="row"
-                      fxLayoutAlign="start center"
-                      class="grid-color-header"
-                    >
-                      <div fxFlex="0 1 50%" class="grid-padding-header">
-                        File Name
-                      </div>
-                      <div fxFlex="0 1 25%" class="grid-padding-header">
-                        File Info.
-                      </div>
-                      <div fxFlex="0 1 25%" class="grid-padding-header">
-                        CNV Tool
-                      </div>
+                    <div fxFlex="0 1 50%" class="grid-padding-data">
+                      {{ chosenFile.fileName }}
                     </div>
-                    <div
-                      *ngFor="
-                        let chosenFile of individualConfig.uploadCnvToolResults
-                      "
-                      fxLayout="row"
-                      fxLayoutAlign="start center"
-                      class="grid-color-data"
-                    >
-                      <div fxFlex="0 1 50%" class="grid-padding-data">
-                        {{ chosenFile.fileName | titlecase }}
-                      </div>
-                      <div fxFlex="0 1 25%" class="grid-padding-data">
-                        {{ chosenFile.fileInfo | titlecase }}
-                      </div>
-                      <div fxFlex="0 1 25%" class="grid-padding-data">
-                        {{ chosenFile.cnvToolName | titlecase }}
-                      </div>
+                    <div fxFlex="0 1 25%" class="grid-padding-data">
+                      {{ chosenFile.fileInfo }}
+                    </div>
+                    <div fxFlex="0 1 25%" class="grid-padding-data">
+                      {{ chosenFile.cnvToolName }}
                     </div>
                   </div>
                 </div>
@@ -118,7 +123,7 @@
               (selectChrRegion)="selectChrRegion($event)"
             ></app-overview-chart>
           </mat-expansion-panel>
-          <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel [expanded]="false">
             <mat-expansion-panel-header>
               <mat-panel-title>All Merged CNVs</mat-panel-title>
             </mat-expansion-panel-header>

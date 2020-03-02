@@ -34,6 +34,13 @@ const appRoutes: Routes = [
           import('./tab-file-mapping/tab-file-mapping.module').then(
             module => module.TabFileMappingModule
           )
+      },
+      {
+        path: 'analysis',
+        loadChildren: () =>
+          import('./analysis/analysis.module').then(
+            module => module.AnalysisModule
+          )
       }
     ]
   },

@@ -44,9 +44,14 @@ body {
     animation-timing-function: ease-out;
   }
 }
-
+.indent {
+  padding-left: 24px;
+}
 .property {
-  padding: 7px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 .property-row {
   width: 100%;

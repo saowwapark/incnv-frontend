@@ -170,7 +170,7 @@
                   Sample Set
                 </div>
                 <div class="property property-value" fxFlex="1 1 70%">
-                  {{ chosenSampleset.samplesetName | titlecase }}
+                  {{ chosenSampleset.samplesetName }}
                 </div>
               </div>
 
@@ -220,13 +220,13 @@
                     class="grid-color-data"
                   >
                     <div fxFlex="1 1 50%" class="grid-padding-data">
-                      {{ chosenFile.fileName | titlecase }}
+                      {{ chosenFile.fileName }}
                     </div>
                     <div fxFlex="1 1 25%" class="grid-padding-data">
-                      {{ chosenFile.fileInfo | titlecase }}
+                      {{ chosenFile.fileInfo }}
                     </div>
                     <div fxFlex="1 1 25%" class="grid-padding-data">
-                      {{ chosenFile.cnvToolName | titlecase }}
+                      {{ chosenFile.cnvToolName }}
                     </div>
                   </div>
                 </div>
@@ -238,7 +238,7 @@
                   Chromosome
                 </div>
                 <div class="property property-value" fxFlex="1 1 70%">
-                  {{ chosenChr | titlecase }}
+                  {{ chosenChr | uppercase }}
                 </div>
               </div>
 
@@ -259,7 +259,7 @@
               <button
                 mat-raised-button
                 color="primary"
-                [routerLink]="['/multiple-analysis/analysis-process']"
+                [routerLink]="['/analysis/multiple-sample/analysis-process']"
                 (click)="confirmConfig()"
               >
                 NEXT

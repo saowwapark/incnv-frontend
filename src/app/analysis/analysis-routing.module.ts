@@ -13,7 +13,7 @@ const routes: Routes = [
     resolve: { samplesets: ChooseSamplesetResolver }
   },
   {
-    path: 'multiple-analysis',
+    path: 'multiple-sample',
     component: MultipleConfigureComponent,
     resolve: { samplesets: ChooseSamplesetResolver }
   },

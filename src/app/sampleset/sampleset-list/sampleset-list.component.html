@@ -23,7 +23,7 @@
   <ng-container matColumnDef="samplesetName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Sample Set</th>
     <td mat-cell *matCellDef="let sampleset">
-      {{ sampleset.samplesetName | titlecase }}
+      {{ sampleset.samplesetName }}
     </td>
   </ng-container>
 
@@ -31,7 +31,7 @@
   <ng-container matColumnDef="description">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
     <td mat-cell *matCellDef="let sampleset">
-      {{ sampleset.description | titlecase }}
+      {{ sampleset.description }}
     </td>
   </ng-container>
 
@@ -106,3 +106,10 @@
     class="expand-row"
   ></tr>
 </table>
+
+<mat-paginator
+  [length]="dataSource.data.length"
+  [pageSizeOptions]="[5, 10, 25, 50, 100]"
+  class="paginator-sticky"
+>
+</mat-paginator>

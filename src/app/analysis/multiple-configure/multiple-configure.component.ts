@@ -6,7 +6,8 @@ import {
   ViewChild,
   Output,
   EventEmitter,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Sampleset } from '../../sampleset/sampleset.model';
@@ -22,7 +23,8 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-multiple-configure',
   templateUrl: './multiple-configure.component.html',
-  styleUrls: ['./multiple-configure.component.scss']
+  styleUrls: ['./multiple-configure.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultipleConfigureComponent implements OnInit, OnDestroy {
   @ViewChild('stepper', { static: true }) private stepper: MatStepper;
@@ -101,6 +103,10 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
     }
   }
 
+  setFile(file: UploadCnvToolResult) {
+    this.chosenFile = file;
+  }
+
   confirmConfig() {
     const multipleConfig = new MultipleSampleConfig(
       this.chosenReferenceGenome,
@@ -123,12 +129,12 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
   }
 
   validateChosenSamples() {
-    // remove not selection (in case accepting not selection)
-    const realSamples = this.chosenSamples.filter(
-      (sample, index) => sample !== ''
-    );
-    // update this.chosenSamples
-    this.chosenSamples = realSamples;
+    // // remove not selection (in case accepting not selection)
+    // const realSamples = this.chosenSamples.filter(
+    //   (sample, index) => sample !== ''
+    // );
+    // // update this.chosenSamples
+    // this.chosenSamples = realSamples;
 
     // check length
     if (this.chosenSamples.length < 2) {

@@ -7,13 +7,15 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FilteredSelectComponent } from './components/filtered-select/filtered-select.component';
+import { NotAvailablePipe } from '../utils/not-available.pipe';
 
 @NgModule({
   declarations: [
     SelectedBarComponent,
     FilteredSelectComponent,
     UnmaskNumericDirective,
-    GrchPipe
+    GrchPipe,
+    NotAvailablePipe
   ],
   imports: [
     CommonModule,
@@ -27,6 +29,7 @@ import { FilteredSelectComponent } from './components/filtered-select/filtered-s
     FilteredSelectComponent,
     UnmaskNumericDirective,
     GrchPipe,
+    NotAvailablePipe,
     CommonModule,
     MaterialModule,
     FormsModule,

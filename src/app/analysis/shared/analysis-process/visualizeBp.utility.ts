@@ -5,10 +5,11 @@ export const filterDataInRegion = (
 ) => {
   const outData: any[] = [];
   for (const inDatum of inData) {
-    // choose data in region
+    // choose data in region (over right, over left, over both)
     if (
       (inDatum.startBp >= regionStartBp && inDatum.startBp <= regionEndBp) ||
-      (inDatum.endBp >= regionStartBp && inDatum.endBp <= regionEndBp)
+      (inDatum.endBp >= regionStartBp && inDatum.endBp <= regionEndBp) ||
+      (inDatum.startBp <= regionStartBp && inDatum.endBp >= regionEndBp)
     ) {
       const { chosenStartBp, chosenEndBp } = chooseBasepair(
         inDatum,

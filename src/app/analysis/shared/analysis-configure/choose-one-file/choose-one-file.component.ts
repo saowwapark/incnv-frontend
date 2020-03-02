@@ -6,7 +6,9 @@ import {
   OnChanges,
   Output,
   EventEmitter,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  SimpleChange,
+  SimpleChanges
 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
@@ -43,7 +45,7 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
     []
   );
   selection = new SelectionModel<UploadCnvToolResult>(true, []);
-  selectedFiles: UploadCnvToolResult[];
+
   isLoadingResults = true;
 
   @ViewChild(MatSort, { static: true }) matSort: MatSort;
@@ -53,7 +55,6 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(private _service: AnalysisConfigureService) {
-    this.selectedFiles = [];
     this._unsubscribeAll = new Subject();
   }
 
@@ -61,7 +62,7 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
   // @ Lifecycle hooks
   // -----------------------------------------------------------------------------------------------------
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     this._service
       .getUploadCnvToolResults(this.referenceGenome, this.samplesetId)
       .pipe(takeUntil(this._unsubscribeAll))
@@ -70,6 +71,9 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
         this.dataSource.sort = this.matSort;
         this.dataSource.paginator = this.paginator;
       });
+    // update from parent only clear value
+    if (!this.selectedFile || !this.selectedFile.uploadCnvToolResultId) {
+    }
   }
 
   /**
@@ -83,5 +87,11 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  selectFile(selectedFile: UploadCnvToolResult) {
+    if (selectedFile) {
+      this.selectedFileChange.next(selectedFile);
+    }
   }
 }

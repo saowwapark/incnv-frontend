@@ -61,14 +61,14 @@ export const navigationData: Navigation[] = [
         title: 'Individual Sample',
         type: 'item',
         icon: 'school',
-        url: '/individual-sample'
+        url: '/analysis/individual-sample'
       },
       {
         id: 'mulitpleSamples',
         title: 'Multiple Samples',
         type: 'item',
         icon: 'school',
-        url: '/multiple-sample'
+        url: '/analysis/multiple-sample'
       }
     ]
   }

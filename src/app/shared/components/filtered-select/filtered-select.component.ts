@@ -188,7 +188,9 @@ export class FilteredSelectComponent
   /********************** Life Cycle Hook ********************************/
   ngOnChanges() {
     this.filteredOptions = [...this.options];
-    this.filterSelectGroup.get('selectControl').setValue(this.selectedOption);
+    if (this.selectedOption !== undefined) {
+      this.filterSelectGroup.get('selectControl').setValue(this.selectedOption);
+    }
   }
   ngOnInit() {}
   ngAfterViewInit() {

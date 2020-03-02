@@ -170,8 +170,7 @@
                         cdkAutosizeMinRows="1"
                         cdkAutosizeMaxRows="3"
                         >{{ row.leftFlanking.sequence }}
-                                                </textarea
-                      >
+                      </textarea>
                     </mat-form-field>
                     <div fxLayout="row" fxLayoutAlign="start end">
                       <button
@@ -254,19 +253,36 @@
           >
             <div class="expand-row">
               <div class="expand-detail--header">
-                Ensembl:
+                Releated Ensembl:
               </div>
-              <mat-chip-list>
-                <mat-chip
-                  *ngFor="let ensembl of row.ensembls"
-                  color="accent"
-                  selected
-                  class="cursor-pointer"
-                  (click)="ensemblLink(ensembl.geneId)"
-                >
-                  {{ ensembl.geneSymbol }}
-                </mat-chip>
-              </mat-chip-list>
+              <div class="expand-detail--data">
+                <div class="property property-name" fxFlex="1 1 20%">
+                  Gene Symbol
+                </div>
+                <div class="property property-value" fxFlex="1 1 80%">
+                  <ng-container
+                    *ngIf="
+                      row.ensembls && row.ensembls.length > 0;
+                      else elseTemplate
+                    "
+                  >
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let ensembl of row.ensembls"
+                        color="accent"
+                        selected
+                        class="cursor-pointer"
+                        (click)="ensemblLink(ensembl.geneId)"
+                      >
+                        {{ ensembl.geneSymbol }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    N/A
+                  </ng-template>
+                </div>
+              </div>
             </div>
           </div>
         </td>
@@ -287,19 +303,47 @@
           >
             <div class="expand-row">
               <div class="expand-detail--header">
-                DGV:
+                Releated DGV:
               </div>
-              <mat-chip-list>
-                <mat-chip
-                  *ngFor="let dgv of row.dgvs"
-                  color="accent"
-                  selected
-                  class="cursor-pointer"
-                  (click)="dgvLink(row.referenceGenome, dgv.variantAccession)"
-                >
-                  {{ dgv.variantAccession }}
-                </mat-chip>
-              </mat-chip-list>
+              <div class="expand-detail--data">
+                <div *ngFor="let dgv of row.dgvs; first as isFirst">
+                  <mat-divider
+                    *ngIf="!isFirst"
+                    [inset]="true"
+                    class="property property-row"
+                  ></mat-divider>
+                  <div class="property property-row" fxLayout="row wrap">
+                    <div class=" property-name" fxFlex="1 1 20%">
+                      {{ dgv.key }}
+                    </div>
+                    <div class=" property-value" fxFlex="1 1 80%">
+                      <ng-container
+                        *ngIf="dgv.values.length > 0; else elseTemplate"
+                      >
+                        <mat-chip-list>
+                          <mat-chip
+                            *ngFor="let value of dgv.values"
+                            color="accent"
+                            selected
+                            class="cursor-pointer"
+                            (click)="
+                              dgvLink(
+                                row.referenceGenome,
+                                value.variantAccession
+                              )
+                            "
+                          >
+                            {{ value.variantAccession }}
+                          </mat-chip>
+                        </mat-chip-list>
+                      </ng-container>
+                      <ng-template #elseTemplate>
+                        N/A
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </td>
@@ -320,42 +364,55 @@
           >
             <div class="expand-row">
               <div class="expand-detail--header">
-                ClinVar:
+                Related ClinVar:
               </div>
               <div class="expand-detail--data">
                 <div class="property-row" fxLayout="row wrap">
-                  <div class="property property-name" fxFlex="1 1 30%">
+                  <div class="property property-name" fxFlex="1 1 20%">
                     OMIM
                   </div>
-                  <div class="property property-value" fxFlex="1 1 70%">
-                    <mat-chip-list>
-                      <mat-chip
-                        *ngFor="let omimId of row.clinvar.omimIds"
-                        (click)="clinvarLink(omimId)"
-                        color="accent"
-                        selected
-                        class="cursor-pointer"
-                        >{{ omimId }}</mat-chip
-                      >
-                    </mat-chip-list>
+                  <div class="property property-value" fxFlex="1 1 80%">
+                    <ng-container
+                      *ngIf="
+                        row.clinvar.omimIds && row.clinvar.omimIds.length > 0;
+                        else elseTemplate
+                      "
+                    >
+                      <mat-chip-list>
+                        <mat-chip
+                          *ngFor="let omimId of row.clinvar.omimIds"
+                          color="accent"
+                          selected
+                          class="cursor-pointer"
+                          (click)="clinvarLink(omimId)"
+                          >{{ omimId }}</mat-chip
+                        >
+                      </mat-chip-list>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      N/A
+                    </ng-template>
                   </div>
                 </div>
 
                 <div class="property-row" fxLayout="row wrap">
-                  <div class="property property-name" fxFlex="1 1 30%">
+                  <div class="property property-name" fxFlex="1 1 20%">
                     Phenotype
                   </div>
-                  <div class="property property-value" fxFlex="1 1 70%">
-                    {{ row.clinvar.phenotypes.join('; ') }}
+                  <div class="property property-value" fxFlex="1 1 80%">
+                    {{ row.clinvar.phenotypes.join('; ') | notAvailable }}
                   </div>
                 </div>
 
                 <div class="property-row" fxLayout="row wrap">
-                  <div class="property property-name" fxFlex="1 1 30%">
+                  <div class="property property-name" fxFlex="1 1 20%">
                     Clinical Significance
                   </div>
-                  <div class="property property-value" fxFlex="1 1 70%">
-                    {{ row.clinvar.clinicalSignificances.join('; ') }}
+                  <div class="property property-value" fxFlex="1 1 80%">
+                    {{
+                      row.clinvar.clinicalSignificances.join('; ')
+                        | notAvailable
+                    }}
                   </div>
                 </div>
               </div>
@@ -365,11 +422,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: ['expandedFlankings']"
-        class="expand-row"
-      ></tr>
+
       <tr
         mat-row
         *matRowDef="let element; columns: displayedColumns"

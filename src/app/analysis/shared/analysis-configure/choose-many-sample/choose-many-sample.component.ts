@@ -6,7 +6,9 @@ import {
   Output,
   EventEmitter,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -27,6 +29,8 @@ export class ChooseManySampleComponent implements OnInit, OnChanges {
   @Input() selectedSamples: string;
   @Output() selectedSamplesChange = new EventEmitter<string[]>();
 
+  @ViewChild('selectAllCheckbox', { static: true })
+  selectAllCheckbox: ElementRef;
   parentForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -50,13 +54,14 @@ export class ChooseManySampleComponent implements OnInit, OnChanges {
       });
     }
   }
-  addSamples(i: number) {
+  addNewSample(i: number) {
     this.sampleFormArray.controls.splice(i + 1, 0, this.newSample());
   }
   removeSample(i: number) {
     if (this.sampleFormArray.length > 2) {
       this.sampleFormArray.removeAt(i);
     }
+    this.onSubmit();
   }
   clearFormArray = (formArray: FormArray) => {
     formArray = this.fb.array([]);
@@ -82,9 +87,7 @@ export class ChooseManySampleComponent implements OnInit, OnChanges {
           case 'selectedSamples':
             if (!this.selectedSamples || this.selectedSamples.length === 0) {
               // clear value
-              this.sampleFormArray.clear();
-              this.sampleFormArray.push(this.newSample());
-              this.sampleFormArray.push(this.newSample());
+              this.resetSampleFormArray();
             } else {
               this.sampleFormArray.clear();
               for (let i = 0; i < this.selectedSamples.length; i++) {
@@ -95,6 +98,27 @@ export class ChooseManySampleComponent implements OnInit, OnChanges {
             break;
         }
       }
+    }
+  }
+
+  resetSampleFormArray() {
+    this.sampleFormArray.clear();
+    this.sampleFormArray.push(this.newSample());
+    this.sampleFormArray.push(this.newSample());
+  }
+
+  addAllSamples() {
+    for (const sample of this.samples) {
+      this.sampleFormArray.push(this.newSample(sample));
+    }
+  }
+  toggleSelectAll(checked: boolean) {
+    if (checked) {
+      this.addAllSamples();
+      this.selectedSamplesChange.next(this.samples);
+    } else {
+      this.resetSampleFormArray();
+      this.selectedSamplesChange.next([]);
     }
   }
 }

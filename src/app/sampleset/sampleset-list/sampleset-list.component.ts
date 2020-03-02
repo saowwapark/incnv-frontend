@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import {
@@ -55,6 +56,7 @@ export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
   selection = new SelectionModel<Sampleset>(true, []);
 
   @ViewChild(MatSort, { static: true }) matSort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   dialogRef: MatDialogRef<SamplesetFormDialogComponent>;
 
@@ -79,6 +81,7 @@ export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnInit(): void {
     this.dataSource.sort = this.matSort;
+    this.dataSource.paginator = this.paginator;
 
     this._samplesetService.onSelectedChanged
       .pipe(takeUntil(this._unsubscribeAll))

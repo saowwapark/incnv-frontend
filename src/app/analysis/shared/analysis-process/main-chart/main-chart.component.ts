@@ -61,16 +61,17 @@ export class MainChartComponent
   };
   readonly dgvChartColor = '#304ffe';
   readonly compareChartColor = [
-    '#ff7f02',
-    '#368c7f',
-    '#ba7636',
-    '#EFA8E4',
-    '#97E5EF',
-    '#c6ff00',
-    '#D4A6D1',
-    '#F1D8BB⁣',
-    '#E98CA4',
-    '#4DA2D7'
+    '#F82DFF'
+    // '#ff7f02',
+    // '#368c7f',
+    // '#ba7636',
+    // '#EFA8E4',
+    // '#97E5EF',
+    // '#c6ff00',
+    // '#D4A6D1',
+    // '#F1D8BB⁣',
+    // '#E98CA4',
+    // '#4DA2D7'
   ];
   readonly mergedChartColor = '#673ab7';
   readonly finalChartColor = '#d32f2f';
@@ -95,7 +96,6 @@ export class MainChartComponent
   finalResultChart;
 
   finalResultData: CnvGroup;
-  maxOverlap: number;
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
 
   @HostListener('window:resize', ['$event'])
@@ -182,8 +182,6 @@ export class MainChartComponent
         this.createFinalResultChart();
         this.detectorRef.markForCheck();
       });
-
-    this.maxOverlap = this.findMaxOverlapNumber();
   }
 
   ngAfterViewInit() {}
@@ -248,7 +246,7 @@ export class MainChartComponent
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
       this.comparedData.map(tool => tool.cnvGroupName),
-      this.maxOverlap,
+      4, // fix data because backend don't find overlap region for performance and rarely to have overlap more than four in one tool
       this.compareChartColor
     );
 
@@ -266,15 +264,16 @@ export class MainChartComponent
     });
   }
 
-  findMaxOverlapNumber() {
+  findMaxOverlapNumber(cnvInfos) {
     let max = 0;
-    for (const cnvInfo of this.mergedData.cnvInfos) {
+    for (const cnvInfo of cnvInfos) {
       if (max < cnvInfo.overlaps.length) {
         max = cnvInfo.overlaps.length;
       }
     }
     return max;
   }
+
   createMergedChart() {
     if (!this.selectedChrRegion) {
       return;
@@ -282,6 +281,8 @@ export class MainChartComponent
     if (this.mergedChart) {
       this.mergedChart.removeVis();
     }
+    const maxOverlap = this.findMaxOverlapNumber(this.mergedData.cnvInfos);
+
     this.mergedChart = new MergedChart(
       '3',
       this.mergedChartDiv.nativeElement,
@@ -289,7 +290,7 @@ export class MainChartComponent
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
       [this.mergedData.cnvGroupName],
-      this.maxOverlap,
+      maxOverlap,
       this.mergedChartColor
     );
 
@@ -314,6 +315,7 @@ export class MainChartComponent
     if (this.finalResultChart) {
       this.finalResultChart.removeVis();
     }
+    const maxOverlap = this.findMaxOverlapNumber(this.mergedData.cnvInfos);
     this.finalResultChart = new MergedChart(
       '4',
       this.finalResultChartDiv.nativeElement,
@@ -321,7 +323,7 @@ export class MainChartComponent
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
       [FINAL_RESULT_NAME],
-      this.maxOverlap,
+      maxOverlap,
       this.finalChartColor
     );
 

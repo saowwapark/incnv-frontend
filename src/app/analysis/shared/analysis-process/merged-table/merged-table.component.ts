@@ -1,3 +1,4 @@
+import { DgvAnnotationKey, DgvAnnotation } from './../../../analysis.model';
 // onpush
 import { AnalysisProcessService } from './../analysis-process.service';
 
@@ -258,18 +259,22 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
           case 'dgv':
             isDgv = filter.filterValues.length > 0 ? false : true;
             for (const dgv of row.dgvs) {
-              for (const value of filter.filterValues) {
-                if (
-                  dgv.variantAccession
-                    .toLowerCase()
-                    .includes(value.toLowerCase())
-                ) {
-                  isDgv = true;
+              // [ 'duplication', 'deletion', 'gain', 'loss', 'gain+loss' ]
+              const dgvAnnotations: DgvAnnotation[] = dgv.values;
+              for (const dgvAnnotation of dgvAnnotations) {
+                for (const searchValue of filter.filterValues) {
+                  if (
+                    dgvAnnotation.variantAccession
+                      .toLowerCase()
+                      .includes(searchValue.toLowerCase())
+                  ) {
+                    isDgv = true;
+                    break;
+                  }
+                }
+                if (isDgv === true) {
                   break;
                 }
-              }
-              if (isDgv === true) {
-                break;
               }
             }
             break;
@@ -313,6 +318,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   onRemoveFilterValue(index: number, filterValues: string[]): void {
     if (index >= 0) {
       filterValues.splice(index, 1);
+      this.applyFilter();
     }
   }
 

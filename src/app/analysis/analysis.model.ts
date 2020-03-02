@@ -71,7 +71,7 @@ export class CnvInfo {
   startBp?: number;
   endBp?: number;
   overlaps?: string[];
-  dgvs?: DgvAnnotation[]; // dgv.variant_accession
+  dgvs?: DgvAnnotationKey[]; // dgv.variant_accession
   ensembls?: EnsemblAnnotation[]; // ensembl.gene_id
   clinvar?: ClinvarAnnotationList;
   leftFlanking?: Sequence;
@@ -106,6 +106,7 @@ export class EnsemblAnnotation {
 
 export class DgvAnnotation {
   variantAccession?: string;
+  variantSubtype?: string;
   startBp?: number;
   endBp?: number;
 
@@ -116,13 +117,19 @@ export class DgvAnnotation {
   }
 }
 
-export class RegionBp {
-  startBp: number;
-  endBp: number;
+type variantSubtypeKey =
+  | 'duplication'
+  | 'deletion'
+  | 'gain'
+  | 'loss'
+  | 'gain+loss';
 
-  constructor(startBp, endBp) {
-    this.startBp = startBp;
-    this.endBp = endBp;
+export class DgvAnnotationKey {
+  key: string;
+  values: DgvAnnotation[];
+  constructor(key: string, values: DgvAnnotation[]) {
+    this.key = key;
+    this.values = values;
   }
 }
 
@@ -134,4 +141,14 @@ export class DgvVariant {
   variantAccession?: string;
   variantType?: string;
   variantSubtype?: string;
+}
+
+export class RegionBp {
+  startBp: number;
+  endBp: number;
+
+  constructor(startBp, endBp) {
+    this.startBp = startBp;
+    this.endBp = endBp;
+  }
 }
