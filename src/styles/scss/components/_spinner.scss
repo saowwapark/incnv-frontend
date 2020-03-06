@@ -5,6 +5,7 @@
   justify-content: center;
   position: fixed;
   top: 300px;
+  z-index: 10;
 }
 
 .spinner-container mat-spinner {

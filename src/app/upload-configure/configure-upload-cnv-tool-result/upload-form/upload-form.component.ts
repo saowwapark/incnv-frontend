@@ -2,7 +2,7 @@ import { TabFileMappingService } from '../../../tab-file-mapping/tab-file-mappin
 import { UploadFormService } from './upload-form.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   Component,
@@ -43,6 +43,7 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output()
   confirmClicked = new EventEmitter<any>();
 
+  isUploading: BehaviorSubject<boolean>;
   private _unsubscribeAll: Subject<any>;
 
   // Tag
@@ -57,8 +58,9 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
     private _uploadFormService: UploadFormService,
     private _router: Router
   ) {
-    this._unsubscribeAll = new Subject();
     this.samplesets = [];
+    this.isUploading = new BehaviorSubject(false);
+    this._unsubscribeAll = new Subject();
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -167,6 +169,8 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onSaveUpload();
   }
   onSaveUpload() {
+    this.isUploading.next(true);
+
     const file = this.form.controls['uploadedFile'].value as File;
     const uploadCnvToolResult = new UploadCnvToolResult({
       fileName: this.form.get('fileName').value,
@@ -186,6 +190,7 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this._uploadFormService
       .addUploadCnvToolResult(uploadCnvToolResult, file)
       .subscribe(uploadCnvToolResultId => {
+        this.isUploading.next(false);
         this.confirmClicked.emit(uploadCnvToolResultId);
       });
   }
@@ -209,6 +214,8 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
    * On destroy
    */
   ngOnDestroy(): void {
+    this.isUploading.unsubscribe();
+
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
