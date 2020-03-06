@@ -8,7 +8,11 @@
 <div [style.height]="!selectedChrRegion ? '0px' : 'auto'">
   <div fxLayout="row">
     <div *ngIf="selectedChrRegion">
-      <div class="property property-value" style="color: #980000">
+      <div
+        class="property property-value"
+        class="indent"
+        style="color: #980000"
+      >
         Please click on merged result chart to select CNVs.
       </div>
     </div>
