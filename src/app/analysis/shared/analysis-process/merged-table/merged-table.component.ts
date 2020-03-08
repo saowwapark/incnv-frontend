@@ -244,9 +244,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
             isEnsembl = filter.filterValues.length > 0 ? false : true;
             for (const ensembl of row.ensembls) {
               for (const value of filter.filterValues) {
-                if (
-                  ensembl.geneSymbol.toLowerCase().includes(value.toLowerCase())
-                ) {
+                if (ensembl.geneSymbol.toLowerCase() === value.toLowerCase()) {
                   isEnsembl = true;
                   break;
                 }
