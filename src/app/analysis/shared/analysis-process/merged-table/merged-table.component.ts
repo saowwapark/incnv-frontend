@@ -182,7 +182,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.dataSource.filteredData.length;
     return numSelected === numRows;
   }
 
@@ -193,7 +193,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
       // this.updateAllSelectStatus(this.cnvInfos, false);
     } else {
       // this.dataSource.data.forEach(row => this.selection.select(row));
-      this.selection.select(...this.cnvInfos);
+      this.selection.select(...this.dataSource.filteredData);
       // this.updateAllSelectStatus(this.cnvInfos, true);
     }
     this.service.onSelectedCnv.next(this.cnvInfos[0]);
