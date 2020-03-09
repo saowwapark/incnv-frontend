@@ -262,9 +262,8 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
               for (const dgvAnnotation of dgvAnnotations) {
                 for (const searchValue of filter.filterValues) {
                   if (
-                    dgvAnnotation.variantAccession
-                      .toLowerCase()
-                      .includes(searchValue.toLowerCase())
+                    dgvAnnotation.variantAccession.toLowerCase() ===
+                    searchValue.toLowerCase()
                   ) {
                     isDgv = true;
                     break;
@@ -280,7 +279,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
             isClinvarOmimId = filter.filterValues.length > 0 ? false : true;
             for (const omimId of row.clinvar.omimIds) {
               for (const value of filter.filterValues) {
-                if (omimId.toLowerCase().includes(value.toLowerCase())) {
+                if (omimId.toLowerCase() === value.toLowerCase()) {
                   isClinvarOmimId = true;
                   break;
                 }
