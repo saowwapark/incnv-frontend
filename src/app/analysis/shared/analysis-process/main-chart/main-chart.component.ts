@@ -59,20 +59,8 @@ export class MainChartComponent
     bottom: number;
     left: number;
   };
-  readonly dgvChartColor = '#304ffe';
-  readonly compareChartColor = [
-    '#F82DFF'
-    // '#ff7f02',
-    // '#368c7f',
-    // '#ba7636',
-    // '#EFA8E4',
-    // '#97E5EF',
-    // '#c6ff00',
-    // '#D4A6D1',
-    // '#F1D8BB⁣',
-    // '#E98CA4',
-    // '#4DA2D7'
-  ];
+  readonly dgvChartColor = '#00A2FD';
+  readonly compareChartColor = ['#FDA404']; // ['#ff7f02'];
   readonly mergedChartColor = '#673ab7';
   readonly finalChartColor = '#d32f2f';
 
