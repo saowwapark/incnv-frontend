@@ -104,7 +104,7 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
       fileName: [this.uploadPost.fileName, Validators.required],
       uploadedFile: [this.uploadPost.uploadedFile, Validators.required],
       fileInfo: [],
-      referenceGenome: ['grch37'],
+      referenceGenome: ['grch38'],
 
       cnvToolName: [null, Validators.required],
       tabFileMapping: [], // only 'file_type' is Tab File Format

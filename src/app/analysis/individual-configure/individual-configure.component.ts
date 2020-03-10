@@ -40,7 +40,7 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
   ) {
     this._unsubscribeAll = new Subject();
 
-    this.chosenReferenceGenome = 'grch37';
+    this.chosenReferenceGenome = 'grch38';
     this.chosenSampleset = new Sampleset();
     this.chosenSampleset.samples = [];
     this.chosenSample = '';
