@@ -57,11 +57,7 @@
         </mat-step>
         <mat-step label="Choose Samples">
           <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
-            <app-choose-many-sample
-              [samples]="chosenSampleset.samples"
-              [selectedSamples]="chosenSamples"
-              (selectedSamplesChange)="setSamples($event)"
-            >
+            <app-choose-many-sample [samples]="chosenSampleset.samples">
             </app-choose-many-sample>
             <div fxLayout="row" fxLayoutAlign="start center">
               <button mat-button color="primary" matStepperPrevious>

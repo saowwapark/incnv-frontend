@@ -1,39 +1,39 @@
-import { map } from 'rxjs/operators';
+import { map, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import {
   Component,
   OnInit,
   Input,
-  Output,
-  EventEmitter,
   OnChanges,
   SimpleChanges,
   ElementRef,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  FormArray,
-  FormControl,
-  Validator,
-  Validators
-} from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { MultipleConfigureService } from 'src/app/analysis/multiple-configure/multiple-configure.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-choose-many-sample',
   templateUrl: './choose-many-sample.component.html',
   styleUrls: ['./choose-many-sample.component.scss']
 })
-export class ChooseManySampleComponent implements OnInit, OnChanges {
+export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
   @Input() samples: string[];
-  @Input() selectedSamples: string;
-  @Output() selectedSamplesChange = new EventEmitter<string[]>();
 
   @ViewChild('selectAllCheckbox', { static: true })
   selectAllCheckbox: ElementRef;
   parentForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  // private
+  private _unsubscribeAll: Subject<any>;
+
+  constructor(
+    private fb: FormBuilder,
+    private service: MultipleConfigureService
+  ) {
+    this._unsubscribeAll = new Subject();
+
     this.parentForm = this.fb.group({
       sampleFormArray: this.fb.array([this.newSample(), this.newSample()])
     });
@@ -77,29 +77,25 @@ export class ChooseManySampleComponent implements OnInit, OnChanges {
     }
     // const array = this.sampleFormArray.value;
     // const data = array.map(d => d.sample);
-    this.selectedSamplesChange.next(samples);
+    this.service.onSelectedSamplesChange.next(samples);
   }
-  ngOnInit() {}
-  ngOnChanges(changes: SimpleChanges): void {
-    for (const propName in changes) {
-      if (changes.hasOwnProperty(propName)) {
-        switch (propName) {
-          case 'selectedSamples':
-            if (!this.selectedSamples || this.selectedSamples.length === 0) {
-              // clear value
-              this.resetSampleFormArray();
-            } else {
-              this.sampleFormArray.clear();
-              for (let i = 0; i < this.selectedSamples.length; i++) {
-                const selectedSample = this.selectedSamples[i];
-                this.sampleFormArray.push(this.newSample(selectedSample));
-              }
-            }
-            break;
+  ngOnInit() {
+    this.service.onSelectedSamplesChange
+      .pipe(distinctUntilChanged(), takeUntil(this._unsubscribeAll))
+      .subscribe(selectedSamples => {
+        if (!selectedSamples || selectedSamples.length === 0) {
+          // clear value
+          this.resetSampleFormArray();
+        } else {
+          this.sampleFormArray.clear();
+          for (let i = 0; i < selectedSamples.length; i++) {
+            const selectedSample = selectedSamples[i];
+            this.sampleFormArray.push(this.newSample(selectedSample));
+          }
         }
-      }
-    }
+      });
   }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   resetSampleFormArray() {
     this.sampleFormArray.clear();
@@ -115,10 +111,18 @@ export class ChooseManySampleComponent implements OnInit, OnChanges {
   toggleSelectAll(checked: boolean) {
     if (checked) {
       this.addAllSamples();
-      this.selectedSamplesChange.next(this.samples);
+      this.service.onSelectedSamplesChange.next(this.samples);
     } else {
       this.resetSampleFormArray();
-      this.selectedSamplesChange.next([]);
+      this.service.onSelectedSamplesChange.next([]);
     }
+  }
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }

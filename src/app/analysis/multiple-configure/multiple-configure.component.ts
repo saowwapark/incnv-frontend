@@ -1,3 +1,5 @@
+import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import { MultipleConfigureService } from 'src/app/analysis/multiple-configure/multiple-configure.service';
 import { findDuplicates } from './../../utils/logic.utils';
 import { UploadCnvToolResult } from '../../shared/models/upload-cnv-tool-result.model';
 import {
@@ -42,7 +44,8 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-    private service: AnalysisProcessService
+    private processService: AnalysisProcessService,
+    private configureService: MultipleConfigureService
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -58,6 +61,13 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createAllChrs();
+
+    this.configureService.onSelectedSamplesChange
+      .pipe(distinctUntilChanged(), takeUntil(this._unsubscribeAll))
+      .subscribe(selectedSamples => {
+        this.chosenSamples = selectedSamples;
+        this.chosenFile = new UploadCnvToolResult();
+      });
   }
 
   createAllChrs() {
@@ -83,25 +93,26 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
 
       // clear independent values -> chosenSamples and chosenFile
       this.chosenSamples = [];
+      this.configureService.onSelectedSamplesChange.next([]);
       this.chosenFile = new UploadCnvToolResult();
     } else {
       this.chosenSampleset = sampleset;
     }
   }
 
-  setSamples(samples: string[]) {
-    if (
-      samples &&
-      JSON.stringify(samples) !== JSON.stringify(this.chosenSamples)
-    ) {
-      this.chosenSamples = samples;
+  // setSamples(samples: string[]) {
+  //   if (
+  //     samples &&
+  //     JSON.stringify(samples) !== JSON.stringify(this.chosenSamples)
+  //   ) {
+  //     this.chosenSamples = samples;
 
-      // clear independent values -> chosenFiles
-      this.chosenFile = new UploadCnvToolResult();
-    } else {
-      this.chosenSamples = samples;
-    }
-  }
+  //     // clear independent values -> chosenFiles
+  //     this.chosenFile = new UploadCnvToolResult();
+  //   } else {
+  //     this.chosenSamples = samples;
+  //   }
+  // }
 
   setFile(file: UploadCnvToolResult) {
     this.chosenFile = file;
@@ -116,7 +127,7 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
       this.chosenSampleset.samplesetName,
       this.chosenSamples
     );
-    this.service.onMultipleSampleConfigChanged.next(multipleConfig);
+    this.processService.onMultipleSampleConfigChanged.next(multipleConfig);
   }
 
   validateChosenSampleset() {
