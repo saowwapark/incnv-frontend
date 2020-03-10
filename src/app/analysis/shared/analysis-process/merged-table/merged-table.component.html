@@ -166,7 +166,7 @@
               fxFlex="1 1 92%"
               appearance="outline"
             >
-              <mat-label>Search ClinVar (Phenotype)...</mat-label>
+              <mat-label>Search ClinVar (phenotype)...</mat-label>
               <mat-icon matPrefix>search</mat-icon>
               <mat-chip-list #searchClinvarOmimPhenotype>
                 <mat-chip
@@ -207,7 +207,7 @@
                 color="warn"
                 aria-label="clear search keywords"
                 (click)="
-                  onClearFilterValues(filteredClinvarOmimId.filterValues)
+                  onClearFilterValues(filteredClinvarPhenotype.filterValues)
                 "
               >
                 <mat-icon>clear</mat-icon>
@@ -216,6 +216,64 @@
           </div>
           <div fxLayout="row" fxLayoutAlign="center center" fxFlex="1 1 10%">
             <div>AND</div>
+          </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 1 90%">
+            <mat-form-field
+              aria-label="search-clinvar-omim-phenotype"
+              fxFlex="1 1 92%"
+              appearance="outline"
+            >
+              <mat-label>{{
+                analysisType === 'multipleSamples'
+                  ? 'Search Sample...'
+                  : 'Search CNV tool...'
+              }}</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <mat-chip-list #searchOverlapping>
+                <mat-chip
+                  color="accent"
+                  selected
+                  *ngFor="
+                    let filterValue of filteredOverlapping.filterValues;
+                    let i = index
+                  "
+                  selectable="false"
+                  [removable]="true"
+                  (removed)="
+                    onRemoveFilterValue(i, filteredOverlapping.filterValues)
+                  "
+                >
+                  {{ filterValue }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  [matChipInputFor]="searchOverlapping"
+                  [matChipInputSeparatorKeyCodes]="
+                    overlappingSeparatorKeysCodes
+                  "
+                  matChipInputAddOnBlur="true"
+                  (matChipInputTokenEnd)="
+                    onAddOverlappingFilterValue(
+                      $event,
+                      filteredOverlapping.filterValues
+                    )
+                  "
+                />
+              </mat-chip-list>
+            </mat-form-field>
+            <div fxFlex="1 1 8%">
+              <button
+                mat-icon-button
+                color="warn"
+                aria-label="clear search keywords"
+                (click)="onClearFilterValues(filteredOverlapping.filterValues)"
+              >
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>

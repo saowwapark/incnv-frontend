@@ -79,9 +79,11 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   filteredDgv = new FilterObj('dgv', []);
   filteredClinvarOmimId = new FilterObj('clinvarOmimId', []);
   filteredClinvarPhenotype = new FilterObj('clinvarPhenotype', []);
+  filteredOverlapping = new FilterObj('overlapping', []);
 
   // mat-chip
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
+  readonly overlappingSeparatorKeysCodes: number[] = [ENTER];
 
   dataSource = new MatTableDataSource<CnvInfo>();
   selection = new SelectionModel<CnvInfo>(true, []);
@@ -151,11 +153,9 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   trackByFn(index: number, item: CnvInfo) {
-    console.log('trackby');
     if (!item) {
       return null;
     } else {
-      console.log(`${item.startBp} - ${item.endBp}`);
       return [item.startBp, item.endBp];
     }
   }
@@ -223,7 +223,8 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
       this.filteredEnsembl,
       this.filteredDgv,
       this.filteredClinvarOmimId,
-      this.filteredClinvarPhenotype
+      this.filteredClinvarPhenotype,
+      this.filteredOverlapping
     ];
     this.dataSource.filter = JSON.stringify(tableFilters);
     if (this.dataSource.paginator) {
@@ -232,12 +233,13 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   createCustomFilterFn() {
-    const customeFilterFn = (row: CnvInfo, filtersJson: string) => {
+    const customFilterFn = (row: CnvInfo, filtersJson: string) => {
       const filters = JSON.parse(filtersJson) as FilterObj[];
       let isEnsembl = true;
       let isDgv = true;
       let isClinvarOmimId = true;
       let isClinvarPhenotype = true;
+      let isOverlapping = true;
       for (const filter of filters) {
         switch (filter.id) {
           case 'ensembl':
@@ -303,14 +305,32 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
               }
             }
             break;
-          default:
+          case 'overlapping':
+            isOverlapping = filter.filterValues.length > 0 ? false : true;
+            for (const overlap of row.overlaps) {
+              for (const value of filter.filterValues) {
+                if (overlap.toLowerCase() === value.toLowerCase()) {
+                  isOverlapping = true;
+                  break;
+                }
+              }
+              if (isOverlapping) {
+                break;
+              }
+            }
             break;
         }
       }
 
-      return isEnsembl && isDgv && isClinvarOmimId && isClinvarPhenotype;
+      return (
+        isEnsembl &&
+        isDgv &&
+        isClinvarOmimId &&
+        isClinvarPhenotype &&
+        isOverlapping
+      );
     };
-    return customeFilterFn;
+    return customFilterFn;
   }
   onRemoveFilterValue(index: number, filterValues: string[]): void {
     if (index >= 0) {
@@ -327,10 +347,24 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
     const input = event.input;
     const value = event.value;
     if ((value || '').trim()) {
-      const splitedValues: string[] = value.split(/[ ,]+/);
+      const splitedValues: string[] = value.trim().split(/[ ,]+/);
       splitedValues.forEach(splitedValue => {
         filterValues.push(splitedValue.trim());
       });
+    }
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+  onAddOverlappingFilterValue(
+    event: MatChipInputEvent,
+    filterValues: string[]
+  ): void {
+    const input = event.input;
+    const value = event.value;
+    if ((value || '').trim()) {
+      filterValues.push(value.trim());
     }
     // Reset the input value
     if (input) {
