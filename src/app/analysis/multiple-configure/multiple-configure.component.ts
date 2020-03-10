@@ -62,7 +62,7 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.createAllChrs();
 
-    this.configureService.onSelectedSamplesChange
+    this.configureService.onSelectedSamplesChanged
       .pipe(distinctUntilChanged(), takeUntil(this._unsubscribeAll))
       .subscribe(selectedSamples => {
         this.chosenSamples = selectedSamples;
@@ -93,7 +93,7 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
 
       // clear independent values -> chosenSamples and chosenFile
       this.chosenSamples = [];
-      this.configureService.onSelectedSamplesChange.next([]);
+      this.configureService.onSelectedSamplesChanged.next([]);
       this.chosenFile = new UploadCnvToolResult();
     } else {
       this.chosenSampleset = sampleset;

@@ -6,8 +6,8 @@ import { Sampleset } from 'src/app/sampleset/sampleset.model';
   providedIn: 'root'
 })
 export class MultipleConfigureService {
-  onSelectedSamplesChange: BehaviorSubject<string[]>;
+  onSelectedSamplesChanged: BehaviorSubject<string[]>;
   constructor() {
-    this.onSelectedSamplesChange = new BehaviorSubject([]);
+    this.onSelectedSamplesChanged = new BehaviorSubject([]);
   }
 }
