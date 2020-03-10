@@ -75,6 +75,11 @@ export class ChooseManyFileComponent implements OnChanges, OnInit, OnDestroy {
     for (const propName in changes) {
       if (changes.hasOwnProperty(propName)) {
         switch (propName) {
+          case 'referenceGenome':
+            this.updateDatasource();
+            this.selection.deselect(...this.selectedFiles);
+            this.selectedFiles = [];
+            break;
           case 'samplesetId':
             this.updateDatasource();
             this.selection.deselect(...this.selectedFiles);

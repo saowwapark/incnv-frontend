@@ -77,10 +77,10 @@ export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
     }
     // const array = this.sampleFormArray.value;
     // const data = array.map(d => d.sample);
-    this.service.onSelectedSamplesChange.next(samples);
+    this.service.onSelectedSamplesChanged.next(samples);
   }
   ngOnInit() {
-    this.service.onSelectedSamplesChange
+    this.service.onSelectedSamplesChanged
       .pipe(distinctUntilChanged(), takeUntil(this._unsubscribeAll))
       .subscribe(selectedSamples => {
         if (!selectedSamples || selectedSamples.length === 0) {
@@ -111,10 +111,10 @@ export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
   toggleSelectAll(checked: boolean) {
     if (checked) {
       this.addAllSamples();
-      this.service.onSelectedSamplesChange.next(this.samples);
+      this.service.onSelectedSamplesChanged.next(this.samples);
     } else {
       this.resetSampleFormArray();
-      this.service.onSelectedSamplesChange.next([]);
+      this.service.onSelectedSamplesChanged.next([]);
     }
   }
   /**
