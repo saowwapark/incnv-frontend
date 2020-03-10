@@ -133,11 +133,9 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
   }
 
   trackByFn(index: number, item: CnvInfo) {
-    console.log('trackby');
     if (!item) {
       return null;
     } else {
-      console.log(`${item.startBp} - ${item.endBp}`);
       return [item.startBp, item.endBp];
     }
   }
