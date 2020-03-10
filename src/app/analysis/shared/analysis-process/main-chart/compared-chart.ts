@@ -273,7 +273,7 @@ export class ComparedChart {
       .on('mousemove', (d, i, n) => {
         // tooltip
         this.tooltip
-          .style('left', d3.mouse(n[i])[0] + 40 + 'px')
+          .style('left', d3.mouse(n[i])[0] + 60 + 'px')
           .style('top', d3.mouse(n[i])[1] - 20 + 'px')
           .style('display', null);
 
