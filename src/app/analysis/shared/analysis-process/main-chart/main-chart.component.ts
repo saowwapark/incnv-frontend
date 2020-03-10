@@ -61,8 +61,8 @@ export class MainChartComponent
   };
   readonly dgvChartColor = '#00A2FD';
   readonly compareChartColor = ['#FDA404']; // ['#ff7f02'];
-  readonly mergedChartColor = '#673ab7';
-  readonly finalChartColor = '#d32f2f';
+  readonly mergedChartColor = '#d32f2f';
+  readonly finalChartColor = '#613EB4';
 
   selectedCnvs: CnvInfo[] = []; // always changed
   private _unsubscribeAll: Subject<any>;
@@ -203,6 +203,16 @@ export class MainChartComponent
     return new RegionBp(startBp, endBp);
   }
 
+  findMaxOverlapNumber(cnvInfos) {
+    let max = 0;
+    for (const cnvInfo of cnvInfos) {
+      if (max < cnvInfo.overlaps.length) {
+        max = cnvInfo.overlaps.length;
+      }
+    }
+    return max;
+  }
+
   createDgvChart() {
     if (!this.selectedChrRegion) {
       return;
@@ -234,7 +244,7 @@ export class MainChartComponent
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
       this.comparedData.map(tool => tool.cnvGroupName),
-      4, // fix data because backend don't find overlap region for performance and rarely to have overlap more than four in one tool
+      1, // 4 fix data because backend don't find overlap region for performance and rarely to have overlap more than four in one tool
       this.compareChartColor
     );
 
@@ -250,16 +260,6 @@ export class MainChartComponent
 
       this.createDialog(cnvGroupName, data);
     });
-  }
-
-  findMaxOverlapNumber(cnvInfos) {
-    let max = 0;
-    for (const cnvInfo of cnvInfos) {
-      if (max < cnvInfo.overlaps.length) {
-        max = cnvInfo.overlaps.length;
-      }
-    }
-    return max;
   }
 
   createMergedChart() {

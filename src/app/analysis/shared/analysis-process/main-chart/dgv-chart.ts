@@ -194,7 +194,7 @@ export class DgvChart {
         d3.select(n[i])
           .transition()
           .duration(300)
-          .attr('fill', '#fff')
+          .attr('fill', '#444444')
           .attr('stroke-opacity', '1')
           .style('cursor', 'pointer');
       })
@@ -212,17 +212,19 @@ export class DgvChart {
       .on('mousemove', (d: DgvVariant, i, n) => {
         // tooltip
         this.tooltip
-          .style('left', d3.mouse(n[i])[0] + 10 + 'px')
+          .style('left', d3.mouse(n[i])[0] + 40 + 'px')
           .style('top', d3.mouse(n[i])[1] - 80 + 'px')
           .style('display', null);
 
         this.tooltip.html(() => {
-          let content = `Chromosome ${d.chromosome}: ${formatNumberWithComma(
-            d.startBp
-          )} - ${formatNumberWithComma(d.endBp)}`;
-          content += '<br>' + `variant: ${d.variantAccession}`;
-          content += '<br>' + `variant type: ${d.variantType}`;
-          content += '<br>' + `variant subtype: ${d.variantSubtype}`;
+          let content = `<b>chromosome ${
+            d.chromosome
+          }:</b> ${formatNumberWithComma(d.startBp)} - ${formatNumberWithComma(
+            d.endBp
+          )}`;
+          content += '<br>' + `<b>variant:</b> ${d.variantAccession}`;
+          content += '<br>' + `<b>variant type:</b> ${d.variantType}`;
+          content += '<br>' + `<b>variant subtype</b>: ${d.variantSubtype}`;
           return content;
         });
       });
@@ -236,10 +238,11 @@ export class DgvChart {
       .attr('id', 'tooltip')
       .attr('class', 'tooltip')
       .style('position', 'absolute')
-      .style('background', '#D3D3D3')
+      .style('background', '#D8D8D8')
       .style('color', '#313639')
       .style('text-align', 'left')
       .style('border-radius', '8px')
+      .style('border', '2px solid #5A5A62')
       .style('padding', '0.3em 1em')
       .style('font-size', '1.3rem')
       .style('display', 'none')
