@@ -8,7 +8,12 @@
 </mat-toolbar>
 
 <div mat-dialog-content>
-  <form [formGroup]="form" fxLayout="column" fxLayoutAlign="start start">
+  <form
+    [formGroup]="form"
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="10px"
+  >
     <!--Reference Genome Column-->
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
       <mat-label>Reference Genome: </mat-label>
@@ -20,7 +25,7 @@
       </mat-radio-group>
     </div>
     <!--File Name Column-->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="form-field-width">
       <mat-label>File Name</mat-label>
       <input
         fxFlex
@@ -30,7 +35,7 @@
       />
     </mat-form-field>
     <!--File Info Column-->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="form-field-width">
       <mat-label>File Info</mat-label>
       <input
         fxFlex
@@ -41,7 +46,7 @@
     </mat-form-field>
 
     <!--CNV Tool Name Column-->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="form-field-width">
       <mat-label>CNV Tool</mat-label>
       <input
         fxFlex
@@ -51,32 +56,31 @@
       />
     </mat-form-field>
     <!--Tab File Mapping Column-->
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>File Mapping...</mat-label>
-        <app-filtered-select
-          formControlName="tabFileMapping"
-          [options]="tabFileMappings"
-          [selectedOption]="initialTabFileMapping"
-        >
-        </app-filtered-select>
-      </mat-form-field>
-    </div>
+
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>File Mapping...</mat-label>
+      <app-filtered-select
+        formControlName="tabFileMapping"
+        [options]="tabFileMappings"
+        [selectedOption]="initialTabFileMapping"
+      >
+      </app-filtered-select>
+    </mat-form-field>
+
     <!--Sampleset Column-->
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Sampleset...</mat-label>
-        <app-filtered-select
-          formControlName="sampleset"
-          [options]="samplesets"
-          [selectedOption]="initialSampleset"
-        >
-        </app-filtered-select>
-      </mat-form-field>
-    </div>
+
+    <mat-form-field appearance="outline" class="form-field-width">
+      <mat-label>Sampleset...</mat-label>
+      <app-filtered-select
+        formControlName="sampleset"
+        [options]="samplesets"
+        [selectedOption]="initialSampleset"
+      >
+      </app-filtered-select>
+    </mat-form-field>
 
     <!--Tag Descriptions Column-->
-    <mat-form-field style="width:400px" appearance="outline">
+    <mat-form-field appearance="outline" class="form-field-width">
       <mat-label>Tag Descriptions</mat-label>
       <mat-chip-list #tagDescriptionList>
         <mat-chip

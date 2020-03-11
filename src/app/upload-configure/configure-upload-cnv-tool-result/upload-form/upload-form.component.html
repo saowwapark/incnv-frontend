@@ -26,7 +26,7 @@
 
       <!--upload file Column-->
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="form-field-width">
           <mat-label>Upload File...</mat-label>
           <input formControlName="fileName" matInput readonly="true" />
 
@@ -40,7 +40,7 @@
 
       <!--fileInfo-->
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="form-field-width">
           <mat-label>File Info...</mat-label>
           <input fxFlex formControlName="fileInfo" matInput />
           <mat-error *ngIf="form.get('fileInfo').hasError('required')"
@@ -49,7 +49,7 @@
         </mat-form-field>
       </div>
       <!--cnvToolName Column-->
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="form-field-width">
         <mat-label>CNV Tool Name...</mat-label>
         <input fxFlex formControlName="cnvToolName" matInput />
         <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
@@ -58,7 +58,7 @@
       </mat-form-field>
       <!--tabFileMapping Id Column-->
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="form-field-width">
           <mat-label>File Mapping...</mat-label>
           <app-filtered-select
             formControlName="tabFileMapping"
@@ -70,7 +70,7 @@
 
       <!--sampleset Column-->
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="form-field-width">
           <mat-label>Sampleset...</mat-label>
           <app-filtered-select
             formControlName="sampleset"
@@ -88,7 +88,7 @@
 
       <!--Tag Descriptions Column-->
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="form-field-width">
           <mat-label>Tag Description ...</mat-label>
           <mat-chip-list #tagDescriptionList>
             <mat-chip

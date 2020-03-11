@@ -8,9 +8,14 @@
 </mat-toolbar>
 
 <div mat-dialog-content>
-  <form [formGroup]="form" fxLayout="column" fxLayoutAlign="start start">
+  <form
+    [formGroup]="form"
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="10px"
+  >
     <!--Sampleset Name Column-->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="form-field-width">
       <mat-label>Set Name</mat-label>
       <input
         fxFlex
@@ -20,7 +25,7 @@
       />
     </mat-form-field>
     <!--Description Column-->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="form-field-width">
       <mat-label>Description</mat-label>
       <input
         fxFlex
@@ -30,7 +35,7 @@
       />
     </mat-form-field>
     <!--Samples Column-->
-    <mat-form-field style="width:400px" appearance="outline">
+    <mat-form-field appearance="outline" class="form-field-width">
       <mat-label>Sample Name</mat-label>
       <mat-chip-list #sampleList>
         <mat-chip
