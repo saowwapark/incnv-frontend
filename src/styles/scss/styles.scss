@@ -15,14 +15,16 @@
 @import '../scss/layout/container';
 
 @import '../scss/pages/home';
-@import '../scss/components/dialog';
+
+@import '../scss/components/button';
 @import '../scss/components/card';
+@import '../scss/components/dialog';
+@import '../scss/components/grid';
+@import '../scss/components/icon';
 @import '../scss/components/search';
+@import '../scss/components/spinner';
 @import '../scss/components/table';
 @import '../scss/components/top-menu';
-@import '../scss/components/grid';
-@import '../scss/components/spinner';
-@import '../scss/components/icon';
 
 // input.ng-invalid.ng-touched, select.ng-invalid.ng-touched {
 //   border: 1px solid red
