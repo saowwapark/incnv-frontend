@@ -1,12 +1,10 @@
-import { map, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import {
   Component,
   OnInit,
   Input,
   OnChanges,
   SimpleChanges,
-  ElementRef,
-  ViewChild,
   OnDestroy
 } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
@@ -21,8 +19,7 @@ import { Subject } from 'rxjs';
 export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
   @Input() samples: string[];
 
-  @ViewChild('selectAllCheckbox', { static: true })
-  selectAllCheckbox: ElementRef;
+  isCheckedSelectAll: boolean;
   parentForm: FormGroup;
 
   // private
@@ -33,7 +30,7 @@ export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
     private service: MultipleConfigureService
   ) {
     this._unsubscribeAll = new Subject();
-
+    this.isCheckedSelectAll = false;
     this.parentForm = this.fb.group({
       sampleFormArray: this.fb.array([this.newSample(), this.newSample()])
     });
@@ -86,6 +83,7 @@ export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
         if (!selectedSamples || selectedSamples.length === 0) {
           // clear value
           this.resetSampleFormArray();
+          this.isCheckedSelectAll = false;
         } else {
           this.sampleFormArray.clear();
           for (let i = 0; i < selectedSamples.length; i++) {
