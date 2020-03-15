@@ -126,6 +126,7 @@
               <mat-panel-title>All Merged CNVs</mat-panel-title>
             </mat-expansion-panel-header>
             <app-merged-table
+              [analysisType]="'multipleSamples'"
               [cnvInfos]="mergedTool.cnvInfos"
             ></app-merged-table>
           </mat-expansion-panel>
@@ -147,7 +148,9 @@
             <mat-expansion-panel-header>
               <mat-panel-title>Selected CNVs</mat-panel-title>
             </mat-expansion-panel-header>
-            <app-selected-cnv></app-selected-cnv>
+            <app-selected-cnv
+              [analysisType]="'multipleSamples'"
+            ></app-selected-cnv>
           </mat-expansion-panel>
         </mat-accordion>
       </div>

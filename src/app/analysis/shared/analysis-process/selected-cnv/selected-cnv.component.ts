@@ -88,7 +88,6 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
         'cnvType',
         'overlappingNumbers',
         'samples',
-        'edit',
         'delete'
       ];
     }

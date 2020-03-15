@@ -21,19 +21,19 @@ table {
   @include table-column(5%);
 }
 .mat-column-chromosome {
-  @include table-column(10%);
+  @include table-column(4%);
 }
 .mat-column-startBp {
-  @include table-column(15%);
+  @include table-column(10%);
 }
 .mat-column-endBp {
-  @include table-column(15%);
+  @include table-column(10%);
 }
 .mat-column-cnvType {
-  @include table-column(10%);
+  @include table-column(6%);
 }
 .mat-column-overlappingNumbers {
-  @include table-column(10%);
+  @include table-column(9%);
 }
 // table will choose one between cnvTools and samples
 .mat-column-cnvTools {

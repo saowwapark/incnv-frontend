@@ -116,6 +116,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
     this.dataSource.data = this.cnvInfos;
     if (this.analysisType === 'multipleSamples') {
       this.displayedColumns = [
+        'select',
         'no',
         'chromosome',
         'startBp',
