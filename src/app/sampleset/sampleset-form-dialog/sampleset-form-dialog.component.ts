@@ -17,6 +17,7 @@ export class SamplesetFormDialogComponent implements OnInit {
   action: number;
   form: FormGroup;
   dialogTitle: string;
+  buttonName: string;
 
   // mat-chip
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
@@ -32,10 +33,12 @@ export class SamplesetFormDialogComponent implements OnInit {
     switch (action) {
       case DialogAction.New:
         this.dialogTitle = 'New Sample Set';
+        this.buttonName = 'ADD';
         break;
 
       case DialogAction.Edit:
         this.dialogTitle = 'Edit Sample Set';
+        this.buttonName = 'SAVE';
         break;
     }
   }
