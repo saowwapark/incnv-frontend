@@ -38,7 +38,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({
         next: () => {
-          this._router.navigate(['/configurefile']);
+          this._router.navigate(['/individual-sample']);
         },
         error: () => {
           console.log('cannot signup');
