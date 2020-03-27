@@ -123,14 +123,6 @@
               (selectChrRegion)="selectChrRegion($event)"
             ></app-overview-chart>
           </mat-expansion-panel>
-          <mat-expansion-panel [expanded]="false">
-            <mat-expansion-panel-header>
-              <mat-panel-title>All Merged CNVs</mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-merged-table
-              [cnvInfos]="mergedTool.cnvInfos"
-            ></app-merged-table>
-          </mat-expansion-panel>
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Main Chart</mat-panel-title>
@@ -144,6 +136,14 @@
               [selectedChrRegion]="selectedChrRegion"
             >
             </app-main-chart>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>All Merged CNVs</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-merged-table
+              [cnvInfos]="mergedTool.cnvInfos"
+            ></app-merged-table>
           </mat-expansion-panel>
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
