@@ -45,7 +45,7 @@ export class ChooseSamplesetComponent implements OnInit, OnChanges {
   @Input() selectedSampleset: Sampleset;
   @Output() selectedSamplesetChange = new EventEmitter<Sampleset>();
 
-  dataSource: MatTableDataSource<Sampleset[]>;
+  dataSource: MatTableDataSource<Sampleset>;
 
   displayedColumns = ['select', 'samplesetName', 'description'];
   expandedElement: string | null;
@@ -53,6 +53,7 @@ export class ChooseSamplesetComponent implements OnInit, OnChanges {
   constructor(private activateRoute: ActivatedRoute) {}
 
   ngOnChanges() {}
+
   ngOnInit() {
     const samplesets = this.activateRoute.snapshot.data['samplesets'];
     this.dataSource = new MatTableDataSource(samplesets);

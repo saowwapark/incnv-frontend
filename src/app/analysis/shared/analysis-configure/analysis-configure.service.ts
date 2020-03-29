@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
-import { Sampleset } from 'src/app/sampleset/sampleset.model';
+import { Observable } from 'rxjs';
 import { ConstantsService } from 'src/app/shared/services/constants.service';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';

@@ -57,7 +57,7 @@ export class AuthenService {
         const token = authenRes.token;
         const expiresInDuration = authenRes.expiresIn;
         const authData = this.createAuthData(token, expiresInDuration);
-        this.saveAuthData(authData.token, authData.expirationDate);
+        this.saveAuthData(email, authData.token, authData.expirationDate);
         this.token = token;
         this.isAuthenSubject.next(true);
       })
@@ -96,12 +96,14 @@ export class AuthenService {
     }, duration * 1000);
   }
 
-  private saveAuthData(token: string, expirationDate: Date) {
+  private saveAuthData(email: string, token: string, expirationDate: Date) {
+    localStorage.setItem('email', email);
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
   }
 
   private clearAuthData() {
+    localStorage.removeItem('email');
     localStorage.removeItem('token');
     localStorage.removeItem('expiration');
   }
