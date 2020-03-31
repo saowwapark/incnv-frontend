@@ -1,7 +1,6 @@
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 export const MERGED_RESULT_NAME = 'merged CNV';
 export const FINAL_RESULT_NAME = 'final CNV';
-export const SELECTED_CNV_ID = 'selected CNV';
 
 export class IndividualSampleConfig {
   referenceGenome?: string;

@@ -1,9 +1,4 @@
-import {
-  RegionBp,
-  CnvInfo,
-  MERGED_RESULT_NAME,
-  SELECTED_CNV_ID
-} from '../../../analysis.model';
+import { RegionBp, CnvInfo, MERGED_RESULT_NAME } from '../../../analysis.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import {
