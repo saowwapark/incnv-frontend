@@ -45,7 +45,7 @@ export class AnnotationDialogComponent implements OnInit {
     this.dialogTitle = title;
     this.cnvInfo = cnvInfo;
 
-    if (title === MERGED_RESULT_NAME || title === SELECTED_CNV_ID) {
+    if (title === MERGED_RESULT_NAME) {
       this.isSelectable = true;
     } else {
       this.isSelectable = false;
