@@ -14,7 +14,7 @@
     >
       <!--reference genome-->
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <mat-label>Reference Genome: </mat-label>
+        <mat-label>REFERENCE GENOME: </mat-label>
         <mat-radio-group formControlName="referenceGenome">
           <mat-radio-button value="grch37">GRCh37/hg19</mat-radio-button>
 
@@ -27,7 +27,7 @@
       <!--upload file Column-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>Upload File...</mat-label>
+          <mat-label>UPLOAD FILE...</mat-label>
           <input formControlName="fileName" matInput readonly="true" />
 
           <mat-icon matSuffix color="accent" (click)="filePicker.click()"
@@ -41,7 +41,7 @@
       <!--fileInfo-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>File Info...</mat-label>
+          <mat-label>FILE INFO...</mat-label>
           <input fxFlex formControlName="fileInfo" matInput />
           <mat-error *ngIf="form.get('fileInfo').hasError('required')"
             >required</mat-error
@@ -50,7 +50,7 @@
       </div>
       <!--cnvToolName Column-->
       <mat-form-field appearance="outline" class="form-field-width">
-        <mat-label>CNV Tool Name...</mat-label>
+        <mat-label>CNV TOOL NAME...</mat-label>
         <input fxFlex formControlName="cnvToolName" matInput />
         <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
           >required</mat-error
@@ -59,7 +59,7 @@
       <!--tabFileMapping Id Column-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>File Mapping...</mat-label>
+          <mat-label>FILE MAPPING...</mat-label>
           <app-filtered-select
             formControlName="tabFileMapping"
             [options]="tabFileMappings"
@@ -71,7 +71,7 @@
       <!--sampleset Column-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>Sampleset...</mat-label>
+          <mat-label>SAMPLE SET...</mat-label>
           <app-filtered-select
             formControlName="sampleset"
             [options]="samplesets"
@@ -89,7 +89,7 @@
       <!--Tag Descriptions Column-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>Tag Description ...</mat-label>
+          <mat-label>TAG DESCRIPTION ...</mat-label>
           <mat-chip-list #tagDescriptionList>
             <mat-chip
               color="accent"

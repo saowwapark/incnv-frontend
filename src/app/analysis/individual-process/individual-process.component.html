@@ -21,6 +21,7 @@
     <ng-template #loadingSuccess>
       <div class="layout__content-items" fxLayout="column" fxLayoutGap="32px">
         <mat-accordion [multi]="true">
+          <!-- Overview Configuration -->
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Overview Configuration</mat-panel-title>
@@ -63,10 +64,10 @@
                 </div>
               </div>
 
-              <!-- Choose File -->
+              <!-- Uploaded CNV Results -->
               <div fxLayout="row wrap" class="indent">
                 <div class="property property-name" fxFlex="1 1 20%">
-                  Files:
+                  Uploaded CNV Results:
                 </div>
                 <div
                   class="property property-value"
@@ -110,6 +111,7 @@
               </div>
             </div>
           </mat-expansion-panel>
+          <!-- Overview Chart -->
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Overview Chart</mat-panel-title>
@@ -123,6 +125,16 @@
               (selectChrRegion)="selectChrRegion($event)"
             ></app-overview-chart>
           </mat-expansion-panel>
+          <!-- All Merged CNVs-->
+          <mat-expansion-panel [expanded]="false">
+            <mat-expansion-panel-header>
+              <mat-panel-title>All Merged CNVs</mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-merged-table
+              [cnvInfos]="mergedTool.cnvInfos"
+            ></app-merged-table>
+          </mat-expansion-panel>
+          <!-- Main Chart-->
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Main Chart</mat-panel-title>
@@ -137,14 +149,7 @@
             >
             </app-main-chart>
           </mat-expansion-panel>
-          <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-              <mat-panel-title>All Merged CNVs</mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-merged-table
-              [cnvInfos]="mergedTool.cnvInfos"
-            ></app-merged-table>
-          </mat-expansion-panel>
+          <!-- Selected CNVs-->
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Selected CNVs</mat-panel-title>

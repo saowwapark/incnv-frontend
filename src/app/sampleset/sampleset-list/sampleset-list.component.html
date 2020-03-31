@@ -21,7 +21,7 @@
 
   <!-- Sampleset Name Column -->
   <ng-container matColumnDef="samplesetName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Sample Set</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Set name</th>
     <td mat-cell *matCellDef="let sampleset">
       {{ sampleset.samplesetName }}
     </td>
@@ -80,7 +80,7 @@
       >
         <div class="expand-row">
           <div class="expand-detail--header">
-            Samples:
+            Sample Names:
           </div>
           <mat-chip-list>
             <mat-chip

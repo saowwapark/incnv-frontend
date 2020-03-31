@@ -55,7 +55,7 @@
             </button>
           </div>
         </mat-step>
-        <mat-step label="Choose Samples">
+        <mat-step label="Choose Sample Names">
           <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
             <app-choose-many-sample [samples]="chosenSampleset.samples">
             </app-choose-many-sample>
@@ -73,7 +73,7 @@
             </div>
           </div>
         </mat-step>
-        <mat-step label="Choose File">
+        <mat-step label="Choose Uploaded CNV Results">
           <div fxLayout="column" fxLayoutGap="20px" class="step__content-item">
             <app-choose-one-file
               class="step__content-item"
@@ -173,7 +173,7 @@
               <!-- Sample -->
               <div class="property-row" fxLayout="row wrap">
                 <div class="property property-name" fxFlex="1 1 30%">
-                  Sample
+                  Sample Names
                 </div>
                 <div
                   *ngIf="chosenSamples"
@@ -187,7 +187,7 @@
               <!-- Choose File -->
               <div class="property-row" fxLayout="row wrap">
                 <div class="property property-name" fxFlex="1 1 30%">
-                  Files
+                  Uploaded CNV Results
                 </div>
                 <div
                   *ngIf="chosenFile"

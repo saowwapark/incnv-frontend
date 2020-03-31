@@ -14,12 +14,12 @@
       <div class="name-wrapper" style="padding-top:7px; padding-bottom: 10px">
         <div fxLayout="column" fxLayoutAlign="center stretch">
           <mat-form-field appearance="outline" class="width--full">
-            <mat-label>File Mapping Name</mat-label>
+            <mat-label>FILE MAPPING NAME</mat-label>
             <input
               fxFlex
               formControlName="tabFileMappingName"
               matInput
-              placeholder="CODEX"
+              placeholder="CONTRA"
             />
           </mat-form-field>
         </div>
@@ -36,16 +36,16 @@
           fxLayoutAlign="start start"
         >
           <mat-form-field appearance="outline" class="width--15">
-            <mat-label>Sample Name</mat-label>
+            <mat-label>SAMPLE NAME</mat-label>
             <input
               fxFlex
               formControlName="sample"
               matInput
-              placeholder="sample_name"
+              placeholder="sample"
             />
           </mat-form-field>
           <mat-form-field appearance="outline" class="width--15"
-            ><mat-label>Chromosome</mat-label>
+            ><mat-label>CHROMOSOME</mat-label>
             <input
               fxFlex
               formControlName="chromosome"
@@ -54,26 +54,25 @@
             />
           </mat-form-field>
           <mat-form-field appearance="outline" class="width--15">
-            <mat-label>Start Basepair</mat-label>
+            <mat-label>START BASE PAIR</mat-label>
             <input
               fxFlex
               formControlName="startBp"
               matInput
-              placeholder="st_bp"
+              placeholder="start"
             />
           </mat-form-field>
           <mat-form-field appearance="outline" class="width--15">
-            <mat-label>End Basepair</mat-label>
+            <mat-label>END BASE PAIR</mat-label>
+            <input fxFlex formControlName="endBp" matInput placeholder="end" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="width--15">
+            <mat-label>CNV TYPE</mat-label>
             <input
               fxFlex
-              formControlName="endBp"
+              formControlName="cnvType"
               matInput
-              placeholder="ed_bp"
-            />
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="width--15">
-            <mat-label>CNV Type</mat-label>
-            <input fxFlex formControlName="cnvType" matInput placeholder="cnv"
+              placeholder="cnv_type"
           /></mat-form-field>
         </div>
       </div>
@@ -87,16 +86,16 @@
           fxLayoutAlign="start start"
         >
           <mat-form-field appearance="outline" class="width--15">
-            <mat-label>Chromosome22</mat-label>
+            <mat-label>CHROMOSOME22</mat-label>
             <input
               fxFlex
               formControlName="chromosome22"
               matInput
-              placeholder="chr22"
+              placeholder="22"
             />
           </mat-form-field>
           <mat-form-field appearance="outline" class="width--15"
-            ><mat-label>Duplication</mat-label
+            ><mat-label>DUPLICATION</mat-label
             ><input
               fxFlex
               formControlName="duplication"
@@ -105,7 +104,7 @@
             />
           </mat-form-field>
           <mat-form-field appearance="outline" class="width--15">
-            <mat-label>Deletion</mat-label>
+            <mat-label>DELETION</mat-label>
             <input
               fxFlex
               formControlName="deletion"
