@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 import {
   CnvInfo,
   Y_AXIS_FONT_SIZE,
-  X_AXIS_FONT_SIZE
+  X_AXIS_FONT_SIZE,
+  TICK_WIDTH
 } from '../../../analysis.model';
 
 export class OverviewChart {
@@ -123,6 +124,12 @@ export class OverviewChart {
       .attr('transform', `translate(0, ${this.graphContainer.attr('height')})`);
     // generate xAxis
     this.xAxis = d3.axisBottom(this.scaleX);
+
+    const tickCount = Math.floor(
+      this.graphContainer.attr('width') / TICK_WIDTH
+    );
+    this.xAxis.ticks(tickCount);
+
     xAxisGroup
       .call(this.xAxis)
       .selectAll('text')
@@ -217,10 +224,16 @@ export class OverviewChart {
         (d: CnvInfo) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
       );
 
+    const newXAxis = d3.axisBottom(this.scaleX);
+    const tickCount = Math.floor(
+      this.graphContainer.attr('width') / TICK_WIDTH
+    );
+    newXAxis.ticks(tickCount);
+
     // create new xAxis with new scaleX
     this.graphContainer
       .selectAll('.overview .x-axis')
-      .call(d3.axisBottom(this.scaleX))
+      .call(newXAxis)
       .selectAll('text')
       .style('font-size', X_AXIS_FONT_SIZE);
     // return scaleX;

@@ -1,3 +1,4 @@
+import { TICK_WIDTH } from './../../../analysis.model';
 import * as d3 from 'd3';
 import {
   DgvVariant,
@@ -119,6 +120,11 @@ export class DgvChart {
     // generate xAxis
     const xAxis = d3.axisTop(this.scaleX);
     // .tickFormat(d3.format('.4s'));
+    const tickCount = Math.floor(
+      this.graphContainer.attr('width') / TICK_WIDTH
+    );
+    xAxis.ticks(tickCount);
+
     xAxisGroup
       .call(xAxis)
       .selectAll('text')
@@ -206,7 +212,7 @@ export class DgvChart {
           .duration(300)
           .attr('fill', '#444444')
           .attr('stroke-opacity', '1')
-          .style('cursor', 'pointer');
+          .style('cursor', 'default');
       })
       .on('mouseout', (d: DgvVariant, i, n) => {
         // subbar

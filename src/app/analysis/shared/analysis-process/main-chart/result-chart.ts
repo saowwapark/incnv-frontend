@@ -3,7 +3,8 @@ import {
   CnvGroup,
   CnvInfo,
   Y_AXIS_FONT_SIZE,
-  X_AXIS_FONT_SIZE
+  X_AXIS_FONT_SIZE,
+  TICK_WIDTH
 } from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
 import { filterDataInRegion } from './../visualizeBp.utility';
@@ -123,6 +124,11 @@ export class MergedChart {
     // generate xAxis
     const xAxis = d3.axisTop(this.scaleX);
     // .tickFormat(d3.format('.4s'));
+    const tickCount = Math.floor(
+      this.graphContainer.attr('width') / TICK_WIDTH
+    );
+    xAxis.ticks(tickCount);
+
     xAxisGroup
       .call(xAxis)
       .selectAll('text')
