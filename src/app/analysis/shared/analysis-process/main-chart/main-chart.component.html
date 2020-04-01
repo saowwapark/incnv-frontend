@@ -23,18 +23,33 @@
           <div>
             <mat-form-field appearance="legacy" style="width: 170px">
               <mat-label>START BASE PAIR</mat-label
-              ><input matInput [value]="selectedChrRegion.startBp | number" />
+              ><input
+                #startBpInput
+                matInput
+                [textMask]="{ mask: numberMark }"
+                [value]="selectedChrRegion.startBp | number"
+              />
             </mat-form-field>
           </div>
           <div class="property" style="align-self: center">to</div>
           <div>
             <mat-form-field appearance="legacy" style="width: 170px">
               <mat-label>END BASE PAIR</mat-label
-              ><input matInput [value]="selectedChrRegion.endBp | number" />
+              ><input
+                #endBpInput
+                matInput
+                [textMask]="{ mask: numberMark }"
+                [value]="selectedChrRegion.endBp | number"
+              />
             </mat-form-field>
           </div>
 
-          <button mat-mini-fab color="accent" style="align-self: center">
+          <button
+            mat-mini-fab
+            color="accent"
+            style="align-self: center"
+            (click)="updateSelectedBp(startBpInput.value, endBpInput.value)"
+          >
             Go
           </button>
         </div>

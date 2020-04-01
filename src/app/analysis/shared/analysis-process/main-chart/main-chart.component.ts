@@ -1,3 +1,4 @@
+import createNumberMask from '../../../../../../node_modules/text-mask-addons/dist/createNumberMask';
 import { chrGrch37 } from './../../../analysis-result/human_chr';
 import { takeUntil, tap } from 'rxjs/operators';
 import { DgvChart } from './dgv-chart';
@@ -33,6 +34,7 @@ import {
 } from 'src/app/analysis/analysis.model';
 import { AnnotationDialogComponent } from '../annotation-dialog/annotation-dialog.component';
 import { Subject, concat } from 'rxjs';
+import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-main-chart',
@@ -87,17 +89,12 @@ export class MainChartComponent
   finalResultData: CnvGroup;
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
 
+  numberMark;
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     // const chartWidth = event.target.innerWidth;
 
-    this.createDgvChart();
-
-    this.createComparedChart();
-
-    this.createMergedChart();
-
-    this.createFinalResultChart();
+    this.createAllCharts();
   }
 
   /**
@@ -113,6 +110,14 @@ export class MainChartComponent
     this.finalResultData.cnvInfos = [];
 
     this._unsubscribeAll = new Subject();
+    this.numberMark = createNumberMask({
+      prefix: '',
+      suffix: '',
+      includeThousandsSeparator: true,
+      thousandsSeparatorSymbol: ',',
+      allowDecimal: false,
+      allowNegative: false
+    });
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.comparedData || !this.mergedData) {
@@ -123,10 +128,7 @@ export class MainChartComponent
       if (changes.hasOwnProperty(propName)) {
         switch (propName) {
           case 'selectedChrRegion':
-            this.createDgvChart();
-            this.createComparedChart();
-            this.createMergedChart();
-            this.createFinalResultChart();
+            this.createAllCharts();
 
             break;
         }
@@ -358,5 +360,37 @@ export class MainChartComponent
       }
     }
     return index;
+  }
+
+  updateSelectedBp(startBp: string, endBp: string) {
+    const startBpNumber = Number(startBp.replace(/\D/g, ''));
+    const endBpNumber = Number(endBp.replace(/\D/g, ''));
+
+    if (endBpNumber < startBpNumber) {
+      // error
+      const errorMessage =
+        'End base pair has to be greater than start base pair.';
+      this.openErrorDialog(errorMessage);
+    } else {
+      this.selectedChrRegion.startBp = startBpNumber;
+      this.selectedChrRegion.endBp = endBpNumber;
+      this.createAllCharts();
+    }
+  }
+  openErrorDialog(errorMessage: string) {
+    this._matDialog.open(ErrorDialogComponent, {
+      panelClass: 'dialog-warning',
+      disableClose: false,
+      data: {
+        errorMessage: errorMessage
+      }
+    });
+  }
+
+  createAllCharts() {
+    this.createDgvChart();
+    this.createComparedChart();
+    this.createMergedChart();
+    this.createFinalResultChart();
   }
 }
