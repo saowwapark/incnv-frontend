@@ -28,7 +28,8 @@ import {
   CnvGroup,
   RegionBp,
   CnvInfo,
-  FINAL_RESULT_NAME
+  SELECTED_RESULT_NAME,
+  MERGED_RESULT_NAME
 } from 'src/app/analysis/analysis.model';
 import { AnnotationDialogComponent } from '../annotation-dialog/annotation-dialog.component';
 import { Subject, concat } from 'rxjs';
@@ -108,7 +109,7 @@ export class MainChartComponent
     private service: AnalysisProcessService
   ) {
     this.finalResultData = new CnvGroup();
-    this.finalResultData.cnvGroupName = FINAL_RESULT_NAME;
+    this.finalResultData.cnvGroupName = SELECTED_RESULT_NAME;
     this.finalResultData.cnvInfos = [];
 
     this._unsubscribeAll = new Subject();
@@ -277,7 +278,7 @@ export class MainChartComponent
       [this.mergedData],
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      [this.mergedData.cnvGroupName],
+      [MERGED_RESULT_NAME],
       maxOverlap,
       this.mergedChartColor
     );
@@ -292,7 +293,7 @@ export class MainChartComponent
         selectedCnvRegions.push(selectedCnvRegion);
       }
 
-      this.createDialog(cnvGroupName, data);
+      this.createDialog(MERGED_RESULT_NAME, data);
     });
   }
 
@@ -310,7 +311,7 @@ export class MainChartComponent
       [this.finalResultData],
       this.containerMargin,
       [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      [FINAL_RESULT_NAME],
+      [SELECTED_RESULT_NAME],
       maxOverlap,
       this.finalChartColor
     );

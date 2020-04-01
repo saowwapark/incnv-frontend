@@ -1,5 +1,9 @@
 import * as d3 from 'd3';
-import { DgvVariant } from 'src/app/analysis/analysis.model';
+import {
+  DgvVariant,
+  X_AXIS_FONT_SIZE,
+  Y_AXIS_FONT_SIZE
+} from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
 import { filterDataInRegion } from '../visualizeBp.utility';
 
@@ -115,7 +119,10 @@ export class DgvChart {
     // generate xAxis
     const xAxis = d3.axisTop(this.scaleX);
     // .tickFormat(d3.format('.4s'));
-    xAxisGroup.call(xAxis);
+    xAxisGroup
+      .call(xAxis)
+      .selectAll('text')
+      .style('font-size', X_AXIS_FONT_SIZE);
   }
 
   private generateAxisY() {
@@ -123,7 +130,10 @@ export class DgvChart {
 
     // generate yAxis
     const yAxis = d3.axisLeft(this.scaleY);
-    yAxisGroup.call(yAxis);
+    yAxisGroup
+      .call(yAxis)
+      .selectAll('text')
+      .style('font-size', Y_AXIS_FONT_SIZE);
   }
 
   public drawData() {

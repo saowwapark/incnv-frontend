@@ -1,4 +1,4 @@
-import { DgvVariant } from './../analysis.model';
+import { DgvVariant, CHRACTER_WIDTH } from './../analysis.model';
 import { Subject, BehaviorSubject, forkJoin, throwError } from 'rxjs';
 
 import {
@@ -7,7 +7,7 @@ import {
   CnvGroup,
   IndividualSampleConfig,
   MERGED_RESULT_NAME,
-  FINAL_RESULT_NAME
+  SELECTED_RESULT_NAME
 } from '../analysis.model';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 
@@ -118,14 +118,14 @@ export class IndividualProcessComponent
     maxLength = Math.max(
       maxLength,
       MERGED_RESULT_NAME.length,
-      FINAL_RESULT_NAME.length
+      SELECTED_RESULT_NAME.length
     );
     // create margins and dimensions
     const containerMargin = {
       top: 40,
       right: 40,
       bottom: 30,
-      left: 10 + 6 * maxLength
+      left: 10 + CHRACTER_WIDTH * maxLength
     };
     return containerMargin;
   }

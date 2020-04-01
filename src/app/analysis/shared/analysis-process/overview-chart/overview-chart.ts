@@ -1,5 +1,9 @@
 import * as d3 from 'd3';
-import { CnvInfo } from '../../../analysis.model';
+import {
+  CnvInfo,
+  Y_AXIS_FONT_SIZE,
+  X_AXIS_FONT_SIZE
+} from '../../../analysis.model';
 
 export class OverviewChart {
   _parentElement; // string
@@ -119,7 +123,10 @@ export class OverviewChart {
       .attr('transform', `translate(0, ${this.graphContainer.attr('height')})`);
     // generate xAxis
     this.xAxis = d3.axisBottom(this.scaleX);
-    xAxisGroup.call(this.xAxis);
+    xAxisGroup
+      .call(this.xAxis)
+      .selectAll('text')
+      .style('font-size', X_AXIS_FONT_SIZE);
   }
 
   private createAxisY() {
@@ -135,7 +142,10 @@ export class OverviewChart {
       .tickFormat((d: number) => {
         return `${d3.format(',d')(d)} ${this._yAxisUnit}`;
       });
-    yAxisGroup.call(this.yAxis);
+    yAxisGroup
+      .call(this.yAxis)
+      .selectAll('text')
+      .style('font-size', Y_AXIS_FONT_SIZE);
   }
 
   private createBars() {
@@ -210,7 +220,9 @@ export class OverviewChart {
     // create new xAxis with new scaleX
     this.graphContainer
       .selectAll('.overview .x-axis')
-      .call(d3.axisBottom(this.scaleX));
+      .call(d3.axisBottom(this.scaleX))
+      .selectAll('text')
+      .style('font-size', X_AXIS_FONT_SIZE);
     // return scaleX;
   }
 

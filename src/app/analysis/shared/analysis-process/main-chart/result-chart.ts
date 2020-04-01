@@ -1,5 +1,10 @@
 import * as d3 from 'd3';
-import { CnvGroup, CnvInfo } from 'src/app/analysis/analysis.model';
+import {
+  CnvGroup,
+  CnvInfo,
+  Y_AXIS_FONT_SIZE,
+  X_AXIS_FONT_SIZE
+} from 'src/app/analysis/analysis.model';
 import { formatNumberWithComma } from 'src/app/utils/map.utils';
 import { filterDataInRegion } from './../visualizeBp.utility';
 
@@ -118,7 +123,10 @@ export class MergedChart {
     // generate xAxis
     const xAxis = d3.axisTop(this.scaleX);
     // .tickFormat(d3.format('.4s'));
-    xAxisGroup.call(xAxis);
+    xAxisGroup
+      .call(xAxis)
+      .selectAll('text')
+      .style('font-size', X_AXIS_FONT_SIZE);
   }
 
   private generateAxisY() {
@@ -126,7 +134,10 @@ export class MergedChart {
 
     // generate yAxis
     const yAxis = d3.axisLeft(this.scaleY);
-    yAxisGroup.call(yAxis);
+    yAxisGroup
+      .call(yAxis)
+      .selectAll('text')
+      .style('font-size', Y_AXIS_FONT_SIZE);
   }
 
   // private createMergedColorScale(color: string) {

@@ -1,6 +1,6 @@
 import {
   MERGED_RESULT_NAME,
-  FINAL_RESULT_NAME,
+  SELECTED_RESULT_NAME,
   DgvVariant
 } from './../analysis.model';
 import {
@@ -109,7 +109,7 @@ export class MultipleProcessComponent
     maxLength = Math.max(
       maxLength,
       MERGED_RESULT_NAME.length,
-      FINAL_RESULT_NAME.length
+      SELECTED_RESULT_NAME.length
     );
     // create margins and dimensions
     const containerMargin = {
