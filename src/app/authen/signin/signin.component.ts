@@ -10,21 +10,11 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss']
 })
-export class SigninComponent implements OnInit, OnDestroy {
-  loginForm: FormGroup;
+export class SigninComponent implements OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(private _authService: AuthenService, private _router: Router) {
     this._unsubscribeAll = new Subject();
-  }
-
-  ngOnInit() {
-    this.loginForm = new FormGroup({
-      username: new FormControl('', {
-        validators: [Validators.required]
-      }),
-      password: new FormControl('', { validators: [Validators.required] })
-    });
   }
 
   onLogin(form: NgForm) {

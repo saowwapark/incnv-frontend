@@ -23,7 +23,7 @@
                 <input
                   matInput
                   placeholder="Your Email"
-                  ngModel
+                  [ngModel]="'incnv-demo@mail.com'"
                   name="email"
                   required
                   email
@@ -44,7 +44,7 @@
                   type="password"
                   matInput
                   placeholder="Your password"
-                  ngModel
+                  [ngModel]="'123456'"
                   name="password"
                   required
                   minlength="6"
