@@ -125,7 +125,7 @@ export class IndividualProcessComponent
       top: 40,
       right: 10,
       bottom: 30,
-      left: CHRACTER_WIDTH * maxLength
+      left: 10 + CHRACTER_WIDTH * maxLength
     };
     return containerMargin;
   }

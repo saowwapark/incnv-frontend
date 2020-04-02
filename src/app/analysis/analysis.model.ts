@@ -3,7 +3,7 @@ export const MERGED_RESULT_NAME = 'Merged CNVs';
 export const SELECTED_RESULT_NAME = 'Selected CNVs';
 export const Y_AXIS_FONT_SIZE = 14; // px
 export const X_AXIS_FONT_SIZE = 13; // px
-export const CHRACTER_WIDTH = 9; // px
+export const CHRACTER_WIDTH = 8.7; // px
 export const TICK_WIDTH = 140; // px
 
 export class IndividualSampleConfig {

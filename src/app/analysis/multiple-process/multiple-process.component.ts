@@ -1,7 +1,8 @@
 import {
   MERGED_RESULT_NAME,
   SELECTED_RESULT_NAME,
-  DgvVariant
+  DgvVariant,
+  CHRACTER_WIDTH
 } from './../analysis.model';
 import {
   CnvInfo,
@@ -116,7 +117,7 @@ export class MultipleProcessComponent
       top: 40,
       right: 40,
       bottom: 30,
-      left: 10 + 6 * maxLength
+      left: 10 + CHRACTER_WIDTH * maxLength
     };
     return containerMargin;
   }
