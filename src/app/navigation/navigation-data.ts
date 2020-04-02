@@ -35,10 +35,10 @@ export const navigationData: Navigation[] = [
         icon: 'dashboard',
         children: [
           {
-            id: 'configurefiles',
-            title: 'Configure Files',
+            id: 'uploadCnvResult',
+            title: 'Upload CNV result',
             type: 'item',
-            url: '/configurefile'
+            url: '/uploadCnvResult'
           },
           {
             id: 'myFiles',
