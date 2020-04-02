@@ -12,10 +12,6 @@
       fxLayout="row"
       fxLayoutAlign="space-between center"
     >
-      <!-- warnning message-->
-      <div class="property property-warn indent">
-        Please click on merged result chart to select CNVs.
-      </div>
       <!-- selected chromosome -->
       <div fxLayout="row" fxLayoutAlign=" center">
         <div class="property">Chromosome {{ chromosome }}:</div>
@@ -66,7 +62,8 @@
   <div *ngIf="selectedChrRegion && this.finalResultData.cnvInfos.length === 0">
     <div class="warning__container--not-show-data mat-elevation-z8">
       <div class="warning__item--not-show-data">
-        Selected CNVs
+        Please click on 'merged CNVs chart' or 'merged CNVs table' to select
+        CNVs.
       </div>
     </div>
   </div>
