@@ -58,7 +58,7 @@
 
               <div fxLayout="row" class="indent">
                 <div class="property property-name" fxFlex="1 1 20%">
-                  Sample Name:
+                  Sample Names:
                 </div>
                 <div class="property property-value" fxflex="1 1 80%">
                   {{ multipleConfig.samples.join(', ') }}
@@ -68,7 +68,7 @@
               <!-- Choose File -->
               <div fxLayout="row wrap" class="indent">
                 <div class="property property-name" fxFlex="1 1 20%">
-                  Upload CNV Results:
+                  Upload CNV Result:
                 </div>
                 <div
                   class="property property-value"
@@ -124,7 +124,7 @@
             ></app-overview-chart>
           </mat-expansion-panel>
           <!-- All Merged CNVs -->
-          <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel [expanded]="false">
             <mat-expansion-panel-header>
               <mat-panel-title>All Merged CNVs</mat-panel-title>
             </mat-expansion-panel-header>
@@ -134,7 +134,7 @@
             ></app-merged-table>
           </mat-expansion-panel>
           <!-- Main Chart -->
-          <mat-expansion-panel [expanded]="false">
+          <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Main Chart</mat-panel-title>
             </mat-expansion-panel-header>

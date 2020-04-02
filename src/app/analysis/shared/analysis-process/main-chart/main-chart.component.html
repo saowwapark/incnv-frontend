@@ -7,15 +7,11 @@
 </div>
 <div [style.height]="!selectedChrRegion ? '0px' : 'auto'">
   <div fxLayout="column">
-    <div
-      *ngIf="selectedChrRegion"
-      fxLayout="row"
-      fxLayoutAlign="space-between center"
-    >
+    <div *ngIf="selectedChrRegion" fxLayout="row" fxLayoutAlign="center center">
       <!-- selected chromosome -->
       <div fxLayout="row" fxLayoutAlign=" center">
         <div class="property">Chromosome {{ chromosome }}:</div>
-        <div fxLayout="row" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutGap="15px">
           <div>
             <mat-form-field appearance="legacy" style="width: 170px">
               <mat-label>START BASE PAIR</mat-label

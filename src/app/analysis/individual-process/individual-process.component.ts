@@ -123,9 +123,9 @@ export class IndividualProcessComponent
     // create margins and dimensions
     const containerMargin = {
       top: 40,
-      right: 40,
+      right: 10,
       bottom: 30,
-      left: 10 + CHRACTER_WIDTH * maxLength
+      left: CHRACTER_WIDTH * maxLength
     };
     return containerMargin;
   }

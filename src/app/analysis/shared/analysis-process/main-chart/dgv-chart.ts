@@ -53,7 +53,7 @@ export class DgvChart {
   private calContainerHeight(containerMargin) {
     const barNumber = 1;
     const xAxisBarHeight = 20;
-    const dataBarHeight = 30; // approximately with inner padding
+    const dataBarHeight = 20; // approximately with inner padding
     const innerPaddingHeight = 0.3 * dataBarHeight;
     const innerPaddingNumber = 0;
     const outterPaddingHeight = 0.2 * dataBarHeight;

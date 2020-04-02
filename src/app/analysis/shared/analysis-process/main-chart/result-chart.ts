@@ -58,7 +58,7 @@ export class MergedChart {
   private calContainerHeight(containerMargin) {
     const barNumber = this._data.length;
     const xAxisBarHeight = 20;
-    const dataBarHeight = 30; // approximately with inner padding
+    const dataBarHeight = 20; // approximately with inner padding
     const innerPaddingHeight = 0.3 * dataBarHeight;
     const innerPaddingNumber = barNumber === 0 ? 0 : barNumber - 1;
     const outterPaddingHeight = 0.2 * dataBarHeight;
