@@ -7,6 +7,7 @@ import {
 } from '@angular/material/dialog';
 
 import { Component, OnInit, Inject } from '@angular/core';
+import { deletionKeyValidator } from 'src/app/shared/directives/custom.validator';
 @Component({
   selector: 'tab-file-mapping-form',
   templateUrl: './tab-file-mapping-form-dialog.component.html',
@@ -79,7 +80,7 @@ export class TabFileMappingFormDialogComponent implements OnInit {
         ],
         deletion: [
           this.fileMappingConfigured.dataFieldMapping.deletion,
-          Validators.required
+          [Validators.required, deletionKeyValidator()]
         ]
       })
     });
@@ -126,7 +127,7 @@ export class TabFileMappingFormDialogComponent implements OnInit {
         ],
         deletion: [
           fileMappingConfigured.dataFieldMapping.deletion,
-          Validators.required
+          [Validators.required, deletionKeyValidator()]
         ]
       })
     });

@@ -72,3 +72,25 @@ export const duplicationValidator = (items: any[]): ValidatorFn => {
     }
   };
 };
+
+export const duplicationKeyValidator = (): ValidatorFn => {
+  return (c: FormControl) => {
+    const deletionKeys = ['dup', 'duplication', 'gain'];
+    if (!deletionKeys.includes(c.value)) {
+      return {
+        deletionKey: { valid: false }
+      };
+    }
+  };
+};
+
+export const deletionKeyValidator = (): ValidatorFn => {
+  return (c: FormControl) => {
+    const deletionKeys = ['del', 'deletion', 'loss'];
+    if (!deletionKeys.includes(c.value)) {
+      return {
+        deletionKey: { valid: false }
+      };
+    }
+  };
+};
