@@ -376,10 +376,15 @@
 
       <!-- Overlaps -->
       <ng-container matColumnDef="overlappingNumbers">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="header-right"
+        >
           Overlapping Numbers
         </th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell class="data-right" *matCellDef="let row">
           {{ row.overlaps.length }}
         </td>
       </ng-container>
