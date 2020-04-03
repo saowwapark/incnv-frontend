@@ -38,7 +38,7 @@ export const navigationData: Navigation[] = [
             id: 'uploadCnvResult',
             title: 'Upload CNV result',
             type: 'item',
-            url: '/uploadCnvResult'
+            url: '/upload-cnv-result'
           },
           {
             id: 'myFiles',

@@ -15,7 +15,7 @@ const appRoutes: Routes = [
     children: [
       { path: 'welcome', component: WelcomeComponent },
       {
-        path: 'uploadCnvResult',
+        path: 'upload-cnv-result',
         loadChildren: () =>
           import('./upload-configure/upload-configure.module').then(
             module => module.UploadConfigureModule
