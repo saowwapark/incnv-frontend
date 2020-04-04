@@ -9,7 +9,7 @@ export const navigationData: Navigation[] = [
     children: [
       {
         id: 'cnvtool',
-        title: 'CNVtool',
+        title: 'CNV Tool',
         type: 'collapsable',
         icon: 'dashboard',
         children: [
@@ -23,7 +23,7 @@ export const navigationData: Navigation[] = [
       },
       {
         id: 'sampleset',
-        title: 'Sampleset',
+        title: 'Sample Set',
         type: 'item',
         icon: 'shopping_cart',
         url: '/sampleset'
@@ -36,7 +36,7 @@ export const navigationData: Navigation[] = [
         children: [
           {
             id: 'uploadCnvResult',
-            title: 'Upload CNV result',
+            title: 'Upload CNV Result',
             type: 'item',
             url: '/upload-cnv-result'
           },
