@@ -102,6 +102,7 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
           this.dataSource.paginator.firstPage();
         }
       });
+    this.createCustomSort();
   }
 
   /**
@@ -137,6 +138,24 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
     } else {
       return [item.startBp, item.endBp];
     }
+  }
+
+  /************************* Sort Row **************************/
+  createCustomSort() {
+    this.dataSource.sortingDataAccessor = (item: CnvInfo, property) => {
+      // property = this.sortBy;
+      // console.log('item: '+JSON.stringify(item)+' '+' property: '+ property);
+      switch (property) {
+        case 'overlappingNumbers': {
+          return item.overlaps.length;
+        }
+
+        default: {
+          return item[property];
+        }
+      }
+    };
+    this.dataSource.sort = this.sort;
   }
 
   // editRow(cnvInfo: CnvInfo, index: number): void {
