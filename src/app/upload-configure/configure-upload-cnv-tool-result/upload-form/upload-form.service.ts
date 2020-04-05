@@ -22,7 +22,6 @@ export class UploadFormService {
     uploadCnvToolResult: UploadCnvToolResult,
     file: File
   ): Observable<number> {
-    console.log('addUpload');
     const formData = new FormData();
     formData.append('file', file);
     formData.append('uploadCnvToolResult', JSON.stringify(uploadCnvToolResult));
