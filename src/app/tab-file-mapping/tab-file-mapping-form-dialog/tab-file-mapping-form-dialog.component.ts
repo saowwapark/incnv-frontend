@@ -1,3 +1,4 @@
+import { duplicationKeyValidator } from './../../shared/directives/custom.validator';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TabFileMapping } from '../tab-file-mapping.model';
 import {
@@ -76,7 +77,7 @@ export class TabFileMappingFormDialogComponent implements OnInit {
         ],
         duplication: [
           this.fileMappingConfigured.dataFieldMapping.duplication,
-          Validators.required
+          [Validators.required, duplicationKeyValidator()]
         ],
         deletion: [
           this.fileMappingConfigured.dataFieldMapping.deletion,
@@ -123,7 +124,7 @@ export class TabFileMappingFormDialogComponent implements OnInit {
         ],
         duplication: [
           fileMappingConfigured.dataFieldMapping.duplication,
-          Validators.required
+          [Validators.required, duplicationKeyValidator()]
         ],
         deletion: [
           fileMappingConfigured.dataFieldMapping.deletion,

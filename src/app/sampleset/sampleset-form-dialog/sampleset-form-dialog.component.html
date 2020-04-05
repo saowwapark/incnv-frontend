@@ -55,7 +55,8 @@
     color="primary"
     (click)="onSave()"
     [disabled]="
-      form.get('samplesetName').invalid ||
+      form.get('samplesetName').value.length === 0 ||
+      form.get('description').value.length === 0 ||
       form.get('samples').value.length === 0
     "
     aria-label="SAVE"

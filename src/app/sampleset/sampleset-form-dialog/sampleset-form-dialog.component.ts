@@ -48,7 +48,7 @@ export class SamplesetFormDialogComponent implements OnInit {
   private _createSamplesetForm(sampleset: Sampleset): FormGroup {
     return this._fb.group({
       samplesetId: [sampleset.samplesetId],
-      samplesetName: [sampleset.samplesetName, Validators.required],
+      samplesetName: [sampleset.samplesetName],
       description: [sampleset.description],
       samples: [sampleset.samples]
     });

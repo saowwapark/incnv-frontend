@@ -26,17 +26,21 @@
     </div>
     <!--File Name Column-->
     <mat-form-field appearance="outline" class="form-field-width">
-      <mat-label>File Name</mat-label>
+      <mat-label>FILE NAME</mat-label>
       <input
         fxFlex
         formControlName="fileName"
         matInput
         placeholder="File Name"
+        required
       />
+      <mat-error *ngIf="form.get('fileName').hasError('required')"
+        >required</mat-error
+      >
     </mat-form-field>
     <!--File Info Column-->
     <mat-form-field appearance="outline" class="form-field-width">
-      <mat-label>File Info</mat-label>
+      <mat-label>FILE INFO</mat-label>
       <input
         fxFlex
         formControlName="fileInfo"
@@ -47,41 +51,47 @@
 
     <!--CNV Tool Name Column-->
     <mat-form-field appearance="outline" class="form-field-width">
-      <mat-label>CNV Tool</mat-label>
+      <mat-label>CNV TOOL</mat-label>
       <input
         fxFlex
         formControlName="cnvToolName"
+        required
         matInput
         placeholder="CNV Tool"
       />
+      <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
+        >required</mat-error
+      >
     </mat-form-field>
     <!--Tab File Mapping Column-->
 
-    <mat-form-field appearance="outline" class="form-field-width">
-      <mat-label>File Mapping...</mat-label>
-      <app-filtered-select
-        formControlName="tabFileMapping"
-        [options]="tabFileMappings"
-        [selectedOption]="initialTabFileMapping"
-      >
-      </app-filtered-select>
-    </mat-form-field>
+    <app-filtered-select
+      [label]="'FILE MAPPING'"
+      [appearance]="'outline'"
+      [class]="'form-field-width'"
+      [required]="true"
+      formControlName="tabFileMapping"
+      [options]="tabFileMappings"
+      [selectedOption]="initialTabFileMapping"
+    >
+    </app-filtered-select>
 
     <!--Sampleset Column-->
 
-    <mat-form-field appearance="outline" class="form-field-width">
-      <mat-label>Sampleset...</mat-label>
-      <app-filtered-select
-        formControlName="sampleset"
-        [options]="samplesets"
-        [selectedOption]="initialSampleset"
-      >
-      </app-filtered-select>
-    </mat-form-field>
+    <app-filtered-select
+      [label]="'SAMPLESET'"
+      [appearance]="'outline'"
+      [class]="'form-field-width'"
+      [required]="true"
+      formControlName="sampleset"
+      [options]="samplesets"
+      [selectedOption]="initialSampleset"
+    >
+    </app-filtered-select>
 
     <!--Tag Descriptions Column-->
     <mat-form-field appearance="outline" class="form-field-width">
-      <mat-label>Tag Descriptions</mat-label>
+      <mat-label>TAG DESCRIPTIONS</mat-label>
       <mat-chip-list #tagDescriptionList>
         <mat-chip
           color="accent"
@@ -111,6 +121,7 @@
   <button
     mat-raised-button
     color="primary"
+    [disabled]="form.invalid"
     (click)="onSave()"
     aria-label="SAVE"
   >

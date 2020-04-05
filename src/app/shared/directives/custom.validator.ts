@@ -75,10 +75,10 @@ export const duplicationValidator = (items: any[]): ValidatorFn => {
 
 export const duplicationKeyValidator = (): ValidatorFn => {
   return (c: FormControl) => {
-    const deletionKeys = ['dup', 'duplication', 'gain'];
-    if (!deletionKeys.includes(c.value)) {
+    const duplicationKeys = ['dup', 'duplication', 'gain'];
+    if (!duplicationKeys.includes(c.value)) {
       return {
-        deletionKey: { valid: false }
+        duplicationKeys: { valid: false }
       };
     }
   };

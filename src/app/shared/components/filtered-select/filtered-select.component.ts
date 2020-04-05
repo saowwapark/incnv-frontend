@@ -25,7 +25,8 @@ import {
   ControlValueAccessor,
   FormGroup,
   NgControl,
-  FormBuilder
+  FormBuilder,
+  Validators
 } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -56,11 +57,12 @@ export class FilteredSelectComponent
     AfterViewInit {
   /****************************** Logic for this component *************************/
   @Input() options: any[];
-  @ViewChild('input', { static: false })
-  input: ElementRef;
-  filteredOptions: any[];
   @Input() selectedOption: any;
   @Output() selectionChange = new EventEmitter();
+  @ViewChild('input', { static: false })
+  // matcher = new MyErrorStateMatcher();
+  input: ElementRef;
+  filteredOptions: any[];
 
   /************************************** Property for MatFormFieldControl **********************************/
   static nextId = 0;
@@ -84,6 +86,42 @@ export class FilteredSelectComponent
   get shouldLabelFloat() {
     return this.focused || !this.empty;
   }
+
+  @Input()
+  get label(): string {
+    return this._label;
+  }
+  set label(value: string) {
+    this._label = value;
+  }
+  private _label: string;
+
+  @Input()
+  get appearance(): string {
+    return this._appearance;
+  }
+  set appearance(value: string) {
+    this._appearance = value;
+  }
+  private _appearance: string;
+
+  @Input()
+  get class(): string {
+    return this._class;
+  }
+  set class(value: string) {
+    this._class = value;
+  }
+  private _class: string;
+
+  @Input()
+  get style(): string {
+    return this._style;
+  }
+  set style(value: string) {
+    this._style = value;
+  }
+  private _style: string;
 
   @Input()
   get placeholder(): string {
@@ -141,7 +179,7 @@ export class FilteredSelectComponent
     @Optional() @Self() public ngControl: NgControl
   ) {
     this.filterSelectGroup = formBuilder.group({
-      selectControl: []
+      selectControl: ['']
     });
 
     _focusMonitor.monitor(_elementRef, true).subscribe(origin => {
@@ -192,7 +230,13 @@ export class FilteredSelectComponent
       this.filterSelectGroup.get('selectControl').setValue(this.selectedOption);
     }
   }
-  ngOnInit() {}
+  ngOnInit() {
+    if (this._required) {
+      this.filterSelectGroup
+        .get('selectControl')
+        .setValidators(Validators.required);
+    }
+  }
   ngAfterViewInit() {
     fromEvent(this.input.nativeElement, 'keyup')
       .pipe(

@@ -16,16 +16,18 @@
         *ngFor="let sampleForm of sampleFormArray.controls; let i = index"
       >
         <div [formGroupName]="i">
-          <mat-form-field appearance="outline" style="width: 250px">
-            <mat-label>Sample...</mat-label>
-            <app-filtered-select
-              formControlName="sample"
-              placeholder="Sample..."
-              [options]="samples"
-              (selectionChange)="onSubmit()"
-            >
-            </app-filtered-select>
-          </mat-form-field>
+          <app-filtered-select
+            [style]="{ width: '250px' }"
+            [label]="'SAMPLE'"
+            [appearance]="'outline'"
+            [required]="true"
+            formControlName="sample"
+            placeholder="SAMPLE"
+            [options]="samples"
+            (selectionChange)="onSubmit()"
+          >
+          </app-filtered-select>
+
           <button mat-icon-button color="warn" (click)="removeSample(i)">
             <mat-icon>delete</mat-icon>
           </button>

@@ -139,7 +139,8 @@
 
   <button
     *ngIf="action === 'edit'"
-    mat-stroked-button
+    mat-raised-button
+    color="primary"
     (click)="matDialogRef.close(['save', form])"
     [disabled]="f.invalid"
     aria-label="SAVE"

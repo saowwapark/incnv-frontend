@@ -129,11 +129,15 @@
             fxLayoutGap="20px"
             class="step__content-item"
           >
-            <mat-form-field appearance="outline">
-              <mat-label>Chromosome...</mat-label>
-              <app-filtered-select [options]="chrs" [(ngModel)]="chosenChr">
-              </app-filtered-select>
-            </mat-form-field>
+            <app-filtered-select
+              [label]="'CHROMOSOME'"
+              [appearance]="'outline'"
+              [style]="{ width: '250px' }"
+              [options]="chrs"
+              [(ngModel)]="chosenChr"
+            >
+            </app-filtered-select>
+
             <div fxLayout="row" fxLayoutAlign="start center">
               <button mat-button color="primary" matStepperPrevious>
                 BACK

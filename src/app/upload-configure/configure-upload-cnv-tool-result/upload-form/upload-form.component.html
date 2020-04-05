@@ -27,11 +27,14 @@
       <!--upload file Column-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>UPLOAD FILE...</mat-label>
-          <input formControlName="fileName" matInput readonly="true" />
+          <mat-label>UPLOAD FILE</mat-label>
+          <input formControlName="fileName" matInput required readonly="true" />
 
           <mat-icon matSuffix color="accent" (click)="filePicker.click()"
             >cloud_upload</mat-icon
+          >
+          <mat-error *ngIf="form.get('fileName').hasError('required')"
+            >required</mat-error
           >
         </mat-form-field>
 
@@ -41,55 +44,48 @@
       <!--fileInfo-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>FILE INFO...</mat-label>
+          <mat-label>FILE INFO</mat-label>
           <input fxFlex formControlName="fileInfo" matInput />
-          <mat-error *ngIf="form.get('fileInfo').hasError('required')"
-            >required</mat-error
-          >
         </mat-form-field>
       </div>
       <!--cnvToolName Column-->
       <mat-form-field appearance="outline" class="form-field-width">
-        <mat-label>CNV TOOL NAME...</mat-label>
-        <input fxFlex formControlName="cnvToolName" matInput />
+        <mat-label>CNV TOOL NAME</mat-label>
+        <input fxFlex formControlName="cnvToolName" matInput required />
         <mat-error *ngIf="form.get('cnvToolName').hasError('required')"
           >required</mat-error
         >
       </mat-form-field>
       <!--tabFileMapping Id Column-->
       <div>
-        <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>FILE MAPPING...</mat-label>
-          <app-filtered-select
-            formControlName="tabFileMapping"
-            [options]="tabFileMappings"
-          >
-          </app-filtered-select>
-        </mat-form-field>
+        <app-filtered-select
+          formControlName="tabFileMapping"
+          [label]="'FILE MAPPING'"
+          [options]="tabFileMappings"
+          [required]="true"
+          [class]="'form-field-width'"
+          [appearance]="'outline'"
+        >
+        </app-filtered-select>
       </div>
 
       <!--sampleset Column-->
       <div>
-        <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>SAMPLE SET...</mat-label>
-          <app-filtered-select
-            formControlName="sampleset"
-            [options]="samplesets"
-          >
-          </app-filtered-select>
-          <!-- <mat-error *ngIf="form.get('samplesetId').hasError('required')"
-            >required</mat-error
-          >
-          <mat-error *ngIf="form.get('samplesetId').hasError('notHave')"
-            >not have</mat-error
-          > -->
-        </mat-form-field>
+        <app-filtered-select
+          formControlName="sampleset"
+          [label]="'SAMPLE SET'"
+          [options]="samplesets"
+          [required]="true"
+          [class]="'form-field-width'"
+          [appearance]="'outline'"
+        >
+        </app-filtered-select>
       </div>
 
       <!--Tag Descriptions Column-->
       <div>
         <mat-form-field appearance="outline" class="form-field-width">
-          <mat-label>TAG DESCRIPTION ...</mat-label>
+          <mat-label>TAG DESCRIPTIONS</mat-label>
           <mat-chip-list #tagDescriptionList>
             <mat-chip
               color="accent"
@@ -116,7 +112,12 @@
     </form>
   </mat-card-content>
   <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
-    <button mat-raised-button color="primary" (click)="onConfirm()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onConfirm()"
+      [disabled]="form.invalid"
+    >
       CONFIRM
     </button>
     <button mat-button color="warn" (click)="onReset()">

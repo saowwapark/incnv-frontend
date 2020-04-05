@@ -18,7 +18,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 import { UploadCnvToolResult } from '../../../shared/models/upload-cnv-tool-result.model';
-import { CustomValidators } from '../../../shared/backup/configure-cnv-tools (see validation)/custom.validators';
 import { IdAndName } from 'src/app/shared/models/id-and-name.model';
 import { SamplesetService } from 'src/app/sampleset/sampleset.service';
 
@@ -102,17 +101,14 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.uploadPost = new UploadCnvToolResult({});
     return this._formBuilder.group({
       fileName: [this.uploadPost.fileName, Validators.required],
-      uploadedFile: [this.uploadPost.uploadedFile, Validators.required],
+      uploadedFile: [this.uploadPost.uploadedFile],
       fileInfo: [],
       referenceGenome: ['grch38'],
 
       cnvToolName: [null, Validators.required],
-      tabFileMapping: [], // only 'file_type' is Tab File Format
-      sampleset: [
-        // cannot use because error
-        // CustomValidators.notHaveInList(this.samplesetNames)
-      ],
-      tagDescriptions: [null, Validators.required]
+      tabFileMapping: [null], // only 'file_type' is Tab File Format
+      sampleset: [null],
+      tagDescriptions: [null]
     });
   }
 
