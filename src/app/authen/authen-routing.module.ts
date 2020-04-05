@@ -13,7 +13,5 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AuthenRoutingModule {
-  constructor() {
-    console.log('AuthenRoutingModule loaded');
-  }
+  constructor() {}
 }

@@ -14,7 +14,5 @@ import { AuthenInterceptor } from './authen-interceptor';
   ]
 })
 export class AuthenModule {
-  constructor() {
-    console.log('AuthenModule loaded.');
-  }
+  constructor() {}
 }

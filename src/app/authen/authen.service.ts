@@ -52,8 +52,6 @@ export class AuthenService {
     return this._http.post<any>(`${this.baseRouteUrl}/login`, authReq).pipe(
       map(res => res['payload']),
       tap((authenRes: AuthenRes) => {
-        console.log('authservice');
-        console.log(authenRes);
         const token = authenRes.token;
         const expiresInDuration = authenRes.expiresIn;
         const authData = this.createAuthData(token, expiresInDuration);
@@ -90,7 +88,6 @@ export class AuthenService {
    * @param duration - second unit (not millisecond)
    */
   private setAuthTimer(duration: number) {
-    console.log('Setting timer: ' + duration);
     this.tokenTimer = setTimeout(() => {
       this.logout();
     }, duration * 1000);
