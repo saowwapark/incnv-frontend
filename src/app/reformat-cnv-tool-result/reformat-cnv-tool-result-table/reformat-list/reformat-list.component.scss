@@ -35,17 +35,17 @@ table {
   justify-content: center;
 }
 
-.header-right .mat-sort-header-container {
-  display: flex !important;
-  justify-content: flex-end !important;
-  text-align: right;
-  padding-right: 40px;
-}
+// .header-right .mat-sort-header-container {
+//   display: flex !important;
+//   justify-content: flex-end !important;
+//   text-align: right;
+//   padding-right: 40px;
+// }
 
-.data-right {
-  text-align: right;
-  padding-right: 58px !important;
-}
+// .data-right {
+//   text-align: right;
+//   padding-right: 58px !important;
+// }
 
 @mixin table-column($size) {
   word-wrap: break-word !important;

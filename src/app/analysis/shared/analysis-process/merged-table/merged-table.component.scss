@@ -28,10 +28,10 @@ table {
   @include table-column(4%);
 }
 .mat-column-startBp {
-  @include table-column(10%);
+  @include table-column(9%);
 }
 .mat-column-endBp {
-  @include table-column(10%);
+  @include table-column(9%);
 }
 .mat-column-cnvType {
   @include table-column(6%);
@@ -41,8 +41,8 @@ table {
 }
 // table will choose one between cnvTools and samples
 .mat-column-cnvTools {
-  @include table-column(25%);
+  @include table-column(27%);
 }
 .mat-column-samples {
-  @include table-column(25%);
+  @include table-column(27%);
 }
