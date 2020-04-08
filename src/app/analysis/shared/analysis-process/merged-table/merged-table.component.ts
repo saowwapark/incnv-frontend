@@ -1,4 +1,8 @@
-import { DgvAnnotationKey, DgvAnnotation } from './../../../analysis.model';
+import {
+  DgvAnnotationKey,
+  DgvAnnotation,
+  CnvGroup
+} from './../../../analysis.model';
 // onpush
 import { AnalysisProcessService } from './../analysis-process.service';
 
@@ -59,7 +63,7 @@ export class FilterObj {
 })
 export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() analysisType: string;
-  @Input() cnvInfos: CnvInfo[];
+  @Input() mergedData: CnvGroup;
   displayedColumns = [
     'select',
     'no',
@@ -113,7 +117,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
   ngOnChanges() {
-    this.dataSource.data = this.cnvInfos;
+    this.dataSource.data = this.mergedData.cnvInfos;
     if (this.analysisType === 'multipleSamples') {
       this.displayedColumns = [
         'select',
@@ -197,7 +201,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
       this.selection.select(...this.dataSource.filteredData);
       // this.updateAllSelectStatus(this.cnvInfos, true);
     }
-    this.service.onSelectedCnv.next(this.cnvInfos[0]);
+    this.service.onSelectedCnv.next(this.mergedData.cnvInfos[0]);
     this.service.onSelectedCnvChanged.next(this.selection.selected);
   }
 

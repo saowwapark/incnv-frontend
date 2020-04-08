@@ -149,7 +149,7 @@ export class MainChartComponent
       tap((cnvInfo: CnvInfo) => {
         const startBp = cnvInfo.startBp;
         const endBp = cnvInfo.endBp;
-        const size = 100000;
+        const size = 200000;
         this.selectedChrRegion = this.generateDefaultRegion(
           startBp,
           endBp,

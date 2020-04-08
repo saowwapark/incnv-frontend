@@ -1,4 +1,9 @@
-import { RegionBp, CnvInfo, MERGED_RESULT_NAME } from '../../../analysis.model';
+import {
+  RegionBp,
+  CnvInfo,
+  MERGED_RESULT_NAME,
+  SELECTED_RESULT_NAME
+} from '../../../analysis.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import {
@@ -40,7 +45,7 @@ export class AnnotationDialogComponent implements OnInit {
     this.dialogTitle = title;
     this.cnvInfo = cnvInfo;
 
-    if (title === MERGED_RESULT_NAME) {
+    if (title === MERGED_RESULT_NAME || title === SELECTED_RESULT_NAME) {
       this.isSelectable = true;
     } else {
       this.isSelectable = false;

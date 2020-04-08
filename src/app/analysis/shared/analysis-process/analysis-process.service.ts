@@ -25,6 +25,7 @@ import { map, tap, timeout, catchError } from 'rxjs/operators';
 export class AnalysisProcessService {
   baseRouteUrl: string;
   onSelectedCnvChanged: Subject<CnvInfo[]>;
+  onMergedDataChanged: BehaviorSubject<CnvGroup>;
   onSelectedCnv: Subject<CnvInfo>;
   onIndividualSampleConfigChanged: BehaviorSubject<IndividualSampleConfig>;
   onMultipleSampleConfigChanged: BehaviorSubject<MultipleSampleConfig>;
@@ -33,6 +34,7 @@ export class AnalysisProcessService {
     this.baseRouteUrl = `${this._constant.baseAppUrl}/api/analysises`;
     this.onSelectedCnv = new Subject();
     this.onSelectedCnvChanged = new Subject();
+    this.onMergedDataChanged = new BehaviorSubject({});
     this.onIndividualSampleConfigChanged = new BehaviorSubject({});
     this.onMultipleSampleConfigChanged = new BehaviorSubject({});
   }

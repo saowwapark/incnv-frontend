@@ -130,9 +130,7 @@
             <mat-expansion-panel-header>
               <mat-panel-title>All Merged CNVs</mat-panel-title>
             </mat-expansion-panel-header>
-            <app-merged-table
-              [cnvInfos]="mergedTool.cnvInfos"
-            ></app-merged-table>
+            <app-merged-table [mergedData]="mergedTool"></app-merged-table>
           </mat-expansion-panel>
           <!-- Main Chart-->
           <mat-expansion-panel [expanded]="true">

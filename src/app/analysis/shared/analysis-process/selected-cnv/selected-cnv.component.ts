@@ -158,29 +158,6 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.sort;
   }
 
-  // editRow(cnvInfo: CnvInfo, index: number): void {
-  //   // Original data
-  //   this.dialogRef = this._matDialog.open(AnnotationDialogComponent, {
-  //     panelClass: 'dialog-default',
-  //     data: {
-  //       title: 'selected CNV',
-  //       cnvInfo: cnvInfo
-  //     }
-  //   });
-
-  //   // // Updated data
-  //   // this.dialogRef.afterClosed().subscribe(response => {
-  //   //   if (!response) {
-  //   //     return;
-  //   //   }
-  //   //   // new selected startBp and endBp
-  //   //   this.service.getCnvInfo(response).subscribe((updatedCnvInfo: CnvInfo) => {
-  //   //     this.selectedCnvs[index] = { ...updatedCnvInfo };
-  //   //     this.service.onSelectedCnvChanged.next(this.selectedCnvs);
-  //   //   });
-  //   // });
-  // }
-
   exportCnvInfos() {
     this.service.downloadCnvInfos(this.selectedCnvs).subscribe(() => {
       console.log('export success');
