@@ -11,12 +11,13 @@ export const navigationData: Navigation[] = [
         id: 'cnvtool',
         title: 'CNV Tool',
         type: 'collapsable',
-        icon: 'dashboard',
+        icon: 'build',
         children: [
           {
             id: 'tabFileMapping',
             title: 'File Mapping',
             type: 'item',
+            icon: 'list',
             url: '/tabfilemapping'
           }
         ]
@@ -25,25 +26,27 @@ export const navigationData: Navigation[] = [
         id: 'sampleset',
         title: 'Sample Set',
         type: 'item',
-        icon: 'shopping_cart',
+        icon: 'face',
         url: '/sampleset'
       },
       {
         id: 'upload',
         title: 'Upload',
         type: 'collapsable',
-        icon: 'dashboard',
+        icon: 'folder',
         children: [
           {
             id: 'uploadCnvResult',
             title: 'Upload CNV Result',
             type: 'item',
+            icon: 'cloud_upload',
             url: '/upload-cnv-result'
           },
           {
             id: 'myFiles',
             title: 'My Files',
             type: 'item',
+            icon: 'description',
             url: '/myfiles'
           }
         ]
