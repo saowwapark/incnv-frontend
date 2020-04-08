@@ -162,7 +162,7 @@ export class MainChartComponent
       tap((cnvInfo: CnvInfo) => {
         const startBp = cnvInfo.startBp;
         const endBp = cnvInfo.endBp;
-        const size = 200000;
+        const size = 100000;
         this.selectedChrRegion = this.generateDefaultRegion(
           startBp,
           endBp,
@@ -206,7 +206,7 @@ export class MainChartComponent
     size: number
   ): RegionBp {
     let regionStartBp: number, regionEndBp: number;
-    if (startBp - size) {
+    if (startBp - size > 0) {
       regionStartBp = startBp - size;
     } else {
       regionStartBp = 0;
@@ -216,7 +216,7 @@ export class MainChartComponent
     } else {
       regionEndBp = chrGrch37[this.chromosome].length;
     }
-    return new RegionBp(startBp, endBp);
+    return new RegionBp(regionStartBp, regionEndBp);
   }
 
   findMaxOverlapNumber(cnvInfos) {
