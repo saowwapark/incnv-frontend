@@ -67,7 +67,7 @@ export class MainChartComponent
   readonly mergedChartColor = '#d32f2f';
   readonly finalChartColor = '#613EB4';
 
-  selectedCnvs: CnvInfo[] = []; // always changed
+  // selectedCnvs: CnvInfo[] = []; // always changed
   private _unsubscribeAll: Subject<any>;
 
   @ViewChild('dgvChartDiv', { static: true }) private dgvChartDiv: ElementRef;
@@ -138,11 +138,24 @@ export class MainChartComponent
   ngDoCheck(): void {}
   ngOnInit() {
     const updateFinalResultData$ = this.service.onSelectedCnvChanged.pipe(
-      tap((cnvInfos: CnvInfo[]) => {
-        this.selectedCnvs = cnvInfos;
-        if (this.selectedCnvs && this.selectedCnvs.length > 0) {
-          this.finalResultData.cnvInfos = this.selectedCnvs;
+      tap((selectedCnvs: CnvInfo[]) => {
+        // clear all CNV select status to false
+        this.updateAllSelectStatus(this.mergedData.cnvInfos, false);
+        // update status of merged CNVs and selected CNVs to be true
+        for (const selectedCnv of selectedCnvs) {
+          selectedCnv.isSelected = true;
+          for (const mergedCnv of this.mergedData.cnvInfos) {
+            if (
+              mergedCnv.startBp === selectedCnv.startBp &&
+              mergedCnv.endBp === selectedCnv.endBp
+            ) {
+              mergedCnv.isSelected = true;
+              break;
+            }
+          }
         }
+
+        this.finalResultData.cnvInfos = selectedCnvs;
       })
     );
     const generateSelectedRegion$ = this.service.onSelectedCnv.pipe(
@@ -319,7 +332,7 @@ export class MainChartComponent
     );
 
     this.finalResultChart.onClickSubbars((cnvGroupName, data) => {
-      this.createDialog(cnvGroupName, data);
+      this.createDialog(SELECTED_RESULT_NAME, data);
     });
   }
 
@@ -337,7 +350,10 @@ export class MainChartComponent
       if (!response) {
         return;
       }
-      const findedIndex = this.findIndex(response, this.selectedCnvs);
+      const findedIndex = this.findIndex(
+        response,
+        this.finalResultData.cnvInfos
+      );
       if (findedIndex >= 0) {
         // remove this cnv from finalResultData
         this.finalResultData.cnvInfos.splice(findedIndex, 1);
@@ -392,5 +408,11 @@ export class MainChartComponent
     this.createComparedChart();
     this.createMergedChart();
     this.createFinalResultChart();
+  }
+
+  updateAllSelectStatus(list: CnvInfo[], isSelected: boolean) {
+    for (let i = 0; i < list.length; i++) {
+      list[i].isSelected = isSelected;
+    }
   }
 }

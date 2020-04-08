@@ -112,6 +112,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cnvInfos: CnvInfo[]) => {
         this.selection.clear();
+        this.updateAllSelectStatus(cnvInfos, false);
         this.selection.select(...cnvInfos);
         this.detectorRef.markForCheck();
       });
@@ -195,11 +196,11 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   masterToggle() {
     if (this.isAllSelected()) {
       this.selection.clear();
-      // this.updateAllSelectStatus(this.cnvInfos, false);
+      // this.updateAllSelectStatus(this.mergedData.cnvInfos, false);
     } else {
       // this.dataSource.data.forEach(row => this.selection.select(row));
       this.selection.select(...this.dataSource.filteredData);
-      // this.updateAllSelectStatus(this.cnvInfos, true);
+      // this.updateAllSelectStatus(this.mergedData.cnvInfos, true);
     }
     this.service.onSelectedCnv.next(this.mergedData.cnvInfos[0]);
     this.service.onSelectedCnvChanged.next(this.selection.selected);
