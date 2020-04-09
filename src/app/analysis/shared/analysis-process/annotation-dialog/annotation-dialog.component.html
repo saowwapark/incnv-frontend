@@ -18,7 +18,7 @@
 
           <div class="property-row" fxLayout="row wrap">
             <div class="property property-name" fxFlex="1 1 30%">
-              Reference Genome
+              Reference genome
             </div>
             <div class="property property-value" fxFlex="1 1 70%">
               {{ cnvInfo.referenceGenome | grch }}
@@ -34,7 +34,7 @@
           </div>
           <div class="property-row" fxLayout="row wrap">
             <div class="property property-name" fxFlex="1 1 30%">
-              Start Basepair
+              Start base pair
             </div>
             <div class="property property-value" fxFlex="1 1 70%">
               {{ cnvInfo.startBp | number }}
@@ -42,14 +42,14 @@
           </div>
           <div class="property-row" fxLayout="row wrap">
             <div class="property property-name" fxFlex="1 1 30%">
-              End Basepair
+              End base pair
             </div>
             <div class="property property-value" fxFlex="1 1 70%">
               {{ cnvInfo.endBp | number }}
             </div>
           </div>
           <div class="property-row" fxLayout="row wrap">
-            <div class="property property-name" fxFlex="1 1 30%">CNV Type</div>
+            <div class="property property-name" fxFlex="1 1 30%">CNV type</div>
             <div class="property property-value" fxFlex="1 1 70%">
               {{ cnvInfo.cnvType }}
             </div>
@@ -58,7 +58,7 @@
           <div *ngIf="isSelectable">
             <div class="property-row" fxLayout="row wrap">
               <div class="property property-name" fxFlex="1 1 30%">
-                Overlap Tools
+                Overlapping tools
               </div>
               <div class="property property-value" fxFlex="1 1 70%">
                 {{ cnvInfo.overlaps.join('; ') }}
@@ -261,7 +261,7 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab label="Clinvar">
+    <mat-tab label="ClinVar">
       <div class="property property-row" fxLayout="row wrap">
         <p>Related ClinVar</p>
       </div>

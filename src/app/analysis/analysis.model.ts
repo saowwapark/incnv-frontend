@@ -1,6 +1,6 @@
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
-export const MERGED_RESULT_NAME = 'Merged CNVs';
-export const SELECTED_RESULT_NAME = 'Selected CNVs';
+export const MERGED_RESULT_NAME = 'Merged CNV';
+export const SELECTED_RESULT_NAME = 'Selected CNV';
 export const Y_AXIS_FONT_SIZE = 14; // px
 export const X_AXIS_FONT_SIZE = 13; // px
 export const CHRACTER_WIDTH = 8.7; // px
