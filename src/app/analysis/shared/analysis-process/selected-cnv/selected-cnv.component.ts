@@ -2,7 +2,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AnnotationDialogComponent } from '../annotation-dialog/annotation-dialog.component';
 import { AnalysisProcessService } from '../analysis-process.service';
-import { CnvInfo } from 'src/app/analysis/analysis.model';
+import {
+  CnvInfo,
+  MULTIPLE_SAMPLE_ANALYSIS
+} from 'src/app/analysis/analysis.model';
 import {
   Component,
   OnInit,
@@ -79,7 +82,7 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.analysisType === 'multipleSamples') {
+    if (this.analysisType === MULTIPLE_SAMPLE_ANALYSIS) {
       this.displayedColumns = [
         'no',
         'chromosome',

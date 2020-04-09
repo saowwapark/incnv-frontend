@@ -1,28 +1,16 @@
 import {
   RegionBp,
   CnvInfo,
+  INDIVIDUAL_SAMPLE_ANALYSIS,
+  MULTIPLE_SAMPLE_ANALYSIS,
   MERGED_RESULT_NAME,
   SELECTED_RESULT_NAME
 } from '../../../analysis.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import {
-  Component,
-  OnInit,
-  Inject,
-  ViewChild,
-  ElementRef
-} from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-import {
-  FormBuilder,
-  NgForm,
-  FormGroup,
-  Validators,
-  ValidatorFn,
-  FormControl
-} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'annotation-dialog',
@@ -32,18 +20,22 @@ import {
 export class AnnotationDialogComponent implements OnInit {
   cnvInfo: CnvInfo;
   dialogTitle: string;
+  analysisType: string;
   selectedCnvRegions?: RegionBp[];
   numberMark;
   isSelectable: boolean;
   selectForm: FormGroup;
+  readonly INDIVIDUAL_SAMPLE_ANALYSIS = INDIVIDUAL_SAMPLE_ANALYSIS;
+  readonly MULTIPLE_SAMPLE_ANALYSIS = MULTIPLE_SAMPLE_ANALYSIS;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    { title, cnvInfo }: any,
+    { title, cnvInfo, analysisType }: any,
     public matDialogRef: MatDialogRef<AnnotationDialogComponent>
   ) {
     this.dialogTitle = title;
     this.cnvInfo = cnvInfo;
+    this.analysisType = analysisType;
 
     if (title === MERGED_RESULT_NAME || title === SELECTED_RESULT_NAME) {
       this.isSelectable = true;

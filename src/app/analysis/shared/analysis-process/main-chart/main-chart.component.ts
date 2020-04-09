@@ -62,6 +62,7 @@ export class MainChartComponent
     bottom: number;
     left: number;
   };
+  @Input() analysisType: string;
   readonly dgvChartColor = '#00A2FD';
   readonly compareChartColor = ['#FDA404']; // ['#ff7f02'];
   readonly mergedChartColor = '#d32f2f';
@@ -341,7 +342,8 @@ export class MainChartComponent
       panelClass: 'dialog-default',
       data: {
         title: cnvGroupName,
-        cnvInfo: cnvInfo
+        cnvInfo: cnvInfo,
+        analysisType: this.analysisType
       }
     });
 

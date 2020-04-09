@@ -57,8 +57,19 @@
 
           <div *ngIf="isSelectable">
             <div class="property-row" fxLayout="row wrap">
-              <div class="property property-name" fxFlex="1 1 30%">
+              <div
+                *ngIf="analysisType === INDIVIDUAL_SAMPLE_ANALYSIS"
+                class="property property-name"
+                fxFlex="1 1 30%"
+              >
                 Overlapping tools
+              </div>
+              <div
+                *ngIf="analysisType === MULTIPLE_SAMPLE_ANALYSIS"
+                class="property property-name"
+                fxFlex="1 1 30%"
+              >
+                Overlapping samples
               </div>
               <div class="property property-value" fxFlex="1 1 70%">
                 {{ cnvInfo.overlaps.join('; ') }}

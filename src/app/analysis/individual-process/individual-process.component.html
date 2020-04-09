@@ -130,7 +130,10 @@
             <mat-expansion-panel-header>
               <mat-panel-title>All Merged CNVs</mat-panel-title>
             </mat-expansion-panel-header>
-            <app-merged-table [mergedData]="mergedTool"></app-merged-table>
+            <app-merged-table
+              [analysisType]="INDIVIDUAL_SAMPLE_ANALYSIS"
+              [mergedData]="mergedTool"
+            ></app-merged-table>
           </mat-expansion-panel>
           <!-- Main Chart-->
           <mat-expansion-panel [expanded]="true">
@@ -144,6 +147,7 @@
               [mergedData]="mergedTool"
               [containerMargin]="containerMargin"
               [selectedChrRegion]="selectedChrRegion"
+              [analysisType]="INDIVIDUAL_SAMPLE_ANALYSIS"
             >
             </app-main-chart>
           </mat-expansion-panel>
@@ -152,7 +156,9 @@
             <mat-expansion-panel-header>
               <mat-panel-title>All Selected CNVs</mat-panel-title>
             </mat-expansion-panel-header>
-            <app-selected-cnv></app-selected-cnv>
+            <app-selected-cnv
+              [analysisType]="INDIVIDUAL_SAMPLE_ANALYSIS"
+            ></app-selected-cnv>
           </mat-expansion-panel>
         </mat-accordion>
       </div>

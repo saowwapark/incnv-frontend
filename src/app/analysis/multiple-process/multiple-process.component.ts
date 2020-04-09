@@ -1,4 +1,5 @@
 import {
+  MULTIPLE_SAMPLE_ANALYSIS,
   MERGED_RESULT_NAME,
   SELECTED_RESULT_NAME,
   DgvVariant,
@@ -39,6 +40,7 @@ export class MultipleProcessComponent
   selectedCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
   isLoading: BehaviorSubject<boolean>;
+  readonly MULTIPLE_SAMPLE_ANALYSIS = MULTIPLE_SAMPLE_ANALYSIS;
 
   // private
   private _unsubscribeAll: Subject<any>;

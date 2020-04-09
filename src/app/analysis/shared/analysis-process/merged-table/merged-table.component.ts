@@ -1,7 +1,8 @@
 import {
   DgvAnnotationKey,
   DgvAnnotation,
-  CnvGroup
+  CnvGroup,
+  MULTIPLE_SAMPLE_ANALYSIS
 } from './../../../analysis.model';
 // onpush
 import { AnalysisProcessService } from './../analysis-process.service';
@@ -88,6 +89,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   // mat-chip
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
   readonly overlappingSeparatorKeysCodes: number[] = [ENTER];
+  readonly MULTIPLE_SAMPLE_ANALYSIS = MULTIPLE_SAMPLE_ANALYSIS;
 
   dataSource = new MatTableDataSource<CnvInfo>();
   selection = new SelectionModel<CnvInfo>(true, []);
@@ -119,7 +121,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   }
   ngOnChanges() {
     this.dataSource.data = this.mergedData.cnvInfos;
-    if (this.analysisType === 'multipleSamples') {
+    if (this.analysisType === MULTIPLE_SAMPLE_ANALYSIS) {
       this.displayedColumns = [
         'select',
         'no',

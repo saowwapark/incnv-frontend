@@ -1,4 +1,8 @@
-import { DgvVariant, CHRACTER_WIDTH } from './../analysis.model';
+import {
+  DgvVariant,
+  CHRACTER_WIDTH,
+  INDIVIDUAL_SAMPLE_ANALYSIS
+} from './../analysis.model';
 import { Subject, BehaviorSubject, forkJoin, throwError } from 'rxjs';
 
 import {
@@ -47,6 +51,7 @@ export class IndividualProcessComponent
   containerMargin: { top: number; right: number; bottom: number; left: number };
   isLoading: BehaviorSubject<boolean>;
   selectedCnvs: CnvInfo[];
+  readonly INDIVIDUAL_SAMPLE_ANALYSIS = INDIVIDUAL_SAMPLE_ANALYSIS;
 
   // private
   private _unsubscribeAll: Subject<any>;

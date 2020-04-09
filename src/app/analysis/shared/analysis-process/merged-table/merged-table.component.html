@@ -227,7 +227,7 @@
               appearance="outline"
             >
               <mat-label>{{
-                analysisType === 'multipleSamples'
+                analysisType === MULTIPLE_SAMPLE_ANALYSIS
                   ? 'Search sample name...'
                   : 'Search CNV tool...'
               }}</mat-label>
@@ -399,7 +399,7 @@
 
       <!-- Samples -->
       <ng-container matColumnDef="samples">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Samples</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sample Names</th>
         <td mat-cell *matCellDef="let row">
           {{ row.overlaps.join('; ') }}
         </td>
