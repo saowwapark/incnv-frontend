@@ -19,11 +19,11 @@ body {
   &--main {
     display: block !important;
 
-    font-size: 7rem !important;
+    font-size: 6rem !important;
     font-weight: 500 !important;
     letter-spacing: 2rem !important;
     line-height: 10rem !important;
-    text-shadow: 4px 4px 6px rgba(10, 10, 10, 0.8) !important;
+    text-shadow: 2px 2px 6px rgba(10, 10, 10, 0.8) !important;
 
     animation-name: moveToLeft !important;
     animation-duration: 1s !important;
@@ -35,10 +35,10 @@ body {
     text-transform: uppercase !important;
 
     font-weight: 500 !important;
-    font-size: 2rem !important;
+    font-size: 1.6rem !important;
     line-height: 4rem !important;
     letter-spacing: 1.6rem !important;
-    text-shadow: 3px 3px 6px rgba(30, 30, 30, 0.801);
+    text-shadow: 2px 2px 6px rgba(30, 30, 30, 0.801);
 
     animation-name: moveToRight !important;
     animation-duration: 1s !important;
