@@ -1,8 +1,14 @@
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 import { MyFileUploadCnvToolResultService } from './my-file-upload-cnv-tool-result.service';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
+} from '@angular/core';
+import { Subject, fromEvent } from 'rxjs';
+import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { myAnimations } from 'src/app/shared/animations';
@@ -12,7 +18,8 @@ import { myAnimations } from 'src/app/shared/animations';
   styleUrls: ['./my-file-upload-cnv-tool-result.component.scss'],
   animations: myAnimations
 })
-export class MyFileUploadCnvToolResultComponent implements OnInit {
+export class MyFileUploadCnvToolResultComponent
+  implements OnInit, AfterViewInit {
   @ViewChild('filterInput', { static: true })
   filterInput: ElementRef;
 
@@ -29,6 +36,20 @@ export class MyFileUploadCnvToolResultComponent implements OnInit {
     this._unsubscribeAll = new Subject();
   }
 
+  ngAfterViewInit(): void {
+    fromEvent(this.filterInput.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe(() => {
+        const filterValue = this.filterInput.nativeElement.value;
+        this._myFileService.onSearchTextChanged.next(
+          filterValue.trim().toLowerCase()
+        );
+      });
+  }
   onSubmitAllSelected(selectedUploads: UploadCnvToolResult[]) {
     this.confirmDialogRef = this._matDialog.open(ConfirmDialogComponent, {
       panelClass: 'dialog-warning',

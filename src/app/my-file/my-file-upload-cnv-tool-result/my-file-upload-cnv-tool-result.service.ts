@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UploadCnvToolResult } from '../../shared/models/upload-cnv-tool-result.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ConstantsService } from 'src/app/shared/services/constants.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -13,11 +13,13 @@ export class MyFileUploadCnvToolResultService {
   onTriggerDataChanged: BehaviorSubject<void>;
   onSelectedChanged: BehaviorSubject<UploadCnvToolResult[]>;
   onUploadCnvToolResultsChanged: BehaviorSubject<UploadCnvToolResult[]>;
+  onSearchTextChanged: Subject<string>;
 
   constructor(private _http: HttpClient, private _constant: ConstantsService) {
     this.onTriggerDataChanged = new BehaviorSubject(null);
     this.onSelectedChanged = new BehaviorSubject([]);
     this.onUploadCnvToolResultsChanged = new BehaviorSubject([]);
+    this.onSearchTextChanged = new Subject();
 
     this.baseRouteUrl = `${this._constant.baseAppUrl}/api/upload-cnv-tool-results`;
   }

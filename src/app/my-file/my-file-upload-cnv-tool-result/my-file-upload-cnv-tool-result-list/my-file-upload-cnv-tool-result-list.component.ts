@@ -85,7 +85,11 @@ export class MyFileUploadCnvToolResultListComponent
           this.selection.clear();
         }
       });
-
+    this._service.onSearchTextChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((filterValue: string) => {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+      });
     this._samplesetService
       .getIdAndNames()
       .pipe(takeUntil(this._unsubscribeAll))
