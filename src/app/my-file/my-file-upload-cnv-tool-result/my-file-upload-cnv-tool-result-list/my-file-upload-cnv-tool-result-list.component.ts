@@ -41,8 +41,8 @@ export class MyFileUploadCnvToolResultListComponent
     'samplesetName',
     'tagDescriptions',
     'createDate',
-    'edit',
-    'detail'
+    'detail',
+    'edit'
   ];
 
   dialogRef: any;
