@@ -15,7 +15,7 @@
         formArrayName="sampleFormArray"
         *ngFor="let sampleForm of sampleFormArray.controls; let i = index"
       >
-        <div [formGroupName]="i">
+        <div [formGroupName]="i" fxLayout="row" fxLayoutAlign=" start">
           <app-filtered-select
             [style]="{ width: '250px' }"
             [label]="'SAMPLE'"
