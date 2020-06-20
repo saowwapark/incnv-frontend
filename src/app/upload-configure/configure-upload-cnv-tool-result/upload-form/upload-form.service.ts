@@ -32,6 +32,8 @@ export class UploadFormService {
   }
 
   deleteUploadCnvToolResult(uploadCnvToolResultId: number) {
-    return this._http.delete(`${this.baseRouteUrl}/${uploadCnvToolResultId}`);
+    return this._http.delete(
+      `${this.baseRouteUrl}/single-upload-cnv-tool-result/${uploadCnvToolResultId}`
+    );
   }
 }

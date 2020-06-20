@@ -38,10 +38,12 @@ export class UploadConfigureComponent {
     const deleteUpload$ = this._uploadFormService.deleteUploadCnvToolResult(
       this.uploadCnvToolResultId
     );
-    const deleteReformat$ = this._reformatService.deleteReformatByUploadId(
-      this.uploadCnvToolResultId
-    );
-    return merge(deleteUpload$, deleteReformat$);
+    return deleteUpload$;
+    // // delete cascade
+    // const deleteReformat$ = this._reformatService.deleteReformatByUploadId(
+    //   this.uploadCnvToolResultId
+    // );
+    // return merge(deleteUpload$, deleteReformat$);
   }
 
   uploadAgain() {
