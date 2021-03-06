@@ -5,6 +5,9 @@
 /tmp
 /out-tsc
 
+# configuration
+/e2e/src/protractor.conf.js
+
 # dependencies
 /node_modules
 
