@@ -6,6 +6,7 @@ import {
   Router
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 
 import { AuthenService } from './authen.service';
 
@@ -17,11 +18,13 @@ export class AuthenGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    this.authService.isAuthen$.subscribe((isAuthen: boolean) => {
-      if (!isAuthen) {
-        this.router.navigate(['signin']);
-      }
-    });
-    return this.authService.isAuthen$;
+    return this.authService.isAuthen$.pipe(
+      take(1),
+      tap((isAuthen: boolean) => {
+        if (!isAuthen) {
+          this.router.navigate(['signin']);
+        }
+      })
+    );
   }
 }

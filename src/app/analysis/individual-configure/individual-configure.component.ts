@@ -11,8 +11,7 @@ import { Sampleset } from '../../sampleset/sampleset.model';
 import { IndividualSampleConfig } from '../analysis.model';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
 import { Subject } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
+import { MessagesService } from 'src/app/shared/components/messages/messages.service';
 
 @Component({
   selector: 'app-individual-configure',
@@ -32,11 +31,11 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
   chrs: string[];
 
   // private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
-    private dialog: MatDialog,
-    private service: AnalysisProcessService
+    private service: AnalysisProcessService,
+    private messagesService: MessagesService
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -61,9 +60,11 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
     this.chrs.push('x');
     this.chrs.push('y');
   }
+
   goToPreviousStep() {
     this.stepper.previous();
   }
+
   goToNexStep() {
     this.stepper.next();
   }
@@ -87,9 +88,7 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
     }
   }
   setSelectedFiles(files: UploadCnvToolResult[]) {
-    if (files && files.length > 0) {
-      this.chosenFiles = files;
-    }
+    this.chosenFiles = files;
   }
 
   confirmConfig() {
@@ -107,44 +106,38 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
   validateChosenSampleset() {
     if (!this.chosenSampleset.samplesetId) {
       const errorMessage = 'Please select one sample set.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
     } else {
+      this.messagesService.clearErrors();
       this.stepper.next();
     }
   }
   validateChosenSample() {
     if (this.chosenSample.length === 0) {
       const errorMessage = 'Please select one sample.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
     } else {
+      this.messagesService.clearErrors();
       this.stepper.next();
     }
   }
   validateChosenFiles() {
     if (this.chosenFiles.length < 2) {
       const errorMessage = 'Please select at least two files.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
     } else {
+      this.messagesService.clearErrors();
       this.stepper.next();
     }
   }
   validateChosenChromosome() {
     if (this.chosenChr.length === 0) {
       const errorMessage = 'Please select one chromosome.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
     } else {
+      this.messagesService.clearErrors();
       this.stepper.next();
     }
-  }
-
-  openErrorDialog(errorMessage: string) {
-    this.dialog.open(ErrorDialogComponent, {
-      panelClass: 'dialog-warning',
-      disableClose: false,
-      data: {
-        errorMessage: errorMessage
-      }
-    });
   }
 
   /**

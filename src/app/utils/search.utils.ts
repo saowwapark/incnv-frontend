@@ -3,29 +3,27 @@ export class SearchUtils {
    * Filter array by string
    *
    * @param mainArr
-   * @param searchText
-   * @returns {any}
+   * @param searchedText
+   * @returns
    */
-  public static filterArrayByString(mainArr: any[], searchText: string): any {
-    if (searchText === '') {
+  public static filterArrayByString(mainArr: any[], searchedText: string): any {
+    if (searchedText === '') {
       return mainArr;
     }
 
-    searchText = searchText.toLowerCase();
+    searchedText = searchedText.toLowerCase();
 
-    return mainArr.filter(itemObj => {
-      return this.searchInObj(itemObj, searchText);
-    });
+    return mainArr.filter(itemObj => this.searchInObj(itemObj, searchedText));
   }
 
   /**
    * Search in object
    *
    * @param itemObj
-   * @param searchText
-   * @returns {boolean}
+   * @param searchedText
+   * @returns
    */
-  public static searchInObj(itemObj, searchText: string): boolean {
+  public static searchInObj(itemObj, searchedText: string): boolean {
     for (const prop in itemObj) {
       if (!itemObj.hasOwnProperty(prop)) {
         continue;
@@ -33,17 +31,17 @@ export class SearchUtils {
 
       const value = itemObj[prop];
       if (typeof value === 'string') {
-        if (this.searchInString(value, searchText)) {
+        if (this.searchInString(value, searchedText)) {
           return true;
         }
       } else if (Array.isArray(value)) {
-        if (this.searchInArray(value, searchText)) {
+        if (this.searchInArray(value, searchedText)) {
           return true;
         }
       }
 
       if (typeof value === 'object') {
-        if (this.searchInObj(value, searchText)) {
+        if (this.searchInObj(value, searchedText)) {
           return true;
         }
       }
@@ -54,19 +52,19 @@ export class SearchUtils {
    * Search in array
    *
    * @param arr
-   * @param searchText
-   * @returns {boolean}
+   * @param searchedText
+   * @returns
    */
-  public static searchInArray(arr, searchText): boolean {
+  public static searchInArray(arr, searchedText): boolean {
     for (const value of arr) {
       if (typeof value === 'string') {
-        if (this.searchInString(value, searchText)) {
+        if (this.searchInString(value, searchedText)) {
           return true;
         }
       }
 
       if (typeof value === 'object') {
-        if (this.searchInObj(value, searchText)) {
+        if (this.searchInObj(value, searchedText)) {
           return true;
         }
       }
@@ -77,26 +75,11 @@ export class SearchUtils {
    * Search in string
    *
    * @param value
-   * @param searchText
-   * @returns {any}
+   * @param searchedText
+   * @returns
    */
-  public static searchInString(value, searchText): any {
-    return value.toLowerCase().includes(searchText);
-  }
-
-  /**
-   * Generate a unique GUID
-   *
-   * @returns {string}
-   */
-  public static generateGUID(): string {
-    function S4(): string {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-
-    return S4() + S4();
+  public static searchInString(value, searchedText): any {
+    return value.toLowerCase().includes(searchedText);
   }
 
   /**
@@ -117,7 +100,7 @@ export class SearchUtils {
    * Handleize
    *
    * @param text
-   * @returns {string}
+   * @returns
    */
   public static handleize(text): string {
     return text

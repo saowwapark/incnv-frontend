@@ -122,7 +122,7 @@ export class DgvAnnotation {
   }
 }
 
-type variantSubtypeKey =
+type VariantSubtypeKey =
   | 'duplication'
   | 'deletion'
   | 'gain'

@@ -9,8 +9,7 @@ import {
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { TabFileMapping } from './tab-file-mapping.model';
-import { UploadFormService } from 'src/app/upload-configure/configure-upload-cnv-tool-result/upload-form/upload-form.service';
-import { ConstantsService } from 'src/app/shared/services/constants.service';
+import { ConstantsService } from 'src/app/services/constants.service';
 import { map } from 'rxjs/operators';
 import { IdAndName } from 'src/app/shared/models/id-and-name.model';
 
@@ -23,11 +22,7 @@ export class TabFileMappingService implements Resolve<any> {
   onSearchTextChanged: Subject<any>;
   baseRouteUrl: string;
 
-  constructor(
-    private _http: HttpClient,
-    private _uploadFormService: UploadFormService,
-    private _constant: ConstantsService
-  ) {
+  constructor(private _http: HttpClient, private _constant: ConstantsService) {
     console.log('TabFileMappingService loaded.');
     this.onTriggerDataChanged = new BehaviorSubject(null);
     this.onTabFileMappingsChanged = new BehaviorSubject([]);

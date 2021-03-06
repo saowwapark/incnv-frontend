@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class SignupComponent implements OnInit, OnDestroy {
   signupForm: FormGroup;
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(public _authService: AuthenService, private _router: Router) {
     this._unsubscribeAll = new Subject();
@@ -38,7 +38,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({
         next: () => {
-          this._router.navigate(['/individual-sample']);
+          this._router.navigate(['/upload-cnv-result']);
         },
         error: () => {
           console.log('cannot signup');

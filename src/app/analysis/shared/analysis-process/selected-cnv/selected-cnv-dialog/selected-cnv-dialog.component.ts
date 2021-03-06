@@ -1,5 +1,5 @@
 import { NgForm } from '@angular/forms';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { CnvInfo } from 'src/app/analysis/analysis.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './selected-cnv-dialog.component.html',
   styleUrls: ['./selected-cnv-dialog.component.scss']
 })
-export class SelectedCnvDialogComponent implements OnInit {
+export class SelectedCnvDialogComponent {
   cnv: CnvInfo;
   dialogTitle: string;
 
@@ -31,8 +31,6 @@ export class SelectedCnvDialogComponent implements OnInit {
       allowNegative: false
     });
   }
-
-  ngOnInit() {}
 
   selectBasepair(form: NgForm) {
     const clonedCnvInfo = { ...this.cnv } as CnvInfo;

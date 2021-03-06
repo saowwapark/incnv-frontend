@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 
 import { AuthenService } from './authen/authen.service';
 import { Subscription } from 'rxjs';
+import { MessagesService } from './shared/components/messages/messages.service';
+import { HeaderService } from './shared/components/header/header.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +17,14 @@ export class AppComponent implements OnInit, OnDestroy {
   private authListenerSubs: Subscription;
   constructor(private authService: AuthenService) {}
 
+  @HostListener('window:beforeunload')
+  ngOnDestroy() {
+    this.authListenerSubs.unsubscribe();
+    this.authService.logout();
+    console.log('app component is destroyed.');
+    window['ngRef'].destroy();
+  }
+
   ngOnInit() {
     this.authService.autoAuthUser();
     this.authListenerSubs = this.authService.isAuthen$.subscribe(
@@ -22,9 +32,5 @@ export class AppComponent implements OnInit, OnDestroy {
         this.userIsAuthenticated = isAuthenticated;
       }
     );
-  }
-
-  ngOnDestroy(): void {
-    this.authListenerSubs.unsubscribe();
   }
 }

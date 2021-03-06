@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class NavigationService {
   onItemCollapsed: Subject<any>;
   onItemCollapseToggled: Subject<any>;

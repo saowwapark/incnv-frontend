@@ -21,6 +21,9 @@ import { ChooseOneFileComponent } from './shared/analysis-configure/choose-one-f
 import { MultipleProcessComponent } from './multiple-process/multiple-process.component';
 import { MergedTableComponent } from './shared/analysis-process/merged-table/merged-table.component';
 import { ClipboardModule } from 'ngx-clipboard';
+import { MultipleConfigureService } from './multiple-configure/multiple-configure.service';
+import { AnalysisConfigureService } from './shared/analysis-configure/analysis-configure.service';
+import { AnalysisProcessService } from './shared/analysis-process/analysis-process.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,12 @@ import { ClipboardModule } from 'ngx-clipboard';
     TextMaskModule,
     ClipboardModule
   ],
-  providers: [ChooseSamplesetResolver],
+  providers: [
+    ChooseSamplesetResolver,
+    AnalysisConfigureService,
+    MultipleConfigureService,
+    AnalysisProcessService
+  ],
   entryComponents: [AnnotationDialogComponent, SelectedCnvDialogComponent]
 })
 export class AnalysisModule {}

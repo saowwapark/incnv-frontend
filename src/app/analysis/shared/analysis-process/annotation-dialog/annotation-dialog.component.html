@@ -58,14 +58,14 @@
           <div *ngIf="isSelectable">
             <div class="property-row" fxLayout="row wrap">
               <div
-                *ngIf="analysisType === INDIVIDUAL_SAMPLE_ANALYSIS"
+                *ngIf="analysisType === individualSampleAnalysisType"
                 class="property property-name"
                 fxFlex="1 1 30%"
               >
                 Overlapping tools
               </div>
               <div
-                *ngIf="analysisType === MULTIPLE_SAMPLE_ANALYSIS"
+                *ngIf="analysisType === multipleSampleAnalysisType"
                 class="property property-name"
                 fxFlex="1 1 30%"
               >

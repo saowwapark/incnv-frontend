@@ -32,6 +32,8 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
   @Input() referenceGenome: string;
   @Input() selectedFile: UploadCnvToolResult;
   @Output() selectedFileChange = new EventEmitter<UploadCnvToolResult>();
+  @ViewChild(MatSort, { static: true }) matSort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedColumns = [
     'select',
     'fileName',
@@ -48,11 +50,8 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
 
   isLoadingResults = true;
 
-  @ViewChild(MatSort, { static: true }) matSort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(private _service: AnalysisConfigureService) {
     this._unsubscribeAll = new Subject();
@@ -66,8 +65,8 @@ export class ChooseOneFileComponent implements OnChanges, OnDestroy {
     this._service
       .getUploadCnvToolResults(this.referenceGenome, this.samplesetId)
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(UploadCnvToolResults => {
-        this.dataSource = new MatTableDataSource(UploadCnvToolResults);
+      .subscribe(uploadCnvToolResults => {
+        this.dataSource = new MatTableDataSource(uploadCnvToolResults);
         this.dataSource.sort = this.matSort;
         this.dataSource.paginator = this.paginator;
       });

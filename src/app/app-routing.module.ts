@@ -1,19 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { WelcomeComponent } from './welcome/welcome.component';
+import { WelcomeComponent } from './welcome-template/welcome-template.component';
 
 import { AuthenGuard } from './authen/authen.guard';
-import { HomeContentComponent } from './home/home-content/home-content.component';
+import { HomeContentComponent } from './home-template/home-content/home-content.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { RefreshGuard } from './shared/guards/refresh.guard';
 
 const appRoutes: Routes = [
   // level1
   {
     path: '',
-    canActivate: [AuthenGuard],
+    // canActivate: [AuthenGuard],
+
     children: [
-      { path: 'welcome', component: WelcomeComponent },
       {
         path: 'upload-cnv-result',
         loadChildren: () =>
@@ -44,13 +45,13 @@ const appRoutes: Routes = [
       }
     ]
   },
+  { path: 'welcome-template', component: WelcomeComponent },
   { path: 'home', component: HomeContentComponent },
-
   { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes, { enableTracing: false })],
+  imports: [RouterModule.forRoot(appRoutes, { enableTracing: false, relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
   providers: [AuthenGuard]
 })

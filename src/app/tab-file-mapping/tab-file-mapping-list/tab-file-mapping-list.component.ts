@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TabFileMapping } from '../tab-file-mapping.model';
 import { TabFileMappingService } from '../tab-file-mapping.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { share, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tab-file-mapping-list',
@@ -10,21 +10,20 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./tab-file-mapping-list.component.scss']
 })
 export class TabFileMappingListComponent implements OnInit, OnDestroy {
-  fileMappingConfigureds: TabFileMapping[];
+  fileMappingConfigureds$: Observable<TabFileMapping[]>;
 
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(private _fileMappingService: TabFileMappingService) {
     // Set the private defaults
     this._unsubscribeAll = new Subject();
   }
   ngOnInit(): void {
-    this._fileMappingService.onTabFileMappingsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(fileMappingConfigureds => {
-        this.fileMappingConfigureds = fileMappingConfigureds;
-      });
+    this.fileMappingConfigureds$ = this._fileMappingService.onTabFileMappingsChanged.pipe(
+      share(),
+      takeUntil(this._unsubscribeAll)
+    );
   }
   /**
    * On destroy

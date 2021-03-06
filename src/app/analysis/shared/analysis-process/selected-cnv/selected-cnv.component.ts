@@ -46,7 +46,8 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class SelectedCnvComponent implements OnInit, OnDestroy {
   @Input() analysisType: string;
-
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   selectedCnvs: CnvInfo[];
   displayedColumns = [
     'no',
@@ -61,8 +62,6 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
   expandedElement: string | null;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
   // matSort: MatSort;
   // @ViewChild(MatSort, { static: false }) set content(content: MatSort) {
   //   console.log(content);
@@ -70,7 +69,7 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
   // }
 
   dataSource = new MatTableDataSource<CnvInfo>();
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     public _matDialog: MatDialog,

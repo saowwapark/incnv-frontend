@@ -2,16 +2,16 @@ import { Sampleset } from './sampleset.model';
 import { SamplesetService } from './sampleset.service';
 import { myAnimations } from 'src/app/shared/animations';
 
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  OnDestroy
-} from '@angular/core';
-import { Subject, fromEvent } from 'rxjs';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+  takeUntil,
+  debounceTime,
+  distinctUntilChanged,
+  tap,
+  switchMap,
+  filter
+} from 'rxjs/operators';
 import {
   MatDialog,
   MatDialogRef,
@@ -21,6 +21,7 @@ import { SamplesetFormDialogComponent } from './sampleset-form-dialog/sampleset-
 import { DialogAction } from '../shared/models/dialog.action.model';
 import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
 import { ActivatedRoute } from '@angular/router';
+import { SearchService } from '../shared/components/search/search.service';
 
 @Component({
   selector: 'app-sampleset',
@@ -28,20 +29,18 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./sampleset.component.scss'],
   animations: myAnimations
 })
-export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('filterInput', { static: false })
-  filterInput: ElementRef;
-
+export class SamplesetComponent implements OnInit, OnDestroy {
   dialogRef: MatDialogRef<SamplesetFormDialogComponent>;
   samplesets: Sampleset[];
   selectedSamplesets: Sampleset[];
   confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     public samplesetService: SamplesetService,
     public _matDialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private _searchService: SearchService
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -52,12 +51,13 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.samplesets = this.route.snapshot.data['samplesets'];
-    this.samplesetService.onTriggerDataChanged
+    const sampleset$ = this.samplesetService.onTriggerDataChanged.pipe(
+      switchMap(() => this.samplesetService.getSamplesets())
+    );
+    sampleset$
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        this.samplesetService.getSamplesets().subscribe(updatedSamplesets => {
-          this.samplesets = updatedSamplesets;
-        });
+      .subscribe(updatedSamplesets => {
+        this.samplesets = updatedSamplesets;
       });
 
     this.samplesetService.onSelectedChanged
@@ -65,22 +65,20 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(selectedSamplesets => {
         this.selectedSamplesets = selectedSamplesets;
       });
-  }
 
-  ngAfterViewInit() {
-    fromEvent(this.filterInput.nativeElement, 'keyup')
+    this._searchService.search$
       .pipe(
         debounceTime(400),
         distinctUntilChanged(),
         takeUntil(this._unsubscribeAll)
       )
-      .subscribe(() => {
-        const filterValue = this.filterInput.nativeElement.value;
+      .subscribe(searchText => {
         this.samplesetService.onSearchTextChanged.next(
-          filterValue.trim().toLowerCase()
+          searchText.trim().toLowerCase()
         );
       });
   }
+
   /**
    * On destroy
    */
@@ -97,9 +95,6 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
    * New Sampleset
    */
   onAddSampleset(): void {
-    const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-
     // Original data
     this.dialogRef = this._matDialog.open(SamplesetFormDialogComponent, {
       panelClass: 'dialog-default',
@@ -111,14 +106,15 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     // Updated data
-    this.dialogRef.afterClosed().subscribe(response => {
-      if (!response) {
-        return;
-      }
-      const updatedSampleset: Sampleset = response;
-
-      this.samplesetService.addSampleset(updatedSampleset).subscribe();
-    });
+    this.dialogRef
+      .afterClosed()
+      .pipe(
+        filter(response => !!response),
+        tap((updatedSampleset: Sampleset) =>
+          this.samplesetService.addSampleset(updatedSampleset)
+        )
+      )
+      .subscribe(() => this.samplesetService.onTriggerDataChanged.next());
   }
   onDelselectedAll() {
     this.samplesetService.onSelectedChanged.next([]);
@@ -140,18 +136,24 @@ export class SamplesetComponent implements OnInit, OnDestroy, AfterViewInit {
     this.confirmDialogRef.componentInstance.confirmMessage =
       'Are you sure you want to delete?' + rowNames;
 
-    this.confirmDialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const samplesetIds = [];
-        for (const selectedRow of selectedSamplesets) {
-          samplesetIds.push(selectedRow.samplesetId);
-        }
-        this.samplesetService.deleteSamplesets(samplesetIds).subscribe(() => {
-          this.samplesetService.onSelectedChanged.next([]);
-          this.samplesetService.onTriggerDataChanged.next();
-        });
-      }
-      this.confirmDialogRef = null;
-    });
+    // after closed dialog
+    this.confirmDialogRef
+      .afterClosed()
+      .pipe(
+        filter(response => !!response),
+        tap((samplesets: Sampleset[]) => {
+          const samplesetIds = [];
+          for (const selectedSampleset of samplesets) {
+            samplesetIds.push(selectedSampleset.samplesetId);
+          }
+          this.samplesetService.deleteSamplesets(samplesetIds);
+        })
+      )
+      .subscribe(() => {
+        this.samplesetService.onSelectedChanged.next([]);
+        this.samplesetService.onTriggerDataChanged.next();
+        // clear confirmDialogRef
+        this.confirmDialogRef = null;
+      });
   }
 }

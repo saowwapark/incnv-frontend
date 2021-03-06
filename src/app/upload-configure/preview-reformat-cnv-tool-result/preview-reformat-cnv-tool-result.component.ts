@@ -1,9 +1,6 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
-  ViewEncapsulation,
-  AfterViewInit,
   Input,
   Output,
   EventEmitter
@@ -16,15 +13,14 @@ import { Subject } from 'rxjs';
   templateUrl: './preview-reformat-cnv-tool-result.component.html',
   styleUrls: ['./preview-reformat-cnv-tool-result.component.scss']
 })
-export class PreviewReformatCnvToolResultComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+export class PreviewReformatCnvToolResultComponent implements OnDestroy {
   @Input() uploadCnvToolResultId: number;
 
   @Output()
   previousStep = new EventEmitter<any>();
   @Output() nextStep = new EventEmitter<any>();
 
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor() {
     this._unsubscribeAll = new Subject();
@@ -34,9 +30,6 @@ export class PreviewReformatCnvToolResultComponent
   // @ Lifecycle hooks
   // -----------------------------------------------------------------------------------------------------
 
-  ngOnInit(): void {}
-
-  ngAfterViewInit() {}
   /**
    * On destroy
    */

@@ -4,15 +4,20 @@
   fxLayoutGap="32px"
   fxLayoutAlign="space-around center"
 >
-  <ng-container *ngFor="let fileMappingConfigured of fileMappingConfigureds">
-    <app-tab-file-mapping-card
-      [fileMappingConfigured]="fileMappingConfigured"
-      fxFlex="0 0 calc(50% - 32px)"
-    >
-    </app-tab-file-mapping-card>
+  <ng-container
+    *ngIf="fileMappingConfigureds$ | async as fileMappingConfigureds; noData"
+  >
+    <ng-container *ngFor="let fileMappingConfigured of fileMappingConfigureds">
+      <app-tab-file-mapping-card
+        [fileMappingConfigured]="fileMappingConfigured"
+        fxFlex="0 0 calc(50% - 32px)"
+      >
+      </app-tab-file-mapping-card>
+    </ng-container>
   </ng-container>
-
-  <p class="info-text mat-body-1" *ngIf="fileMappingConfigureds.length <= 0">
-    No CNV Tools added yet!
-  </p>
+  <ng-template #noData>
+    <p class="info-text mat-body-1">
+      No CNV Tools added yet!
+    </p>
+  </ng-template>
 </div>

@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { ReformatCnvToolResultTableComponent } from './reformat-cnv-tool-result-table/reformat-cnv-tool-result-table.component';
+import { ReformatCnvToolResultService } from './reformat-cnv-tool-result.service';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { ReformatCnvToolResultTableComponent } from './reformat-cnv-tool-result-
   ],
   imports: [ReactiveFormsModule, SharedModule],
   exports: [ReformatCnvToolResultTableComponent],
+  providers: [ReformatCnvToolResultService],
   entryComponents: [ReformatDialogComponent]
 })
 export class ReformatCnvToolResultModule {}

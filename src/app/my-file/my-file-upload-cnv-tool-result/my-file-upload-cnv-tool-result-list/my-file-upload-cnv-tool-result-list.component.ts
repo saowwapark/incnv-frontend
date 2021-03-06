@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { takeUntil } from 'rxjs/operators';
+import { filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
 
 import { Subject } from 'rxjs';
 import { UploadCnvToolResult } from '../../../shared/models/upload-cnv-tool-result.model';
@@ -29,6 +29,8 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class MyFileUploadCnvToolResultListComponent
   implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   uploads: any;
   displayedColumns = [
     'select',
@@ -55,11 +57,8 @@ export class MyFileUploadCnvToolResultListComponent
   samplesets: IdAndName[];
   tabFileMappings: IdAndName[];
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private _service: MyFileUploadCnvToolResultService,
@@ -107,15 +106,14 @@ export class MyFileUploadCnvToolResultListComponent
 
   ngAfterViewInit() {
     this._service.onTriggerDataChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        this._service
-          .getUploadCnvToolResults()
-          .subscribe(UploadCnvToolResults => {
-            this.dataSource = new MatTableDataSource(UploadCnvToolResults);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-          });
+      .pipe(
+        mergeMap(() => this._service.getUploadCnvToolResults()),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe(uploadCnvToolResults => {
+        this.dataSource = new MatTableDataSource(uploadCnvToolResults);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
       });
   }
   /**
@@ -140,23 +138,22 @@ export class MyFileUploadCnvToolResultListComponent
         action: DialogAction.Edit,
         tabFileMappings: this.tabFileMappings,
         samplesets: this.samplesets,
-        uploadCnvToolResult: uploadCnvToolResult
+        uploadCnvToolResult
       }
     });
 
     // Updated data
-    this.dialogRef.afterClosed().subscribe((response: UploadCnvToolResult) => {
-      if (!response) {
-        return;
-      }
-      response.uploadCnvToolResultId =
-        uploadCnvToolResult.uploadCnvToolResultId;
-      const updatedData: UploadCnvToolResult = response;
-
-      this._service.editUploadCnvToolResult(updatedData).subscribe(() => {
+    this.dialogRef
+      .afterClosed()
+      .pipe(
+        filter(response => !!response),
+        tap((updatedData: UploadCnvToolResult) =>
+          this._service.editUploadCnvToolResult(updatedData)
+        )
+      )
+      .subscribe(() => {
         this._service.onTriggerDataChanged.next();
       });
-    });
   }
   /************************* Select **************************/
   /** Whether the number of selected elements matches the total number of rows. */
@@ -168,11 +165,14 @@ export class MyFileUploadCnvToolResultListComponent
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach(sampleset =>
-          this.selection.select(sampleset)
-        );
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.dataSource.data.forEach(sampleset =>
+        this.selection.select(sampleset)
+      );
+    }
+
     this._service.onSelectedChanged.next(this.selection.selected);
   }
 

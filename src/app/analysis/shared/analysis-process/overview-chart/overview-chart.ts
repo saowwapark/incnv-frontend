@@ -9,7 +9,7 @@ import {
 export class OverviewChart {
   _parentElement; // string
   _data: CnvInfo[];
-  _yAxisUnit;
+  _yAxisUnit: string;
   _domainOnX;
   _domainOnY;
   _color: string;
@@ -21,7 +21,6 @@ export class OverviewChart {
   copyScaleX;
   xAxis;
   yAxis;
-
   svg;
 
   /**
@@ -47,7 +46,57 @@ export class OverviewChart {
 
     this.initVis(containerMargin);
   }
+  // -----------------------------------  public -----------------------------------------
 
+  public createBrush(callback) {
+    // Initialize brush component
+    const brush = d3
+      .brushX()
+      .handleSize(10)
+      .extent([
+        [0, 0],
+        [this.graphContainer.attr('width'), this.graphContainer.attr('height')]
+      ])
+      .on('end', () => this.brushed(callback));
+    // Append brush component
+    const brushComponent = this.graphContainer
+      .append('g')
+      .attr('class', 'brush')
+      .call(brush);
+  }
+  public initVis(maxTickLeft) {
+    this.generateGraphContainer(maxTickLeft);
+    this.createClipPath();
+    this.generateScaleX();
+    this.generateScaleY();
+    this.createAxisX();
+    this.createAxisY();
+
+    this.graphContainer.call(this.createZoomScale());
+    this.createBars();
+  }
+
+  public destroyChart() {
+    this.removeVis();
+    this.releaseInstances();
+  }
+  // -----------------------------------  private -----------------------------------------
+
+  private removeVis() {
+    if (this.svg !== undefined) {
+      this.svg.remove();
+    }
+  }
+  private releaseInstances() {
+    this.graphContainer = null;
+    this.clipPath = null;
+    this.scaleX = null;
+    this.scaleY = null;
+    this.xAxis = null;
+    this.yAxis = null;
+    this.copyScaleX = null;
+    this.svg = null;
+  }
   private calContainerHeight(containerMargin) {
     const maxY = this._domainOnY[1];
     const xAxisBarHeight = 20;
@@ -146,9 +195,7 @@ export class OverviewChart {
     this.yAxis = d3
       .axisLeft(this.scaleY)
       .ticks(this._domainOnY[1])
-      .tickFormat((d: number) => {
-        return `${d3.format(',d')(d)} ${this._yAxisUnit}`;
-      });
+      .tickFormat((d: number) => `${d3.format(',d')(d)} ${this._yAxisUnit}`);
     yAxisGroup
       .call(this.yAxis)
       .selectAll('text')
@@ -163,9 +210,7 @@ export class OverviewChart {
       .attr('clip-path', 'url(#clip)');
     bars
       .selectAll('rect')
-      .data(() => {
-        return this._data;
-      }) // get merged_tool
+      .data(() => this._data) // get merged_tool
       .enter()
       .append('rect')
       .attr(
@@ -192,21 +237,24 @@ export class OverviewChart {
     }
   }
 
-  public createBrush(callback) {
-    // Initialize brush component
-    const brush = d3
-      .brushX()
-      .handleSize(10)
+  private createZoomScale() {
+    const width = this.graphContainer.attr('width');
+    const height = this.graphContainer.attr('height');
+    const zoomScale = d3
+      .zoom()
+      .scaleExtent([1, Infinity])
+      .translateExtent([
+        [0, 0],
+        [width, height]
+      ])
       .extent([
         [0, 0],
-        [this.graphContainer.attr('width'), this.graphContainer.attr('height')]
+        [width, height]
       ])
-      .on('end', () => this.brushed(callback));
-    // Append brush component
-    const brushComponent = this.graphContainer
-      .append('g')
-      .attr('class', 'brush')
-      .call(brush);
+      .on('zoom', () => {
+        this.zoomed();
+      });
+    return zoomScale;
   }
 
   private zoomed() {
@@ -237,43 +285,5 @@ export class OverviewChart {
       .selectAll('text')
       .style('font-size', X_AXIS_FONT_SIZE);
     // return scaleX;
-  }
-
-  private createZoomScale() {
-    const width = this.graphContainer.attr('width');
-    const height = this.graphContainer.attr('height');
-    const zoomScale = d3
-      .zoom()
-      .scaleExtent([1, Infinity])
-      .translateExtent([
-        [0, 0],
-        [width, height]
-      ])
-      .extent([
-        [0, 0],
-        [width, height]
-      ])
-      .on('zoom', () => {
-        this.zoomed();
-      });
-    return zoomScale;
-  }
-
-  public initVis(maxTickLeft) {
-    this.generateGraphContainer(maxTickLeft);
-    this.createClipPath();
-    this.generateScaleX();
-    this.generateScaleY();
-    this.createAxisX();
-    this.createAxisY();
-
-    this.graphContainer.call(this.createZoomScale());
-    this.createBars();
-  }
-
-  public removeVis() {
-    if (this.svg) {
-      this.svg.remove();
-    }
   }
 }

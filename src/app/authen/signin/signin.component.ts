@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnDestroy {
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(private _authService: AuthenService, private _router: Router) {
     this._unsubscribeAll = new Subject();
@@ -27,7 +27,7 @@ export class SigninComponent implements OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({
         next: () => {
-          this._router.navigate(['/individual-sample']);
+          this._router.navigate(['/upload-cnv-result']);
         },
         error: () => {
           console.log('cannot login');

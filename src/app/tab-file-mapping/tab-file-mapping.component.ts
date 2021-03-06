@@ -1,39 +1,47 @@
 import { TabFileMappingService } from './tab-file-mapping.service';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { TabFileMappingFormDialogComponent } from './tab-file-mapping-form-dialog/tab-file-mapping-form-dialog.component';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { SearchService } from '../shared/components/search/search.service';
 @Component({
   selector: 'app-tab-file-mapping',
   templateUrl: './tab-file-mapping.component.html',
   styleUrls: ['./tab-file-mapping.component.scss']
 })
-export class TabFileMappingComponent implements OnInit {
+export class TabFileMappingComponent implements OnInit, OnDestroy {
   dialogRef: any;
-  searchInput: FormControl;
 
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private _matDialog: MatDialog,
-    private _fileMappingService: TabFileMappingService
+    private _fileMappingService: TabFileMappingService,
+    private _searchService: SearchService
   ) {
-    this.searchInput = new FormControl('');
     this._unsubscribeAll = new Subject();
   }
   ngOnInit(): void {
-    this.searchInput.valueChanges
+    this._searchService.search$
       .pipe(
-        takeUntil(this._unsubscribeAll),
         debounceTime(300),
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntil(this._unsubscribeAll)
       )
-      .subscribe(searchText => {
-        this._fileMappingService.onSearchTextChanged.next(searchText);
+      .subscribe(searchedText => {
+        this._fileMappingService.onSearchTextChanged.next(searchedText);
       });
+  }
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 
   // -----------------------------------------------------------------------------------------------------

@@ -1,13 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ConstantsService } from 'src/app/shared/services/constants.service';
+import { ConstantsService } from 'src/app/services/constants.service';
 import { map } from 'rxjs/operators';
 import { ReformatCnvToolResult } from './reformat-cnv-tool-result.model';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ReformatCnvToolResultService {
   onResultsChanged: BehaviorSubject<ReformatCnvToolResult[]>;
   onSelectedChanged: BehaviorSubject<ReformatCnvToolResult[]>;
@@ -36,8 +34,8 @@ export class ReformatCnvToolResultService {
         `${this.baseRouteUrl}/upload-cnv-tool-results/${uploadCnvToolResultId}`,
         {
           params: {
-            sort: sort,
-            order: order,
+            sort,
+            order,
             pageNumber: String(pageNumber + 1),
             pageSize: String(pageSize)
           }
@@ -63,7 +61,7 @@ export class ReformatCnvToolResultService {
         'Content-Type': 'application/json'
       }),
       body: {
-        reformatCnvToolResultIds: reformatCnvToolResultIds
+        reformatCnvToolResultIds
       }
     };
     return this._http.delete(
@@ -74,13 +72,13 @@ export class ReformatCnvToolResultService {
   editReformatCnvToolResult(reformatCnvToolResult: ReformatCnvToolResult) {
     return this._http.put(
       `${this.baseRouteUrl}/${reformatCnvToolResult.reformatCnvToolResultId}`,
-      { reformatCnvToolResult: reformatCnvToolResult }
+      { reformatCnvToolResult }
     );
   }
   addReformatCnvToolResult(reformatCnvToolResult: ReformatCnvToolResult) {
     return this._http.post(
       `${this.baseRouteUrl}/${reformatCnvToolResult.reformatCnvToolResultId}`,
-      { reformatCnvToolResult: reformatCnvToolResult }
+      { reformatCnvToolResult }
     );
   }
 }

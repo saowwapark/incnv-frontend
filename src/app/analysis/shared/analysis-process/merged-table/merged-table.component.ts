@@ -1,5 +1,4 @@
 import {
-  DgvAnnotationKey,
   DgvAnnotation,
   CnvGroup,
   MULTIPLE_SAMPLE_ANALYSIS
@@ -15,7 +14,10 @@ import {
   OnChanges,
   OnDestroy,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewChecked,
+  AfterViewInit,
+  AfterContentInit
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -65,6 +67,14 @@ export class FilterObj {
 export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() analysisType: string;
   @Input() mergedData: CnvGroup;
+  @ViewChild(MatPaginator, { static: false }) set paginator(mp: MatPaginator) {
+    console.log('@ViewChild - paginator');
+    this.dataSource.paginator = mp;
+  }
+  @ViewChild(MatSort, { static: false }) set sort(ms: MatSort) {
+    console.log('@ViewChild - sort');
+    this.createCustomSort();
+  }
   displayedColumns = [
     'select',
     'no',
@@ -78,8 +88,6 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
   expandedElement: string | null;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
   filteredEnsembl = new FilterObj('ensembl', []);
   filteredDgv = new FilterObj('dgv', []);
   filteredClinvarOmimId = new FilterObj('clinvarOmimId', []);
@@ -93,7 +101,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
 
   dataSource = new MatTableDataSource<CnvInfo>();
   selection = new SelectionModel<CnvInfo>(true, []);
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   // #########################################  Constructor  #######################################
   constructor(
@@ -106,10 +114,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
 
   // #########################################  Life Cycle Hook #######################################
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.createCustomSort();
     this.dataSource.filterPredicate = this.createCustomFilterFn();
-
     this.service.onSelectedCnvChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((cnvInfos: CnvInfo[]) => {
@@ -120,7 +125,8 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
   ngOnChanges() {
-    this.dataSource.data = this.mergedData.cnvInfos;
+    this.dataSource.data = this.mergedData?.cnvInfos;
+
     if (this.analysisType === MULTIPLE_SAMPLE_ANALYSIS) {
       this.displayedColumns = [
         'select',
@@ -204,7 +210,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
       this.selection.select(...this.dataSource.filteredData);
       // this.updateAllSelectStatus(this.mergedData.cnvInfos, true);
     }
-    this.service.onSelectedCnv.next(this.mergedData.cnvInfos[0]);
+    this.service.onSelectedCnv.next(this.mergedData?.cnvInfos[0]);
     this.service.onSelectedCnvChanged.next(this.selection.selected);
   }
 
@@ -221,8 +227,8 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   updateAllSelectStatus(list: CnvInfo[], isSelected: boolean) {
-    for (let i = 0; i < list.length; i++) {
-      list[i].isSelected = isSelected;
+    for (const listMember of list) {
+      listMember.isSelected = isSelected;
     }
   }
   /***************************** Filter Row *******************************/

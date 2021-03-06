@@ -2,7 +2,7 @@ import { Sampleset } from './sampleset.model';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { ConstantsService } from '../shared/services/constants.service';
+import { ConstantsService } from '../services/constants.service';
 import { map, tap } from 'rxjs/operators';
 import { IdAndName } from '../shared/models/id-and-name.model';
 
@@ -51,7 +51,7 @@ export class SamplesetService {
         'Content-Type': 'application/json'
       }),
       body: {
-        samplesetIds: samplesetIds
+        samplesetIds
       }
     };
     return this._http.delete(this.baseRouteUrl, options);

@@ -1,10 +1,6 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ConfigureCnvToolFilesService {
-
-
-  constructor() { }
+  constructor() {}
 }

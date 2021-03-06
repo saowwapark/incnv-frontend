@@ -1,5 +1,6 @@
 <!-- onpush -->
 <div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start stretch">
+  <!-- filter-->
   <mat-accordion [multi]="true">
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
@@ -289,7 +290,7 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-  <div class="table-container">
+  <div class="table-container" *ngIf="dataSource.data?.length">
     <table
       mat-table
       [dataSource]="dataSource"
@@ -702,7 +703,10 @@
         </td>
       </ng-container>
 
+      <!-- header -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+      <!-- nomal row -->
       <tr
         mat-row
         *matRowDef="let element; columns: displayedColumns"
@@ -711,6 +715,7 @@
         (click)="expandedElement = expandedElement === element ? null : element"
       ></tr>
 
+      <!-- expanded logics for each column-->
       <tr
         mat-row
         *matRowDef="let row; columns: ['expandedFlankings']"
@@ -733,8 +738,9 @@
       ></tr>
     </table>
 
+    <!-- page -->
     <mat-paginator
-      [length]="dataSource.data.length"
+      [length]="dataSource.data?.length"
       [pageSizeOptions]="[5, 10, 25, 50, 100]"
       class="paginator-sticky"
     >

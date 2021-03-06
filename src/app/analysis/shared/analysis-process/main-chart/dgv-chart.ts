@@ -20,7 +20,6 @@ export class DgvChart {
   scaleY: d3.ScaleBand<string>;
   xAxis;
   yAxis;
-
   tooltip;
   subbars;
   svg;
@@ -49,6 +48,52 @@ export class DgvChart {
 
     // this.domainOnY = domainOnY;
     this.initVis(containerMargin);
+  }
+
+  public initVis(containerMargin) {
+    this.generateGraphContainer(containerMargin);
+    this.createScaleX();
+    this.createScaleY();
+    this.generateAxisX();
+    this.generateAxisY();
+
+    this.generateTooltip();
+    this.drawData();
+  }
+
+  public updateVis(newData, newDomainOnX) {
+    this._data = newData;
+    this._domainOnX = newDomainOnX;
+    this.createScaleX();
+    this.generateAxisX();
+    this.drawData();
+  }
+  public drawData() {
+    const bars = this.generateBars();
+    this.subbars = this.generateSubbars(bars);
+    this.addEventToSubbars();
+  }
+  public destroyChart() {
+    this.removeVis();
+    this.releaseInstances();
+  }
+  private removeVis() {
+    if (this.svg) {
+      this.svg.remove();
+    }
+    if (this.tooltip) {
+      this.tooltip.remove();
+    }
+  }
+  private releaseInstances() {
+    this.graphContainer = null;
+    this.scaleX = null;
+    this.scaleY = null;
+    this.xAxis = null;
+    this.yAxis = null;
+    this.tooltip = null;
+    this.subbars = null;
+    this.svg = null;
   }
   private calContainerHeight(containerMargin) {
     const barNumber = 1;
@@ -140,12 +185,6 @@ export class DgvChart {
       .call(yAxis)
       .selectAll('text')
       .style('font-size', Y_AXIS_FONT_SIZE);
-  }
-
-  public drawData() {
-    const bars = this.generateBars();
-    this.subbars = this.generateSubbars(bars);
-    this.addEventToSubbars();
   }
 
   private generateBars() {
@@ -263,33 +302,5 @@ export class DgvChart {
       .style('font-size', '1.3rem')
       .style('display', 'none')
       .style('z-index', '10');
-  }
-
-  public initVis(containerMargin) {
-    this.generateGraphContainer(containerMargin);
-    this.createScaleX();
-    this.createScaleY();
-    this.generateAxisX();
-    this.generateAxisY();
-
-    this.generateTooltip();
-    this.drawData();
-  }
-
-  public updateVis(newData, newDomainOnX) {
-    this._data = newData;
-    this._domainOnX = newDomainOnX;
-    this.createScaleX();
-    this.generateAxisX();
-    this.drawData();
-  }
-
-  public removeVis() {
-    if (this.svg) {
-      this.svg.remove();
-    }
-    if (this.tooltip) {
-      this.tooltip.remove();
-    }
   }
 }

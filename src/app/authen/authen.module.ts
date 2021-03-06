@@ -5,11 +5,13 @@ import { SignupComponent } from './signup/signup.component';
 import { AuthenRoutingModule } from './authen-routing.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthenInterceptor } from './authen-interceptor';
+import { AuthenService } from './authen.service';
 
 @NgModule({
   declarations: [SigninComponent, SignupComponent],
   imports: [SharedModule, AuthenRoutingModule],
   providers: [
+    AuthenService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthenInterceptor, multi: true }
   ]
 })

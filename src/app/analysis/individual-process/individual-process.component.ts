@@ -2,8 +2,8 @@ import {
   DgvVariant,
   CHRACTER_WIDTH,
   INDIVIDUAL_SAMPLE_ANALYSIS
-} from './../analysis.model';
-import { Subject, BehaviorSubject, forkJoin, throwError } from 'rxjs';
+} from '../analysis.model';
+import { Subject, throwError, Observable, combineLatest } from 'rxjs';
 
 import {
   CnvInfo,
@@ -13,10 +13,17 @@ import {
   MERGED_RESULT_NAME,
   SELECTED_RESULT_NAME
 } from '../analysis.model';
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
-import { takeUntil, map, catchError } from 'rxjs/operators';
+import {
+  takeUntil,
+  catchError,
+  mergeMap,
+  shareReplay,
+  map,
+  startWith
+} from 'rxjs/operators';
 import {
   trigger,
   state,
@@ -25,11 +32,23 @@ import {
   animate
 } from '@angular/animations';
 import { Router } from '@angular/router';
+import { LoadingService } from 'src/app/shared/loading/loading.service';
+import { MessagesService } from 'src/app/shared/components/messages/messages.service';
+import { Margin } from '../visualization.model';
+
+interface IndividaulData {
+  individualConfig: IndividualSampleConfig;
+  dgvVariants: DgvVariant[];
+  cnvTools: CnvGroup[];
+  mergedTool: CnvGroup;
+  containerMargin: Margin;
+}
 
 @Component({
   selector: 'app-individual-process',
   templateUrl: './individual-process.component.html',
   styleUrls: ['./individual-process.component.scss'],
+  providers: [LoadingService],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -41,64 +60,103 @@ import { Router } from '@angular/router';
     ])
   ]
 })
-export class IndividualProcessComponent
-  implements OnInit, AfterViewInit, OnDestroy {
-  dgvVariants: DgvVariant[];
-  individualConfig: IndividualSampleConfig;
-  cnvTools: CnvGroup[];
-  mergedTool: CnvGroup;
+export class IndividualProcessComponent implements OnInit, OnDestroy {
+  data$: Observable<IndividaulData>;
   selectedChrRegion: RegionBp;
-  containerMargin: { top: number; right: number; bottom: number; left: number };
-  isLoading: BehaviorSubject<boolean>;
   selectedCnvs: CnvInfo[];
-  readonly INDIVIDUAL_SAMPLE_ANALYSIS = INDIVIDUAL_SAMPLE_ANALYSIS;
+  readonly analysisType = INDIVIDUAL_SAMPLE_ANALYSIS;
 
   // private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
-  constructor(private service: AnalysisProcessService, private router: Router) {
-    this.isLoading = new BehaviorSubject(true);
+  constructor(
+    private service: AnalysisProcessService,
+    private router: Router,
+    private messagesService: MessagesService,
+    public loadingService: LoadingService
+  ) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
-    this.service.onIndividualSampleConfigChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((config: IndividualSampleConfig) => {
-        this.individualConfig = config;
-        const observables$ = [
-          this.service.getDgvVariants(
-            this.individualConfig.referenceGenome,
-            this.individualConfig.chromosome
-          ),
-          this.service.getIndividualSampleData(this.individualConfig)
-        ];
+    const individualConfig$ = this.service.onIndividualSampleConfigChanged
+      .asObservable()
+      .pipe(shareReplay({ refCount: true, bufferSize: 1 }));
 
-        if (!this.individualConfig.referenceGenome) {
-          this.router.navigate(['/individual-sample']);
-        } else {
-          forkJoin(observables$)
-            .pipe(
-              catchError(err => {
-                this.router.navigate(['/individual-sample']);
-                return throwError(err);
-              }),
-              takeUntil(this._unsubscribeAll)
-            )
-            .subscribe(
-              ([dgvs, individualSample]: [
-                DgvVariant[],
-                [CnvGroup[], CnvGroup]
-              ]) => {
-                this.dgvVariants = dgvs;
-                this.cnvTools = individualSample[0];
-                this.mergedTool = individualSample[1];
-                this.containerMargin = this.calContainerMargin();
-                this.isLoading.next(false);
-              }
-            );
-        }
-      });
+    const dgvVariants$ = individualConfig$.pipe(
+      mergeMap((config: IndividualSampleConfig) =>
+        this.service.getDgvVariants(config.referenceGenome, config.chromosome)
+      ),
+      startWith(undefined as DgvVariant[]),
+      catchError((err: unknown) => {
+        const message = 'Could not load DGV variants';
+        this.messagesService.showErrors(message);
+        console.log(message, err);
+        this.router.navigate(['/individual-sample']);
+        return throwError(err);
+      })
+    );
+    const individualSampleData$ = individualConfig$.pipe(
+      mergeMap((config: IndividualSampleConfig) =>
+        this.service.getIndividualSampleData(config)
+      ),
+      shareReplay({ refCount: true, bufferSize: 1 })
+    );
+
+    const cnvTools$ = individualSampleData$.pipe(
+      map(individaulSampleData => individaulSampleData[0]),
+      startWith(undefined as CnvGroup[]),
+      catchError((err: unknown) => {
+        const message = 'Could not load CNV tools';
+        this.messagesService.showErrors(message);
+        console.log(message);
+        return throwError(err);
+      })
+    );
+    const mergedTool$ = individualSampleData$.pipe(
+      map(individaulSampleData => individaulSampleData[1]),
+      startWith(undefined as CnvGroup),
+      catchError((err: unknown) => {
+        const message = 'Could not load merged CNV tools';
+        this.messagesService.showErrors(message);
+        console.log(message);
+        return throwError(err);
+      })
+    );
+
+    const containerMargin$ = cnvTools$.pipe(
+      map(cnvTools => this.calContainerMargin(cnvTools)),
+      startWith(undefined as Margin)
+    );
+
+    this.data$ = combineLatest([
+      individualConfig$,
+      dgvVariants$,
+      cnvTools$,
+      mergedTool$,
+      containerMargin$
+    ]).pipe(
+      map(
+        ([
+          individualConfig,
+          dgvVariants,
+          cnvTools,
+          mergedTool,
+          containerMargin
+        ]) => ({
+          individualConfig,
+          dgvVariants,
+          cnvTools,
+          mergedTool,
+          containerMargin
+        })
+      ),
+      catchError((err: unknown) => {
+        console.log(err);
+        this.router.navigate(['/individual-sample']);
+        return throwError(err);
+      })
+    );
 
     this.service.onSelectedCnvChanged
       .pipe(takeUntil(this._unsubscribeAll))
@@ -106,15 +164,25 @@ export class IndividualProcessComponent
         this.selectedCnvs = cnvInfos;
       });
   }
-
   selectChrRegion(selectedChrRegion: RegionBp) {
     this.selectedChrRegion = selectedChrRegion;
   }
 
-  private calContainerMargin() {
-    // max character lenght
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+  private calContainerMargin(cnvTools: CnvGroup[]): Margin {
+    if (!cnvTools) {
+      return undefined;
+    }
+    // max character length
     let maxLength = 0;
-    for (const tool of this.cnvTools) {
+    for (const tool of cnvTools) {
       const length = tool.cnvGroupName.length;
       if (length > maxLength) {
         maxLength = length;
@@ -133,16 +201,5 @@ export class IndividualProcessComponent
       left: 10 + CHRACTER_WIDTH * maxLength
     };
     return containerMargin;
-  }
-
-  ngAfterViewInit(): void {}
-
-  /**
-   * On destroy
-   */
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
   }
 }

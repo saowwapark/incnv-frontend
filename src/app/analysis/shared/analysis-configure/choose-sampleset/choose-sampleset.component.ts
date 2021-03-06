@@ -38,7 +38,7 @@ import { MatPaginator } from '@angular/material/paginator';
     ])
   ]
 })
-export class ChooseSamplesetComponent implements OnInit, OnChanges {
+export class ChooseSamplesetComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) matSort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -51,8 +51,6 @@ export class ChooseSamplesetComponent implements OnInit, OnChanges {
   expandedElement: string | null;
 
   constructor(private activateRoute: ActivatedRoute) {}
-
-  ngOnChanges() {}
 
   ngOnInit() {
     const samplesets = this.activateRoute.snapshot.data['samplesets'];

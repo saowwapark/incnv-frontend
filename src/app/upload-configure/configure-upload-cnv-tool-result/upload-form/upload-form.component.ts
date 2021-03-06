@@ -11,7 +11,6 @@ import {
   EventEmitter,
   ViewChild,
   ElementRef,
-  AfterViewInit,
   OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -26,7 +25,7 @@ import { SamplesetService } from 'src/app/sampleset/sampleset.service';
   templateUrl: './upload-form.component.html',
   styleUrls: ['./upload-form.component.scss']
 })
-export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
+export class UploadFormComponent implements OnInit, OnDestroy {
   @ViewChild('samplesetInput', { static: true }) samplesetInput: ElementRef;
   @ViewChild('tabFileMappingInput', { static: true })
   tabFileMappingInput: ElementRef;
@@ -43,7 +42,7 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
   confirmClicked = new EventEmitter<any>();
 
   isUploading: BehaviorSubject<boolean>;
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   // Tag
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -90,8 +89,6 @@ export class UploadFormComponent implements OnInit, OnDestroy, AfterViewInit {
     //   this.tabFileMappings = tabFileMappings;
     // });
   }
-
-  ngAfterViewInit(): void {}
 
   // -----------------------------------------------------------------------------------------------------
   // @ Private methods

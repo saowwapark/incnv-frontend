@@ -1,9 +1,7 @@
 import { MatPaginator } from '@angular/material/paginator';
 import {
   Component,
-  OnInit,
   OnDestroy,
-  AfterViewInit,
   ViewChild,
   Input,
   OnChanges,
@@ -29,12 +27,14 @@ import { AnalysisConfigureService } from '../analysis-configure.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: myAnimations
 })
-export class ChooseManyFileComponent implements OnChanges, OnInit, OnDestroy {
+export class ChooseManyFileComponent implements OnChanges, OnDestroy {
   @Input() samplesetId: number;
   @Input() sample: string;
   @Input() referenceGenome: string;
   @Input() selectedFiles: UploadCnvToolResult[];
   @Output() selectedFilesChange = new EventEmitter<UploadCnvToolResult[]>();
+  @ViewChild(MatSort, { static: true }) matSort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   displayedColumns = [
     'select',
     'fileName',
@@ -50,11 +50,8 @@ export class ChooseManyFileComponent implements OnChanges, OnInit, OnDestroy {
   selection = new SelectionModel<UploadCnvToolResult>(true, []);
   isLoadingResults = true;
 
-  @ViewChild(MatSort, { static: true }) matSort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   /**
    *
@@ -73,7 +70,7 @@ export class ChooseManyFileComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     for (const propName in changes) {
-      if (changes.hasOwnProperty(propName)) {
+      if (Object.prototype.hasOwnProperty.call(changes, propName)) {
         switch (propName) {
           case 'referenceGenome':
             this.updateDatasource();
@@ -96,8 +93,6 @@ export class ChooseManyFileComponent implements OnChanges, OnInit, OnDestroy {
       }
     }
   }
-
-  ngOnInit(): void {}
 
   updateDatasource() {
     this._service
@@ -132,11 +127,14 @@ export class ChooseManyFileComponent implements OnChanges, OnInit, OnDestroy {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach(sampleset =>
-          this.selection.select(sampleset)
-        );
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.dataSource.data.forEach(sampleset =>
+        this.selection.select(sampleset)
+      );
+    }
+
     this.selectedFiles = this.selection.selected;
     this.selectedFilesChange.emit(this.selectedFiles);
   }

@@ -43,6 +43,8 @@ import { SamplesetFormDialogComponent } from '../sampleset-form-dialog/sampleset
 })
 export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() samplesets: Sampleset[];
+  @ViewChild(MatSort, { static: true }) matSort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   dataSource: MatTableDataSource<Sampleset>;
   displayedColumns = [
     'select',
@@ -55,14 +57,11 @@ export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
 
   selection = new SelectionModel<Sampleset>(true, []);
 
-  @ViewChild(MatSort, { static: true }) matSort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
   dialogRef: MatDialogRef<SamplesetFormDialogComponent>;
 
   expandedElement: string | null;
 
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private _samplesetService: SamplesetService,
@@ -121,7 +120,7 @@ export class SamplesetListComponent implements OnInit, OnChanges, OnDestroy {
     this.dialogRef = this._matDialog.open(SamplesetFormDialogComponent, {
       panelClass: 'dialog-default',
       data: {
-        sampleset: sampleset,
+        sampleset,
         action: DialogAction.Edit
       }
     });

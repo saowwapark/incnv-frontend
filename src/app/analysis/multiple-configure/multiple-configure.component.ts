@@ -6,21 +6,15 @@ import {
   Component,
   OnInit,
   ViewChild,
-  Output,
-  EventEmitter,
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Sampleset } from '../../sampleset/sampleset.model';
-import {
-  IndividualSampleConfig,
-  MultipleSampleConfig
-} from '../analysis.model';
+import { MultipleSampleConfig } from '../analysis.model';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
-import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import { MessagesService } from 'src/app/shared/components/messages/messages.service';
 
 @Component({
   selector: 'app-multiple-configure',
@@ -40,12 +34,12 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
   chrs: string[];
 
   // private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
-    private dialog: MatDialog,
     private processService: AnalysisProcessService,
-    private configureService: MultipleConfigureService
+    private configureService: MultipleConfigureService,
+    private messagesService: MessagesService
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -100,20 +94,6 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
     }
   }
 
-  // setSamples(samples: string[]) {
-  //   if (
-  //     samples &&
-  //     JSON.stringify(samples) !== JSON.stringify(this.chosenSamples)
-  //   ) {
-  //     this.chosenSamples = samples;
-
-  //     // clear independent values -> chosenFiles
-  //     this.chosenFile = new UploadCnvToolResult();
-  //   } else {
-  //     this.chosenSamples = samples;
-  //   }
-  // }
-
   setFile(file: UploadCnvToolResult) {
     this.chosenFile = file;
   }
@@ -133,8 +113,9 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
   validateChosenSampleset() {
     if (!this.chosenSampleset.samplesetId) {
       const errorMessage = 'Please select one sample set.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
     } else {
+      this.messagesService.clearErrors();
       this.stepper.next();
     }
   }
@@ -150,7 +131,7 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
     // check length
     if (this.chosenSamples.length < 2) {
       const errorMessage = 'Please select at least two samples.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
       return null;
     }
 
@@ -158,17 +139,19 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
     const allDuplicatedSamples = findDuplicates(this.chosenSamples);
     if (allDuplicatedSamples.length > 0) {
       const errorMessage = `Duplicated at ${allDuplicatedSamples.join(', ')}`;
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
       return null;
     }
-
+    this.messagesService.clearErrors();
     this.stepper.next();
   }
+
   validateChosenFile() {
     if (!this.chosenFile.uploadCnvToolResultId) {
       const errorMessage = 'Please select one file.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
     } else {
+      this.messagesService.clearErrors();
       this.stepper.next();
     }
   }
@@ -176,20 +159,11 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
   validateChosenChromosome() {
     if (this.chosenChr.length === 0) {
       const errorMessage = 'Please select one chromosome.';
-      this.openErrorDialog(errorMessage);
+      this.messagesService.showErrors(errorMessage);
     } else {
+      this.messagesService.clearErrors();
       this.stepper.next();
     }
-  }
-
-  openErrorDialog(errorMessage: string) {
-    this.dialog.open(ErrorDialogComponent, {
-      panelClass: 'dialog-warning',
-      disableClose: false,
-      data: {
-        errorMessage: errorMessage
-      }
-    });
   }
 
   /**

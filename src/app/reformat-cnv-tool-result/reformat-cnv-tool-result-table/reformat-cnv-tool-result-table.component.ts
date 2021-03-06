@@ -11,12 +11,23 @@ import {
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ReformatCnvToolResult } from '../reformat-cnv-tool-result.model';
 import { ReformatDialogComponent } from './reformat-dialog/reformat-dialog.component';
-import { Subject, fromEvent } from 'rxjs';
+import { Subject, fromEvent, concat } from 'rxjs';
 import { ReformatCnvToolResultService } from '../reformat-cnv-tool-result.service';
-import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {
+  takeUntil,
+  debounceTime,
+  distinctUntilChanged,
+  tap,
+  mergeMap,
+  switchMap,
+  map,
+  filter
+} from 'rxjs/operators';
+
 import { DialogAction } from 'src/app/shared/models/dialog.action.model';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { myAnimations } from 'src/app/shared/animations';
+import { SearchService } from 'src/app/shared/components/search/search.service';
 
 @Component({
   selector: 'app-reformat-cnv-tool-result-table',
@@ -24,20 +35,18 @@ import { myAnimations } from 'src/app/shared/animations';
   styleUrls: ['./reformat-cnv-tool-result-table.component.css'],
   animations: myAnimations
 })
-export class ReformatCnvToolResultTableComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+export class ReformatCnvToolResultTableComponent implements OnInit, OnDestroy {
   @Input() uploadCnvToolResultId: number;
-  @ViewChild('filterInput', { static: false })
-  filterInput: ElementRef;
 
   dialogRef: MatDialogRef<ReformatDialogComponent>;
   selectedResults: ReformatCnvToolResult[];
   confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private _reformatService: ReformatCnvToolResultService,
-    private _matDialog: MatDialog
+    private _matDialog: MatDialog,
+    private _searchService: SearchService
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -47,37 +56,24 @@ export class ReformatCnvToolResultTableComponent
   // -----------------------------------------------------------------------------------------------------
 
   ngOnInit(): void {
-    // this._uploadReformatService.onTriggerDataChanged
-    //   .pipe(takeUntil(this._unsubscribeAll))
-    //   .subscribe(() => {
-    //     this._uploadReformatService
-    //       .getReformatCnvToolResults(this.uploadCnvToolResultId)
-    //       .subscribe(updatedReformatCnvToolResults => {
-    //         this.reformatCnvToolResults = updatedReformatCnvToolResults;
-    //       });
-    //   });
-
     this._reformatService.onSelectedChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(selectedResults => {
         this.selectedResults = selectedResults;
       });
-  }
-
-  ngAfterViewInit() {
-    fromEvent(this.filterInput.nativeElement, 'keyup')
+    this._searchService.search$
       .pipe(
         debounceTime(400),
         distinctUntilChanged(),
         takeUntil(this._unsubscribeAll)
       )
-      .subscribe(() => {
-        const filterValue = this.filterInput.nativeElement.value;
+      .subscribe(searchedText => {
         this._reformatService.onSearchTextChanged.next(
-          filterValue.trim().toLowerCase()
+          searchedText.trim().toLowerCase()
         );
       });
   }
+
   /**
    * On destroy
    */
@@ -105,19 +101,25 @@ export class ReformatCnvToolResultTableComponent
     });
 
     // Updated data
-    this.dialogRef.afterClosed().subscribe(response => {
-      if (!response) {
-        return;
-      }
-      const reformatCnvToolResult: ReformatCnvToolResult = response;
-      this._reformatService
-        .addReformatCnvToolResult(reformatCnvToolResult)
-        .subscribe(() => {
-          this._reformatService.onTriggerDataChanged.next(
-            reformatCnvToolResult.uploadCnvToolResultId
+    let reformatCnvToolResult: ReformatCnvToolResult;
+    this.dialogRef
+      .afterClosed()
+      .pipe(
+        // if false, this means closing dialog by pressing close button.
+        filter(response => !!response),
+        switchMap((response: ReformatCnvToolResult) => {
+          reformatCnvToolResult = response;
+          return this._reformatService.addReformatCnvToolResult(
+            reformatCnvToolResult
           );
-        });
-    });
+        }),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe(() => {
+        this._reformatService.onTriggerDataChanged.next(
+          reformatCnvToolResult.uploadCnvToolResultId
+        );
+      });
   }
   onDelselectedAll() {
     this._reformatService.onSelectedChanged.next([]);
@@ -131,25 +133,25 @@ export class ReformatCnvToolResultTableComponent
     this.confirmDialogRef.componentInstance.confirmMessage =
       'Are you sure you want to delete?';
 
-    this.confirmDialogRef.afterClosed().subscribe(response => {
-      if (!response) {
-        return;
-      }
-
-      const reformatIds = [];
-      for (const selectedRow of selectedResults) {
-        reformatIds.push(selectedRow.reformatCnvToolResultId);
-      }
-      this._reformatService
-        .deleteReformatByReformatIds(reformatIds)
-        .subscribe(() => {
-          this._reformatService.onSelectedChanged.next([]);
-          this._reformatService.onTriggerDataChanged.next(
-            selectedResults[0].uploadCnvToolResultId
-          );
-        });
-
-      this.confirmDialogRef = null;
-    });
+    this.confirmDialogRef
+      .afterClosed()
+      .pipe(
+        filter(response => !!response),
+        switchMap(() => {
+          const reformatIds = [];
+          for (const selectedRow of selectedResults) {
+            reformatIds.push(selectedRow.reformatCnvToolResultId);
+          }
+          return this._reformatService.deleteReformatByReformatIds(reformatIds);
+        }),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe(() => {
+        this._reformatService.onSelectedChanged.next([]);
+        this._reformatService.onTriggerDataChanged.next(
+          selectedResults[0].uploadCnvToolResultId
+        );
+        this.confirmDialogRef = null;
+      });
   }
 }

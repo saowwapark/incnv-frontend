@@ -1,23 +1,16 @@
 // Return true if param iss null or undefined.
-export const isNullOrUndefined = (value: any): value is null | undefined => {
-  return value === null || typeof value === 'undefined';
-};
+export const isNullOrUndefined = (value: any): value is null | undefined =>
+  value === null || typeof value === 'undefined';
 // Return ture if param is an object.
-export const isObject = (value: any): boolean => {
-  return value && value.constructor === Object;
-};
+export const isObject = (value: any): boolean =>
+  value && value.constructor === Object;
 // Return true if param doesn't have value.
-export const isBlank = (value: any): boolean => {
-  return (
-    isNullOrUndefined(value) ||
-    (isObject(value) && Object.keys(value).length === 0) ||
-    value.toString().trim() === ''
-  );
-};
+export const isBlank = (value: any): boolean =>
+  isNullOrUndefined(value) ||
+  (isObject(value) && Object.keys(value).length === 0) ||
+  value.toString().trim() === '';
 // Return true if param has value.
-export const isPresent = (value: any): boolean => {
-  return !isBlank(value);
-};
+export const isPresent = (value: any): boolean => !isBlank(value);
 
 export const isEqualObj = (a: Object, b: Object): boolean => {
   // Create arrays of property names
@@ -30,9 +23,7 @@ export const isEqualObj = (a: Object, b: Object): boolean => {
     return false;
   }
 
-  for (let i = 0; i < aProps.length; i++) {
-    const propName = aProps[i];
-
+  for (const propName of aProps) {
     // If values of same property are not equal,
     // objects are not equivalent
     if (a[propName] !== b[propName]) {

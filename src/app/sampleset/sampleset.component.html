@@ -1,18 +1,10 @@
 <div id="sampleset" class="layout--absolute-1vh">
   <!-- HEADER -->
-  <div class="layout__header-container">
-    <div class="layout__header-items">
-      <!-- APP TITLE -->
-      <span class="h2">Sample Set</span>
+  <app-header [title]="'Sample Set'">
+    <!-- SEARCH -->
+    <app-search></app-search>
+  </app-header>
 
-      <!-- SEARCH -->
-      <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
-        <input class="search-input" placeholder="Search..." #filterInput />
-
-        <mat-icon class="search-icon">search</mat-icon>
-      </div>
-    </div>
-  </div>
   <!-- / HEADER -->
 
   <!-- SELECTED BAR -->

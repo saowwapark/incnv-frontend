@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConstantsService } from 'src/app/shared/services/constants.service';
+import { ConstantsService } from 'src/app/services/constants.service';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AnalysisConfigureService {
   baseRouteUrl: string;
 
@@ -22,8 +20,8 @@ export class AnalysisConfigureService {
     return this._http
       .get(`${this.baseRouteUrl}/upload-cnv-tool-results`, {
         params: {
-          referenceGenome: referenceGenome,
-          samplesetId: samplesetId
+          referenceGenome,
+          samplesetId
         }
       })
       .pipe(map(res => res['payload']));

@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges
-} from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { CnvInfo } from '../analysis.model';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SelectedCnvDialogComponent } from '../shared/analysis-process/selected-cnv/selected-cnv-dialog/selected-cnv-dialog.component';
@@ -15,7 +8,7 @@ import { SelectedCnvDialogComponent } from '../shared/analysis-process/selected-
   templateUrl: './analysis-result.component.html',
   styleUrls: ['./analysis-result.component.scss']
 })
-export class AnalysisResultComponent implements OnInit, OnChanges {
+export class AnalysisResultComponent implements OnChanges {
   @Input() dataSource: CnvInfo[];
   displayedColumns = [
     'no',
@@ -30,8 +23,6 @@ export class AnalysisResultComponent implements OnInit, OnChanges {
   expandedElement: string | null;
 
   constructor(public _matDialog: MatDialog) {}
-
-  ngOnInit() {}
 
   ngOnChanges(): void {
     console.log(this.dataSource);

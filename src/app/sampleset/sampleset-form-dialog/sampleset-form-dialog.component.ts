@@ -4,7 +4,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 
 import { DialogAction } from '../../shared/models/dialog.action.model';
 
@@ -13,7 +13,7 @@ import { DialogAction } from '../../shared/models/dialog.action.model';
   templateUrl: './sampleset-form-dialog.component.html',
   styleUrls: ['./sampleset-form-dialog.component.scss']
 })
-export class SamplesetFormDialogComponent implements OnInit {
+export class SamplesetFormDialogComponent {
   action: number;
   form: FormGroup;
   dialogTitle: string;
@@ -43,16 +43,6 @@ export class SamplesetFormDialogComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
-
-  private _createSamplesetForm(sampleset: Sampleset): FormGroup {
-    return this._fb.group({
-      samplesetId: [sampleset.samplesetId],
-      samplesetName: [sampleset.samplesetName],
-      description: [sampleset.description],
-      samples: [sampleset.samples]
-    });
-  }
   onRemoveSample(index: number): void {
     if (index >= 0) {
       const samples = this.form.get('samples').value;
@@ -78,5 +68,13 @@ export class SamplesetFormDialogComponent implements OnInit {
 
   onSave() {
     this.dialogRef.close(this.form.value);
+  }
+  private _createSamplesetForm(sampleset: Sampleset): FormGroup {
+    return this._fb.group({
+      samplesetId: [sampleset.samplesetId],
+      samplesetName: [sampleset.samplesetName],
+      description: [sampleset.description],
+      samples: [sampleset.samples]
+    });
   }
 }

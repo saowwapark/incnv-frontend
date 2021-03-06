@@ -1,22 +1,8 @@
 <!-- HEADER -->
-
-<div fxLayout="column" fxLayoutAlign="start">
-  <!-- APP TITLE -->
-  <span style="font-size: 2rem">Reformatted File</span>
-
-  <!-- Filter -->
-  <div
-    fxLayout="row"
-    fxLayoutAlign="start center"
-    class="property property-row"
-  >
-    <mat-form-field appearance="outline" fxFlex="1 1 100%">
-      <input matInput placeholder="Filter..." #filterInput />
-    </mat-form-field>
-  </div>
-</div>
-
-<!-- / HEADER -->
+<app-header [title]="'Reformatted File'">
+  <!-- SEARCH -->
+  <app-search></app-search>
+</app-header>
 
 <!-- SELECTED BAR -->
 <app-selected-bar

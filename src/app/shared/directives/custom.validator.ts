@@ -18,79 +18,73 @@ export const uIntThousandSeparatedValidator = (
       };
 };
 
-export const minNumberValidator = (min: number): ValidatorFn => {
-  return (c: FormControl) => {
-    const num = +c.value;
-    if (isNaN(num) || num < min) {
-      return {
-        minNumber: { valid: false }
-      };
-    }
-    return null;
-  };
+export const minNumberValidator = (min: number): ValidatorFn => (
+  c: FormControl
+) => {
+  const num = +c.value;
+  if (isNaN(num) || num < min) {
+    return {
+      minNumber: { valid: false }
+    };
+  }
+  return null;
 };
 
-export const maxNumberValidator = (max: number): ValidatorFn => {
-  return (c: FormControl) => {
-    const num = +c.value;
-    if (isNaN(num) || num > max) {
-      return {
-        maxNumber: { valid: false }
-      };
-    }
-    return null;
-  };
+export const maxNumberValidator = (max: number): ValidatorFn => (
+  c: FormControl
+) => {
+  const num = +c.value;
+  if (isNaN(num) || num > max) {
+    return {
+      maxNumber: { valid: false }
+    };
+  }
+  return null;
 };
 
 export const numberInRangeValidator = (
   min: number,
   max: number
-): ValidatorFn => {
-  return (c: FormControl) => {
-    const num = +c.value;
-    if (num > min) {
-      return {
-        numberInRange: { valid: false }
-      };
-    }
-    if (num < max) {
-      return {
-        numberInRange: { valid: false }
-      };
-    }
-  };
+): ValidatorFn => (c: FormControl) => {
+  const num = +c.value;
+  if (num > min) {
+    return {
+      numberInRange: { valid: false }
+    };
+  }
+  if (num < max) {
+    return {
+      numberInRange: { valid: false }
+    };
+  }
 };
 
-export const duplicationValidator = (items: any[]): ValidatorFn => {
-  return (c: FormControl) => {
-    for (const item of items) {
-      if (c.value === item) {
-        return {
-          duplication: { valid: false }
-        };
-      }
-    }
-  };
-};
-
-export const duplicationKeyValidator = (): ValidatorFn => {
-  return (c: FormControl) => {
-    const duplicationKeys = ['dup', 'duplication', 'gain'];
-    if (!duplicationKeys.includes(c.value)) {
+export const duplicationValidator = (items: any[]): ValidatorFn => (
+  c: FormControl
+) => {
+  for (const item of items) {
+    if (c.value === item) {
       return {
-        duplicationKeys: { valid: false }
+        duplication: { valid: false }
       };
     }
-  };
+  }
 };
 
-export const deletionKeyValidator = (): ValidatorFn => {
-  return (c: FormControl) => {
-    const deletionKeys = ['del', 'deletion', 'loss'];
-    if (!deletionKeys.includes(c.value)) {
-      return {
-        deletionKey: { valid: false }
-      };
-    }
-  };
+export const duplicationKeyValidator = (): ValidatorFn => (c: FormControl) => {
+  const duplicationKeys = ['dup', 'duplication', 'gain'];
+  if (!duplicationKeys.includes(c.value)) {
+    return {
+      duplicationKeys: { valid: false }
+    };
+  }
+};
+
+export const deletionKeyValidator = (): ValidatorFn => (c: FormControl) => {
+  const deletionKeys = ['del', 'deletion', 'loss'];
+  if (!deletionKeys.includes(c.value)) {
+    return {
+      deletionKey: { valid: false }
+    };
+  }
 };

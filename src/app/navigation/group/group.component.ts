@@ -27,7 +27,7 @@ export class GroupComponent implements OnInit, OnDestroy {
   item: NavigationItem;
 
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,

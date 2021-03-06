@@ -8,9 +8,19 @@ import { MaterialModule } from '../material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FilteredSelectComponent } from './components/filtered-select/filtered-select.component';
 import { NotAvailablePipe } from '../utils/not-available.pipe';
+import { LoadingComponent } from './loading/loading.component';
+import { MessagesComponent } from './components/messages/messages.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SearchComponent } from './components/search/search.component';
+import { SearchService } from './components/search/search.service';
+import { MessagesService } from './components/messages/messages.service';
 
 @NgModule({
   declarations: [
+    HeaderComponent,
+    SearchComponent,
+    LoadingComponent,
+    MessagesComponent,
     SelectedBarComponent,
     FilteredSelectComponent,
     UnmaskNumericDirective,
@@ -25,6 +35,10 @@ import { NotAvailablePipe } from '../utils/not-available.pipe';
     ReactiveFormsModule
   ],
   exports: [
+    SearchComponent,
+    HeaderComponent,
+    LoadingComponent,
+    MessagesComponent,
     SelectedBarComponent,
     FilteredSelectComponent,
     UnmaskNumericDirective,
@@ -35,6 +49,7 @@ import { NotAvailablePipe } from '../utils/not-available.pipe';
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule
-  ]
+  ],
+  providers: [SearchService, MessagesService]
 })
 export class SharedModule {}

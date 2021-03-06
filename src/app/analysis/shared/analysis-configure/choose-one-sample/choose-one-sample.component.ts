@@ -5,14 +5,12 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './choose-one-sample.component.html',
   styleUrls: ['./choose-one-sample.component.scss']
 })
-export class ChooseOneSampleComponent implements OnInit {
+export class ChooseOneSampleComponent {
   @Input() samples: string[];
   @Input() selectedSample: string;
   @Output() selectedSampleChange = new EventEmitter<string>();
 
   constructor() {}
-
-  ngOnInit() {}
 
   // // not working cannot bind new @Input
   // ngOnChanges(changes: SimpleChanges) {

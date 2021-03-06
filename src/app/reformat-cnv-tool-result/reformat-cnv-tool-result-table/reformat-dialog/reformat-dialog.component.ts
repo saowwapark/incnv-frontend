@@ -1,5 +1,5 @@
 import { ReformatCnvToolResult } from '../../reformat-cnv-tool-result.model';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogAction } from 'src/app/shared/models/dialog.action.model';
@@ -9,7 +9,7 @@ import { DialogAction } from 'src/app/shared/models/dialog.action.model';
   templateUrl: './reformat-dialog.component.html',
   styleUrls: ['./reformat-dialog.component.scss']
 })
-export class ReformatDialogComponent implements OnInit {
+export class ReformatDialogComponent {
   action: number;
   form: FormGroup;
   dialogTitle: string;
@@ -33,8 +33,9 @@ export class ReformatDialogComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
-
+  onSave() {
+    this.dialogRef.close(this.form.value);
+  }
   private _createForm(reformatCnvToolResult: ReformatCnvToolResult): FormGroup {
     return this._fb.group({
       reformatCnvToolResultId: [reformatCnvToolResult.reformatCnvToolResultId],
@@ -44,9 +45,5 @@ export class ReformatDialogComponent implements OnInit {
       startBp: [reformatCnvToolResult.startBp],
       endBp: [reformatCnvToolResult.endBp]
     });
-  }
-
-  onSave() {
-    this.dialogRef.close(this.form.value);
   }
 }

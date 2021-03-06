@@ -1,27 +1,15 @@
 <div class="layout--absolute-1vh">
   <!-- HEADER -->
-  <div class="layout__header-container">
-    <div class="layout__header-items">
-      <!-- APP TITLE -->
-      <span class="h2">File Mapping</span>
-
-      <!-- SEARCH -->
-      <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
-        <input
-          class="search-input"
-          type="search"
-          [formControl]="searchInput"
-          placeholder="Search CNV tools..."
-        />
-        <mat-icon class="search-icon">search</mat-icon>
-      </div>
-    </div>
-  </div>
+  <app-header [title]="'File Mapping'">
+    <!-- SEARCH -->
+    <app-search></app-search>
+  </app-header>
+  <!-- / HEADER -->
 
   <!-- CONTENT -->
   <div class="layout__content-container--scrollbar ">
     <div class="layout__content-items">
-      <!---- TAB FILE MAPPING -->
+      <!-- TAB FILE MAPPING -->
       <app-tab-file-mapping-list></app-tab-file-mapping-list>
     </div>
 

@@ -1,19 +1,9 @@
 <div id="history-upload-cnv-tool-result" class="layout--absolute-1vh">
   <!-- HEADER -->
-  <div class="layout__header-container">
-    <div class="layout__header-items">
-      <!-- APP TITLE -->
-      <span class="h2">My Files</span>
-
-      <!-- SEARCH -->
-      <div class="search-box" fxLayout="row" fxLayoutAlign="start center">
-        <input class="search-input" placeholder="Search..." #filterInput />
-
-        <mat-icon class="search-icon">search</mat-icon>
-      </div>
-    </div>
-  </div>
-  <!-- / HEADER -->
+  <app-header [title]="'Multiple Sample Analysis'">
+    <!-- SEARCH -->
+    <app-search></app-search>
+  </app-header>
 
   <!-- SELECTED BAR -->
   <app-selected-bar

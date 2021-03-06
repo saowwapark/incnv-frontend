@@ -31,7 +31,7 @@ export class CollapsableComponent implements OnInit, OnDestroy {
   @HostBinding('class.open')
   public isOpen = false;
 
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -196,21 +196,31 @@ export class CollapsableComponent implements OnInit, OnDestroy {
     if (!parent.children) {
       return false;
     }
-
-    for (let i = 0; i < parent.children.length; i++) {
-      if (parent.children[i].children) {
-        if (this.isUrlInChildren(parent.children[i], url)) {
+    for (const child of parent.children) {
+      if (child.children) {
+        if (this.isUrlInChildren(child, url)) {
           return true;
         }
       }
-
-      if (
-        parent.children[i].url === url ||
-        url.includes(parent.children[i].url)
-      ) {
+      if (child.url === url || url.includes(child.url)) {
         return true;
       }
     }
+
+    // for (let i = 0; i < parent.children.length; i++) {
+    //   if (parent.children[i].children) {
+    //     if (this.isUrlInChildren(parent.children[i], url)) {
+    //       return true;
+    //     }
+    //   }
+
+    //   if (
+    //     parent.children[i].url === url ||
+    //     url.includes(parent.children[i].url)
+    //   ) {
+    //     return true;
+    //   }
+    // }
 
     return false;
   }

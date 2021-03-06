@@ -1,24 +1,10 @@
 <div id="analysis-process" class="layout--absolute-1vh">
   <!-- HEADER -->
-  <div class="layout__header-container">
-    <div class="layout__header-items">
-      <!-- APP TITLE -->
-      <span class="h2">Individual Sample Analysis</span>
-    </div>
-  </div>
-  <!-- / HEADER -->
+  <app-header [title]="'Individual Sample Analysis'"> </app-header>
 
   <!-- CONTENT -->
-
   <div class="layout__content-container--default ">
-    <div
-      class="spinner-container"
-      *ngIf="isLoading | async; else loadingSuccess"
-    >
-      <mat-spinner></mat-spinner>
-    </div>
-
-    <ng-template #loadingSuccess>
+    <div *ngIf="data$ | async as data">
       <div class="layout__content-items" fxLayout="column" fxLayoutGap="32px">
         <mat-accordion [multi]="true">
           <!-- Overview Configuration -->
@@ -36,7 +22,7 @@
                   Reference Genome:
                 </div>
                 <div class="property property-value" fxFlex="1 1 80%">
-                  {{ individualConfig.referenceGenome | grch }}
+                  {{ data.individualConfig?.referenceGenome | grch }}
                 </div>
               </div>
               <div fxLayout="row" class="indent">
@@ -44,7 +30,7 @@
                   Chromosome:
                 </div>
                 <div class="property property-value" fxFlex="1 1 80%">
-                  {{ individualConfig.chromosome | uppercase }}
+                  {{ data.individualConfig?.chromosome | uppercase }}
                 </div>
               </div>
               <div fxLayout="row" class="indent">
@@ -52,7 +38,7 @@
                   CNV Type:
                 </div>
                 <div class="property property-value" fxFlex="1 1 80%">
-                  {{ individualConfig.cnvType | titlecase }}
+                  {{ data.individualConfig?.cnvType | titlecase }}
                 </div>
               </div>
               <div fxLayout="row" class="indent">
@@ -60,7 +46,7 @@
                   Sample Name:
                 </div>
                 <div class="property property-value" fxFlex="1 1 80%">
-                  {{ individualConfig.sample }}
+                  {{ data.individualConfig?.sample }}
                 </div>
               </div>
 
@@ -91,7 +77,8 @@
                   </div>
                   <div
                     *ngFor="
-                      let chosenFile of individualConfig.uploadCnvToolResults
+                      let chosenFile of data.individualConfig
+                        ?.uploadCnvToolResults
                     "
                     fxLayout="row"
                     fxLayoutAlign="start center"
@@ -112,27 +99,27 @@
             </div>
           </mat-expansion-panel>
           <!-- Overview Chart -->
-          <mat-expansion-panel [expanded]="true">
+          <!-- <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Overview Chart</mat-panel-title>
             </mat-expansion-panel-header>
             <app-overview-chart
-              [yAxisMaxVaule]="cnvTools.length"
-              [mergedData]="mergedTool"
-              [containerMargin]="containerMargin"
-              [chromosome]="individualConfig.chromosome"
+              [yAxisMaxVaule]="data.cnvTools?.length"
+              [mergedData]="data.mergedTool"
+              [containerMargin]="data.containerMargin"
+              [chromosome]="data.individualConfig?.chromosome"
               [yAxisUnit]="'tools'"
               (selectChrRegion)="selectChrRegion($event)"
             ></app-overview-chart>
-          </mat-expansion-panel>
+          </mat-expansion-panel> -->
           <!-- All Merged CNVs-->
-          <mat-expansion-panel [expanded]="false">
+          <mat-expansion-panel [expanded]="false" *ngIf="!!data.mergedTool">
             <mat-expansion-panel-header>
               <mat-panel-title>All Merged CNVs</mat-panel-title>
             </mat-expansion-panel-header>
             <app-merged-table
-              [analysisType]="INDIVIDUAL_SAMPLE_ANALYSIS"
-              [mergedData]="mergedTool"
+              [analysisType]="analysisType"
+              [mergedData]="data.mergedTool"
             ></app-merged-table>
           </mat-expansion-panel>
           <!-- Main Chart-->
@@ -141,13 +128,13 @@
               <mat-panel-title>Main Chart</mat-panel-title>
             </mat-expansion-panel-header>
             <app-main-chart
-              [chromosome]="individualConfig.chromosome"
-              [dgvVaraints]="dgvVariants"
-              [comparedData]="cnvTools"
-              [mergedData]="mergedTool"
-              [containerMargin]="containerMargin"
+              [chromosome]="data.individualConfig?.chromosome"
+              [dgvVaraints]="data.dgvVariants"
+              [comparedData]="data.cnvTools"
+              [mergedData]="data.mergedTool"
+              [containerMargin]="data.containerMargin"
               [selectedChrRegion]="selectedChrRegion"
-              [analysisType]="INDIVIDUAL_SAMPLE_ANALYSIS"
+              [analysisType]="analysisType"
             >
             </app-main-chart>
           </mat-expansion-panel>
@@ -156,12 +143,10 @@
             <mat-expansion-panel-header>
               <mat-panel-title>All Selected CNVs</mat-panel-title>
             </mat-expansion-panel-header>
-            <app-selected-cnv
-              [analysisType]="INDIVIDUAL_SAMPLE_ANALYSIS"
-            ></app-selected-cnv>
+            <app-selected-cnv [analysisType]="analysisType"></app-selected-cnv>
           </mat-expansion-panel>
         </mat-accordion>
       </div>
-    </ng-template>
+    </div>
   </div>
 </div>

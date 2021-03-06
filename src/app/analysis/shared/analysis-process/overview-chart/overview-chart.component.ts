@@ -1,7 +1,6 @@
 import { RegionBp } from '../../../analysis.model';
 import {
   Component,
-  OnInit,
   Input,
   ViewChild,
   ElementRef,
@@ -9,7 +8,8 @@ import {
   OnChanges,
   Output,
   EventEmitter,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  OnDestroy
 } from '@angular/core';
 import * as d3 from 'd3';
 import { CnvGroup, CnvInfo } from '../../../analysis.model';
@@ -22,8 +22,7 @@ import { HUMAN_CHROMOSOME } from '../../../chromosome.model';
   styleUrls: ['./overview-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverviewChartComponent implements OnInit, OnChanges {
-  readonly color = '#d32f2f';
+export class OverviewChartComponent implements OnChanges, OnDestroy {
   @Input() mergedData: CnvGroup;
   @Input() chromosome: string;
   @Input() yAxisUnit: string;
@@ -40,9 +39,10 @@ export class OverviewChartComponent implements OnInit, OnChanges {
 
   @ViewChild('overviewChartDiv', { static: true })
   private overviewChartDiv: ElementRef;
-  private overviewChart;
-
+  readonly color = '#d32f2f';
   chrLength: number;
+
+  private overviewChart;
 
   svg: d3.Selection<SVGSVGElement, CnvGroup, null, undefined>;
 
@@ -68,30 +68,58 @@ export class OverviewChartComponent implements OnInit, OnChanges {
       this.createOverviewChart();
     }
   }
-  ngOnInit() {}
+
+  ngOnDestroy() {
+    // release SVG
+    if (this.overviewChart !== undefined) {
+      this.overviewChart.destroyChart();
+    }
+    this.overviewChartDiv = null;
+  }
 
   /*********************** Function **********************/
   createOverviewChart() {
-    if (this.overviewChart) {
-      this.overviewChart.removeVis();
+    const parentElement = this.overviewChartDiv.nativeElement;
+    const data = this.mergedData.cnvInfos;
+    const containerMargin = this.containerMargin;
+    const yUnit = this.yAxisUnit;
+    const domainOnX = [1, this.chrLength - 1];
+    const domainOnY = [0, this.yAxisMaxVaule];
+    const color = this.color;
+
+    if (
+      !(
+        parentElement &&
+        data &&
+        containerMargin &&
+        yUnit &&
+        domainOnX &&
+        domainOnY &&
+        color
+      )
+    ) {
+      return;
     }
-    this.overviewChart = new OverviewChart(
-      this.overviewChartDiv.nativeElement,
-      this.mergedData.cnvInfos,
-
-      this.containerMargin,
-      this.yAxisUnit,
-      [1, this.chrLength - 1],
-      [0, this.yAxisMaxVaule],
-      this.color
-    );
-
+    if (this.overviewChart === undefined) {
+      this.overviewChart = new OverviewChart(
+        parentElement,
+        data,
+        containerMargin,
+        yUnit,
+        domainOnX,
+        domainOnY,
+        color
+      );
+    } else {
+      this.overviewChart.destroyChart();
+      this.overviewChart.initVis(this.containerMargin);
+    }
     this.overviewChart.createBrush((sx1, sx2) => {
-      this.callback(sx1, sx2);
+      this.selectChrRegionCallback(sx1, sx2);
     });
   }
 
-  private callback(sx1, sx2) {
+  private selectChrRegionCallback(sx1, sx2) {
     const selectedChrRegion = new RegionBp(sx1, sx2);
     this.selectChrRegion.next(selectedChrRegion);
   }

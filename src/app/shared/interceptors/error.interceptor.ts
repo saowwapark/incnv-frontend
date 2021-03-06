@@ -25,7 +25,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           panelClass: 'dialog-warning',
           disableClose: false,
           data: {
-            errorMessage: errorMessage
+            errorMessage
           }
         });
         return throwError(httpError);

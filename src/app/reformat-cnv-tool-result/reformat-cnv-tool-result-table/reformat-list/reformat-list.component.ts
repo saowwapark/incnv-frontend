@@ -17,7 +17,9 @@ import {
   startWith,
   switchMap,
   map,
-  catchError
+  catchError,
+  mergeMap,
+  filter
 } from 'rxjs/operators';
 import { ReformatCnvToolResultService } from '../../reformat-cnv-tool-result.service';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -52,10 +54,11 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
-  // Private
-  private _unsubscribeAll: Subject<any>;
-  // dataSource: UploadReformatDataSource | null;
   dataSource: MatTableDataSource<ReformatCnvToolResult>;
+  // Private
+  private _unsubscribeAll: Subject<void>;
+  // dataSource: UploadReformatDataSource | null;
+
   constructor(
     private _reformatService: ReformatCnvToolResultService,
     public _matDialog: MatDialog
@@ -81,21 +84,21 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     this._reformatService.onTriggerDataChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(uploadCnvToolResultId => {
-        this._reformatService
-          .getReformatCnvToolResults(
+      .pipe(
+        switchMap(uploadCnvToolResultId =>
+          this._reformatService.getReformatCnvToolResults(
             uploadCnvToolResultId,
             'sort',
             'order',
             this.paginator.pageIndex,
             this.paginator.pageSize
           )
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe(response => {
-            this.dataSource.data = response.items;
-            this.resultsLength = response.totalCount;
-          });
+        ),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe(response => {
+        this.dataSource.data = response.items;
+        this.resultsLength = response.totalCount;
       });
   }
 
@@ -151,26 +154,26 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dialogRef = this._matDialog.open(ReformatDialogComponent, {
       panelClass: 'dialog-default',
       data: {
-        reformatCnvToolResult: reformatCnvToolResult,
+        reformatCnvToolResult,
         action: DialogAction.Edit
       }
     });
 
     // Updated data
-    this.dialogRef.afterClosed().subscribe(response => {
-      if (!response) {
-        return;
-      }
-      const updatedData: ReformatCnvToolResult = response;
-
-      this._reformatService
-        .editReformatCnvToolResult(updatedData)
-        .subscribe(() => {
-          this._reformatService.onTriggerDataChanged.next(
-            reformatCnvToolResult.uploadCnvToolResultId
-          );
-        });
-    });
+    this.dialogRef
+      .afterClosed()
+      .pipe(
+        filter(response => !!response),
+        switchMap((updatedData: ReformatCnvToolResult) =>
+          this._reformatService.editReformatCnvToolResult(updatedData)
+        ),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe(() => {
+        this._reformatService.onTriggerDataChanged.next(
+          reformatCnvToolResult.uploadCnvToolResultId
+        );
+      });
   }
 
   /************************* Select **************************/
@@ -183,9 +186,11 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach(row => this.selection.select(row));
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+    }
     this._reformatService.onSelectedChanged.next(this.selection.selected);
   }
 

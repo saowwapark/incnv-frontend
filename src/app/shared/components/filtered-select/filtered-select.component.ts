@@ -56,16 +56,17 @@ export class FilteredSelectComponent
     OnDestroy,
     AfterViewInit {
   /****************************** Logic for this component *************************/
+  static nextId = 0;
   @Input() options: any[];
   @Input() selectedOption: any;
   @Output() selectionChange = new EventEmitter();
   @ViewChild('input', { static: false })
   // matcher = new MyErrorStateMatcher();
   input: ElementRef;
+
   filteredOptions: any[];
 
   /************************************** Property for MatFormFieldControl **********************************/
-  static nextId = 0;
 
   filterSelectGroup: FormGroup;
   stateChanges = new Subject<void>();
@@ -94,6 +95,7 @@ export class FilteredSelectComponent
   set label(value: string) {
     this._label = value;
   }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _label: string;
 
   @Input()
@@ -103,6 +105,7 @@ export class FilteredSelectComponent
   set appearance(value: string) {
     this._appearance = value;
   }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _appearance: string;
 
   @Input()
@@ -112,6 +115,7 @@ export class FilteredSelectComponent
   set class(value: string) {
     this._class = value;
   }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _class: string;
 
   @Input()
@@ -121,6 +125,7 @@ export class FilteredSelectComponent
   set style(value: string) {
     this._style = value;
   }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _style: string;
 
   @Input()
@@ -131,6 +136,7 @@ export class FilteredSelectComponent
     this._placeholder = value;
     this.stateChanges.next();
   }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _placeholder: string;
 
   @Input()
@@ -141,6 +147,7 @@ export class FilteredSelectComponent
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _required = false;
 
   @Input()
@@ -154,6 +161,7 @@ export class FilteredSelectComponent
       : this.filterSelectGroup.enable();
     this.stateChanges.next();
   }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   private _disabled = false;
 
   @Input()
@@ -201,7 +209,7 @@ export class FilteredSelectComponent
 
   onContainerClick(event: MouseEvent) {
     if ((event.target as Element).tagName.toLowerCase() !== 'div') {
-      this._elementRef.nativeElement.querySelector('div')!.focus();
+      this._elementRef.nativeElement.querySelector('div')?.focus();
     }
   }
 
@@ -243,9 +251,7 @@ export class FilteredSelectComponent
         debounceTime(400),
         distinctUntilChanged(),
         startWith(''),
-        map(() => {
-          return filterIncluded(this.input.nativeElement.value, this.options);
-        })
+        map(() => filterIncluded(this.input.nativeElement.value, this.options))
       )
       .subscribe(filteredOptions => {
         this.filteredOptions = filteredOptions;

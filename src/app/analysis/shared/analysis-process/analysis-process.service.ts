@@ -1,5 +1,4 @@
 import { DgvVariant } from './../../analysis.model';
-import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
 import {
   CnvGroup,
   IndividualSampleConfig,
@@ -15,13 +14,12 @@ import {
   throwError,
   TimeoutError
 } from 'rxjs';
-import { ConstantsService } from 'src/app/shared/services/constants.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, tap, timeout, catchError } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, tap, timeout, catchError, shareReplay } from 'rxjs/operators';
+import { ConstantsService } from 'src/app/services/constants.service';
+
+@Injectable()
 export class AnalysisProcessService {
   baseRouteUrl: string;
   onSelectedCnvChanged: Subject<CnvInfo[]>;
@@ -53,12 +51,13 @@ export class AnalysisProcessService {
     // actual http get url must not be longer than 2000 characters.
     return this._http
       .post(`${this.baseRouteUrl}/individual-sample`, data, {
-        headers: headers
+        headers
       })
       .pipe(
+        shareReplay({ refCount: true, bufferSize: 1 }),
         timeout(600000),
         map(res => res['payload']),
-        catchError(error => {
+        catchError((error: unknown) => {
           // Error...
           // Handle 'timeout over' error
           if (error instanceof TimeoutError) {
@@ -87,9 +86,12 @@ export class AnalysisProcessService {
     // actual http get url must not be longer than 2000 characters.
     return this._http
       .post(`${this.baseRouteUrl}/multiple-sample`, data, {
-        headers: headers
+        headers
       })
-      .pipe(map(res => res['payload']));
+      .pipe(
+        map(res => res['payload']),
+        shareReplay({ refCount: true, bufferSize: 1 })
+      );
   }
 
   getDgvVariants(
@@ -99,11 +101,18 @@ export class AnalysisProcessService {
     const url = `${this.baseRouteUrl}/dgvs`;
     const options = {
       params: {
-        referenceGenome: referenceGenome,
-        chromosome: chromosome
+        referenceGenome,
+        chromosome
       }
     };
-    return this._http.get(url, options).pipe(map(res => res['payload']));
+    return this._http
+      .get(url, options)
+      .pipe(
+        map(
+          res => res['payload'],
+          shareReplay({ refCount: true, bufferSize: 1 })
+        )
+      );
   }
 
   getCnvInfos(cnvInfos: CnvInfo[]) {
@@ -113,7 +122,10 @@ export class AnalysisProcessService {
         //   params: { cnvs: cnvs.toString() }
         // })
         .post(`${this.baseRouteUrl}/cnv-infos`, [...cnvInfos])
-        .pipe(map(res => res['payload']))
+        .pipe(
+          map(res => res['payload']),
+          shareReplay({ refCount: true, bufferSize: 1 })
+        )
     );
   }
 
@@ -124,7 +136,10 @@ export class AnalysisProcessService {
         //   params: { cnvs: cnvs.toString() }
         // })
         .post(`${this.baseRouteUrl}/cnv-info`, { ...cnvInfo })
-        .pipe(map(res => res['payload']))
+        .pipe(
+          map(res => res['payload']),
+          shareReplay({ refCount: true, bufferSize: 1 })
+        )
     );
   }
 

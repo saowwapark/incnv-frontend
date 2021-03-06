@@ -19,7 +19,7 @@ export class NavigationComponent implements OnInit {
   navigationData: any;
 
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,

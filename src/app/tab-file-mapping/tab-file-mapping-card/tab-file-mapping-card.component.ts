@@ -34,7 +34,7 @@ export class TabFileMappingCardComponent {
     this.dialogRef = this._matDialog.open(TabFileMappingFormDialogComponent, {
       panelClass: 'dialog-default',
       data: {
-        fileMappingConfigured: fileMappingConfigured,
+        fileMappingConfigured,
         action: 'edit'
       }
     });

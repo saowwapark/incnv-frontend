@@ -1,7 +1,7 @@
 <ng-container *ngIf="userIsAuthenticated; else homeToolbarTemplate">
-  <app-welcome></app-welcome>
+  <app-welcome-template></app-welcome-template>
 </ng-container>
 
 <ng-template #homeToolbarTemplate>
-  <app-home></app-home>
+  <app-home-template></app-home-template>
 </ng-template>

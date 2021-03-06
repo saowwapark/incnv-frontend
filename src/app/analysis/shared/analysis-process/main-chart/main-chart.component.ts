@@ -12,14 +12,11 @@ import {
   ElementRef,
   OnChanges,
   Input,
-  HostListener,
-  SimpleChanges,
-  AfterViewInit,
-  AfterViewChecked,
   OnDestroy,
-  DoCheck,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  HostListener,
+  SimpleChanges
 } from '@angular/core';
 
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -42,14 +39,7 @@ import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/err
   styleUrls: ['./main-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainChartComponent
-  implements
-    OnInit,
-    OnChanges,
-    AfterViewInit,
-    AfterViewChecked,
-    OnDestroy,
-    DoCheck {
+export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
   @Input() chromosome: string; // static
   @Input() dgvVaraints: DgvVariant[]; // static
   @Input() comparedData: CnvGroup[]; // static
@@ -63,14 +53,6 @@ export class MainChartComponent
     left: number;
   };
   @Input() analysisType: string;
-  readonly dgvChartColor = '#00A2FD';
-  readonly compareChartColor = ['#FDA404']; // ['#ff7f02'];
-  readonly mergedChartColor = '#d32f2f';
-  readonly finalChartColor = '#613EB4';
-
-  // selectedCnvs: CnvInfo[] = []; // always changed
-  private _unsubscribeAll: Subject<any>;
-
   @ViewChild('dgvChartDiv', { static: true }) private dgvChartDiv: ElementRef;
 
   @ViewChild('comparedChartDiv', { static: true })
@@ -81,23 +63,19 @@ export class MainChartComponent
 
   @ViewChild('finalResultChartDiv', { static: true })
   private finalResultChartDiv: ElementRef;
-
+  readonly dgvChartColor = '#00A2FD';
+  readonly compareChartColor = ['#FDA404']; // ['#ff7f02'];
+  readonly mergedChartColor = '#d32f2f';
+  readonly finalChartColor = '#613EB4';
   dgvChart;
   comparedChart;
   mergedChart;
   finalResultChart;
-
   finalResultData: CnvGroup;
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
-
   numberMark;
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    // const chartWidth = event.target.innerWidth;
-
-    this.createAllCharts();
-  }
-
+  private _unsubscribeAll: Subject<void>;
+  // selectedCnvs: CnvInfo[] = []; // always changed
   /**
    *  Constructor
    */
@@ -120,6 +98,14 @@ export class MainChartComponent
       allowNegative: false
     });
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    // const chartWidth = event.target.innerWidth;
+
+    this.createAllCharts();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.comparedData || !this.mergedData) {
       return;
@@ -136,7 +122,7 @@ export class MainChartComponent
       }
     }
   }
-  ngDoCheck(): void {}
+
   ngOnInit() {
     const updateFinalResultData$ = this.service.onSelectedCnvChanged.pipe(
       tap((selectedCnvs: CnvInfo[]) => {
@@ -189,13 +175,28 @@ export class MainChartComponent
       });
   }
 
-  ngAfterViewInit() {}
-
-  ngAfterViewChecked() {}
   /**
    * On destroy
    */
   ngOnDestroy(): void {
+    this.dgvChartDiv.nativeElement.remove();
+    this.comparedChartDiv.nativeElement.remove();
+    this.mergedChartDiv.nativeElement.remove();
+    this.finalResultChartDiv.nativeElement.remove();
+    // release SVG
+    if (this.dgvChart !== undefined) {
+      this.dgvChart.destroyChart();
+    }
+    if (this.mergedChart !== undefined) {
+      this.mergedChart.destroyChart();
+    }
+    if (this.comparedChart !== undefined) {
+      this.comparedChart.destroyChart();
+    }
+    if (this.finalResultChart !== undefined) {
+      this.finalResultChart.destroyChart();
+    }
+
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
@@ -206,7 +207,8 @@ export class MainChartComponent
     endBp: number,
     size: number
   ): RegionBp {
-    let regionStartBp: number, regionEndBp: number;
+    let regionStartBp: number;
+    let regionEndBp: number;
     if (startBp - size > 0) {
       regionStartBp = startBp - size;
     } else {
@@ -234,36 +236,40 @@ export class MainChartComponent
     if (!this.selectedChrRegion) {
       return;
     }
-    if (this.dgvChart) {
-      this.dgvChart.removeVis();
+    if (this.dgvChart === undefined) {
+      this.dgvChart = new DgvChart(
+        '1',
+        this.dgvChartDiv.nativeElement,
+        this.dgvVaraints,
+        this.containerMargin,
+        [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
+        ['DGV'],
+        this.dgvChartColor
+      );
+    } else {
+      this.dgvChart.destroyChart();
+      this.dgvChart.initVis(this.containerMargin);
     }
-    this.dgvChart = new DgvChart(
-      '1',
-      this.dgvChartDiv.nativeElement,
-      this.dgvVaraints,
-      this.containerMargin,
-      [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      ['DGV'],
-      this.dgvChartColor
-    );
   }
   createComparedChart() {
     if (!this.selectedChrRegion) {
       return;
     }
-    if (this.comparedChart) {
-      this.comparedChart.removeVis();
+    if (this.comparedChart === undefined) {
+      this.comparedChart = new ComparedChart(
+        '2',
+        this.comparedChartDiv.nativeElement,
+        this.comparedData,
+        this.containerMargin,
+        [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
+        this.comparedData.map(tool => tool.cnvGroupName),
+        1, // 4 fix data because backend don't find overlap region for performance and rarely to have overlap more than four in one tool
+        this.compareChartColor
+      );
+    } else {
+      this.comparedChart.destroyChart();
+      this.comparedChart.initVis(this.containerMargin);
     }
-    this.comparedChart = new ComparedChart(
-      '2',
-      this.comparedChartDiv.nativeElement,
-      this.comparedData,
-      this.containerMargin,
-      [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      this.comparedData.map(tool => tool.cnvGroupName),
-      1, // 4 fix data because backend don't find overlap region for performance and rarely to have overlap more than four in one tool
-      this.compareChartColor
-    );
 
     this.comparedChart.onClickSubbars((cnvGroupName, data) => {
       const selectedCnvRegions: RegionBp[] = [];
@@ -283,88 +289,59 @@ export class MainChartComponent
     if (!this.selectedChrRegion) {
       return;
     }
-    if (this.mergedChart) {
-      this.mergedChart.removeVis();
+    if (this.mergedChart === undefined) {
+      const maxOverlap = this.findMaxOverlapNumber(this.mergedData.cnvInfos);
+      this.mergedChart = new MergedChart(
+        '3',
+        this.mergedChartDiv.nativeElement,
+        [this.mergedData],
+        this.containerMargin,
+        [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
+        [MERGED_RESULT_NAME],
+        maxOverlap,
+        this.mergedChartColor
+      );
+
+      this.mergedChart.onClickSubbars((cnvGroupName, data) => {
+        const selectedCnvRegions: RegionBp[] = [];
+        for (const selectedCnv of this.finalResultData.cnvInfos) {
+          const selectedCnvRegion = new RegionBp(
+            selectedCnv.startBp,
+            selectedCnv.endBp
+          );
+          selectedCnvRegions.push(selectedCnvRegion);
+        }
+        this.createDialog(MERGED_RESULT_NAME, data);
+      });
+    } else {
+      this.mergedChart.destroyChart();
+      this.mergedChart.initVis(this.containerMargin);
     }
-    const maxOverlap = this.findMaxOverlapNumber(this.mergedData.cnvInfos);
-
-    this.mergedChart = new MergedChart(
-      '3',
-      this.mergedChartDiv.nativeElement,
-      [this.mergedData],
-      this.containerMargin,
-      [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      [MERGED_RESULT_NAME],
-      maxOverlap,
-      this.mergedChartColor
-    );
-
-    this.mergedChart.onClickSubbars((cnvGroupName, data) => {
-      const selectedCnvRegions: RegionBp[] = [];
-      for (const selectedCnv of this.finalResultData.cnvInfos) {
-        const selectedCnvRegion = new RegionBp(
-          selectedCnv.startBp,
-          selectedCnv.endBp
-        );
-        selectedCnvRegions.push(selectedCnvRegion);
-      }
-
-      this.createDialog(MERGED_RESULT_NAME, data);
-    });
   }
 
   createFinalResultChart() {
     if (!this.selectedChrRegion) {
       return;
     }
-    if (this.finalResultChart) {
-      this.finalResultChart.removeVis();
+    if (this.finalResultChart === undefined) {
+      const maxOverlap = this.findMaxOverlapNumber(this.mergedData.cnvInfos);
+      this.finalResultChart = new MergedChart(
+        '4',
+        this.finalResultChartDiv.nativeElement,
+        [this.finalResultData],
+        this.containerMargin,
+        [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
+        [SELECTED_RESULT_NAME],
+        maxOverlap,
+        this.finalChartColor
+      );
+    } else {
+      this.finalResultChart.destroyChart();
+      this.finalResultChart.initVis(this.containerMargin);
     }
-    const maxOverlap = this.findMaxOverlapNumber(this.mergedData.cnvInfos);
-    this.finalResultChart = new MergedChart(
-      '4',
-      this.finalResultChartDiv.nativeElement,
-      [this.finalResultData],
-      this.containerMargin,
-      [this.selectedChrRegion.startBp, this.selectedChrRegion.endBp],
-      [SELECTED_RESULT_NAME],
-      maxOverlap,
-      this.finalChartColor
-    );
 
     this.finalResultChart.onClickSubbars((cnvGroupName, data) => {
       this.createDialog(SELECTED_RESULT_NAME, data);
-    });
-  }
-
-  private createDialog(cnvGroupName: string, cnvInfo: CnvInfo) {
-    this.dialogRef = this._matDialog.open(AnnotationDialogComponent, {
-      panelClass: 'dialog-default',
-      data: {
-        title: cnvGroupName,
-        cnvInfo: cnvInfo,
-        analysisType: this.analysisType
-      }
-    });
-
-    // add data
-    this.dialogRef.afterClosed().subscribe((response: CnvInfo) => {
-      if (!response) {
-        return;
-      }
-      const findedIndex = this.findIndex(
-        response,
-        this.finalResultData.cnvInfos
-      );
-      if (findedIndex >= 0) {
-        // remove this cnv from finalResultData
-        this.finalResultData.cnvInfos.splice(findedIndex, 1);
-      } else {
-        // add this cnv into finalResultData
-        this.finalResultData.cnvInfos.push(response);
-      }
-      this.createFinalResultChart();
-      this.service.onSelectedCnvChanged.next(this.finalResultData.cnvInfos);
     });
   }
 
@@ -400,7 +377,7 @@ export class MainChartComponent
       panelClass: 'dialog-warning',
       disableClose: false,
       data: {
-        errorMessage: errorMessage
+        errorMessage
       }
     });
   }
@@ -413,8 +390,38 @@ export class MainChartComponent
   }
 
   updateAllSelectStatus(list: CnvInfo[], isSelected: boolean) {
-    for (let i = 0; i < list.length; i++) {
-      list[i].isSelected = isSelected;
+    for (const listMember of list) {
+      listMember.isSelected = isSelected;
     }
+  }
+  private createDialog(cnvGroupName: string, cnvInfo: CnvInfo) {
+    this.dialogRef = this._matDialog.open(AnnotationDialogComponent, {
+      panelClass: 'dialog-default',
+      data: {
+        title: cnvGroupName,
+        cnvInfo,
+        analysisType: this.analysisType
+      }
+    });
+
+    // add data
+    this.dialogRef.afterClosed().subscribe((response: CnvInfo) => {
+      if (!response) {
+        return;
+      }
+      const findedIndex = this.findIndex(
+        response,
+        this.finalResultData.cnvInfos
+      );
+      if (findedIndex >= 0) {
+        // remove this cnv from finalResultData
+        this.finalResultData.cnvInfos.splice(findedIndex, 1);
+      } else {
+        // add this cnv into finalResultData
+        this.finalResultData.cnvInfos.push(response);
+      }
+      this.createFinalResultChart();
+      this.service.onSelectedCnvChanged.next(this.finalResultData.cnvInfos);
+    });
   }
 }

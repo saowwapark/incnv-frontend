@@ -13,7 +13,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
   templateUrl: './upload-dialog.component.html',
   styleUrls: ['./upload-dialog.component.css']
 })
-export class UploadDialogComponent implements OnInit, OnDestroy {
+export class UploadDialogComponent implements OnDestroy {
   samplesets: IdAndName[];
   tabFileMappings: IdAndName[];
 
@@ -28,7 +28,7 @@ export class UploadDialogComponent implements OnInit, OnDestroy {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
 
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -59,23 +59,6 @@ export class UploadDialogComponent implements OnInit, OnDestroy {
     }
 
     this._unsubscribeAll = new Subject();
-  }
-
-  private _createUploadForm(
-    uploadCnvToolResult: UploadCnvToolResult
-  ): FormGroup {
-    return this._fb.group({
-      fileName: [uploadCnvToolResult.fileName, Validators.required],
-      fileInfo: [uploadCnvToolResult.fileInfo, Validators.required],
-      referenceGenome: [
-        uploadCnvToolResult.referenceGenome,
-        Validators.required
-      ],
-      cnvToolName: [uploadCnvToolResult.cnvToolName, Validators.required],
-      tabFileMapping: [this.initialTabFileMapping, Validators.required],
-      sampleset: [this.initialSampleset, Validators.required],
-      tagDescriptions: [uploadCnvToolResult.tagDescriptions]
-    });
   }
 
   onRemoveTag(index: number): void {
@@ -114,7 +97,7 @@ export class UploadDialogComponent implements OnInit, OnDestroy {
     updated.samplesetId = samplesetId;
     this.dialogRef.close(updated);
   }
-  ngOnInit(): void {}
+
   /**
    * On destroy
    */
@@ -122,5 +105,21 @@ export class UploadDialogComponent implements OnInit, OnDestroy {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+  }
+  private _createUploadForm(
+    uploadCnvToolResult: UploadCnvToolResult
+  ): FormGroup {
+    return this._fb.group({
+      fileName: [uploadCnvToolResult.fileName, Validators.required],
+      fileInfo: [uploadCnvToolResult.fileInfo, Validators.required],
+      referenceGenome: [
+        uploadCnvToolResult.referenceGenome,
+        Validators.required
+      ],
+      cnvToolName: [uploadCnvToolResult.cnvToolName, Validators.required],
+      tabFileMapping: [this.initialTabFileMapping, Validators.required],
+      sampleset: [this.initialSampleset, Validators.required],
+      tagDescriptions: [uploadCnvToolResult.tagDescriptions]
+    });
   }
 }

@@ -47,9 +47,8 @@ export const chooseBasepair = (
   ) {
     chosenStartBp = regionStartBp;
     chosenEndBp = regionStartBp;
-  }
-  // right region
-  else if (diffEnd >= 0 && diffStartEnd < 0) {
+  } else if (diffEnd >= 0 && diffStartEnd < 0) {
+    // right region
     chosenStartBp = inDatum.startBp;
     chosenEndBp = regionEndBp;
   } else if (
@@ -60,19 +59,17 @@ export const chooseBasepair = (
   ) {
     chosenStartBp = regionEndBp;
     chosenEndBp = regionEndBp;
-  }
-  // within region
-  else if (diffStart > 0 && diffEnd < 0) {
+  } else if (diffStart > 0 && diffEnd < 0) {
+    // within region
     chosenStartBp = inDatum.startBp;
     chosenEndBp = inDatum.endBp;
-  }
-  // over region
-  else if (
+  } else if (
+    // over region
     (diffStart === 0 && diffEnd === 0) ||
     (diffStart < 0 && diffEnd > 0)
   ) {
     chosenStartBp = regionStartBp;
     chosenEndBp = regionEndBp;
   }
-  return { chosenStartBp: chosenStartBp, chosenEndBp: chosenEndBp };
+  return { chosenStartBp, chosenEndBp };
 };

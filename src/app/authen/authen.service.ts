@@ -1,21 +1,20 @@
-import { ConstantsService } from '../shared/services/constants.service';
+import { ConstantsService } from '../services/constants.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, concat } from 'rxjs';
 
 import { AuthenReq, AuthenRes } from './authen.model';
-import { map, tap, finalize } from 'rxjs/operators';
+import { map, tap, finalize, take } from 'rxjs/operators';
 import { error } from '@angular/compiler/src/util';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class AuthenService {
   private baseRouteUrl: string;
-
   private token: string;
   private tokenTimer: any;
   private isAuthenSubject = new BehaviorSubject<boolean>(false);
-  public isAuthen$ = this.isAuthenSubject.asObservable();
+  isAuthen$ = this.isAuthenSubject.asObservable();
 
   constructor(
     private _http: HttpClient,
@@ -30,7 +29,7 @@ export class AuthenService {
   }
 
   addUser(email: string, password: string) {
-    const authData: AuthenReq = { email: email, password: password };
+    const authData: AuthenReq = { email, password };
     return this._http.post(`${this.baseRouteUrl}/signup`, authData);
   }
 
@@ -43,12 +42,12 @@ export class AuthenService {
       this.setAuthTimer(expiresInDuration);
       const now = new Date();
       const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-      return { token: token, expirationDate: expirationDate };
+      return { token, expirationDate };
     }
   }
 
   login(email: string, password: string) {
-    const authReq: AuthenReq = { email: email, password: password };
+    const authReq: AuthenReq = { email, password };
     return this._http.post<any>(`${this.baseRouteUrl}/login`, authReq).pipe(
       map(res => res['payload']),
       tap((authenRes: AuthenRes) => {
@@ -112,7 +111,7 @@ export class AuthenService {
       return;
     }
     return {
-      token: token,
+      token,
       expirationDate: new Date(expirationDate)
     };
   }

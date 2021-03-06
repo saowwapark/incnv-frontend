@@ -16,14 +16,14 @@ import { Subject } from 'rxjs';
   templateUrl: './choose-many-sample.component.html',
   styleUrls: ['./choose-many-sample.component.scss']
 })
-export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
+export class ChooseManySampleComponent implements OnInit, OnDestroy {
   @Input() samples: string[];
 
   isCheckedSelectAll: boolean;
   parentForm: FormGroup;
 
   // private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<void>;
 
   constructor(
     private fb: FormBuilder,
@@ -86,15 +86,12 @@ export class ChooseManySampleComponent implements OnInit, OnChanges, OnDestroy {
           this.isCheckedSelectAll = false;
         } else {
           this.sampleFormArray.clear();
-          for (let i = 0; i < selectedSamples.length; i++) {
-            const selectedSample = selectedSamples[i];
+          for (const selectedSample of selectedSamples) {
             this.sampleFormArray.push(this.newSample(selectedSample));
           }
         }
       });
   }
-  ngOnChanges(changes: SimpleChanges): void {}
-
   resetSampleFormArray() {
     this.sampleFormArray.clear();
     this.sampleFormArray.push(this.newSample());

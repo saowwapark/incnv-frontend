@@ -63,15 +63,30 @@ export const navigationData: Navigation[] = [
         id: 'individualSample',
         title: 'Individual Sample',
         type: 'item',
-        icon: 'school',
+        icon: 'analytics',
         url: '/analysis/individual-sample'
       },
       {
         id: 'mulitpleSamples',
         title: 'Multiple Samples',
         type: 'item',
-        icon: 'school',
+        icon: 'analytics',
         url: '/analysis/multiple-sample'
+      }
+    ]
+  },
+  {
+    id: 'maintenance',
+    title: 'Maintenance',
+    type: 'group',
+    icon: 'pages',
+    children: [
+      {
+        id: 'version',
+        title: 'Version',
+        type: 'item',
+        icon: 'miscellaneous_services',
+        url: '/maintenance/version'
       }
     ]
   }

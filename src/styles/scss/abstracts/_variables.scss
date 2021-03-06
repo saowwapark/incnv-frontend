@@ -7,6 +7,10 @@ $color-primary: mat-color($primary); // #1976d2
 $color-primary-light: mat-color($primary, lighter); //#2196f3
 $color-primary-dark: mat-color($primary, darker); //#0d47a1
 
+$color-warn: mat-color($warn);
+$color-warn-light: mat-color($warn, lighter);
+$color-warn-dark: mat-color($warn, darker);
+
 $color-blue-1: #039be5; //light-blue-600
 
 $color-gray-light-1: #f7f7f7;

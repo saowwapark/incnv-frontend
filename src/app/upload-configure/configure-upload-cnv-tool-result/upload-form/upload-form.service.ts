@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { IdAndName } from '../../../shared/models/id-and-name.model';
 import { HttpClient } from '@angular/common/http';
-import { ConstantsService } from 'src/app/shared/services/constants.service';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UploadCnvToolResult } from '../../../shared/models/upload-cnv-tool-result.model';
+import { ConstantsService } from 'src/app/services/constants.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UploadFormService {
   samplesets: IdAndName[];
   tapfileMapping: IdAndName[];

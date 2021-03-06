@@ -27,11 +27,8 @@ export class NavLoadingComponent implements OnInit {
           NavigationCancel,
           NavigationError
         ].some(navigationType => event instanceof navigationType)
-      ),
-      map(event => {
-        // console.log(event.constructor.name);
-        return event instanceof NavigationStart;
-      })
+      ), // console.log(event.constructor.name);
+      map(event => event instanceof NavigationStart)
     );
   }
 }

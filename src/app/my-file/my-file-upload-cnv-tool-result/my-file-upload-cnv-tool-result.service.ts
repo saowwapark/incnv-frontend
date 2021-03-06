@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { UploadCnvToolResult } from '../../shared/models/upload-cnv-tool-result.model';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { ConstantsService } from 'src/app/shared/services/constants.service';
+import { ConstantsService } from 'src/app/services/constants.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MyFileUploadCnvToolResultService {
   baseRouteUrl: string;
   onTriggerDataChanged: BehaviorSubject<void>;
@@ -33,7 +31,7 @@ export class MyFileUploadCnvToolResultService {
   editUploadCnvToolResult(uploadCnvToolResult: UploadCnvToolResult) {
     return this._http.put(
       `${this.baseRouteUrl}/${uploadCnvToolResult.uploadCnvToolResultId}`,
-      { uploadCnvToolResult: uploadCnvToolResult }
+      { uploadCnvToolResult }
     );
   }
 
@@ -49,7 +47,7 @@ export class MyFileUploadCnvToolResultService {
         'Content-Type': 'application/json'
       }),
       body: {
-        uploadCnvToolResultIds: uploadCnvToolResultIds
+        uploadCnvToolResultIds
       }
     };
     return this._http.delete(

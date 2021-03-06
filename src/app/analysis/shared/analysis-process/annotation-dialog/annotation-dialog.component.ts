@@ -25,8 +25,8 @@ export class AnnotationDialogComponent implements OnInit {
   numberMark;
   isSelectable: boolean;
   selectForm: FormGroup;
-  readonly INDIVIDUAL_SAMPLE_ANALYSIS = INDIVIDUAL_SAMPLE_ANALYSIS;
-  readonly MULTIPLE_SAMPLE_ANALYSIS = MULTIPLE_SAMPLE_ANALYSIS;
+  readonly individualSampleAnalysisType = INDIVIDUAL_SAMPLE_ANALYSIS;
+  readonly multipleSampleAnalysisType = MULTIPLE_SAMPLE_ANALYSIS;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

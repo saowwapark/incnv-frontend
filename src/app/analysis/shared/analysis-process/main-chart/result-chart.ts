@@ -23,7 +23,6 @@ export class MergedChart {
   colorOpacityScale;
   xAxis;
   yAxis;
-
   tooltip;
   subbars;
   svg;
@@ -54,7 +53,60 @@ export class MergedChart {
     // this.domainOnY = domainOnY;
     this.initVis(containerMargin);
   }
+  public drawData() {
+    const bars = this.generateBars();
+    this.colorOpacityScale = this.createColorOpacityScale();
+    this.subbars = this.generateSubbars(bars);
+    this.addEventToSubbars();
+  }
+  public initVis(containerMargin) {
+    this.generateGraphContainer(containerMargin);
+    this.createScaleX();
+    this.createScaleY();
+    this.generateAxisX();
+    this.generateAxisY();
 
+    this.generateTooltip();
+    this.drawData();
+  }
+
+  public updateVis(newData, newDomainOnX) {
+    this._data = newData;
+    this._domainOnX = newDomainOnX;
+    this.createScaleX();
+    this.generateAxisX();
+    this.drawData();
+  }
+
+  public destroyChart() {
+    this.removeVis();
+    this.releaseInstances();
+  }
+  public onClickSubbars(callback) {
+    this.subbars.on('click', (d, i, n) => {
+      const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+      callback(parentData.cnvGroupName, d);
+    });
+  }
+  private removeVis() {
+    if (this.svg) {
+      this.svg.remove();
+    }
+    if (this.tooltip) {
+      this.tooltip.remove();
+    }
+  }
+  private releaseInstances() {
+    this.graphContainer = null;
+    this.scaleX = null;
+    this.scaleY = null;
+    this.colorOpacityScale = null;
+    this.xAxis = null;
+    this.yAxis = null;
+    this.tooltip = null;
+    this.subbars = null;
+    this.svg = null;
+  }
   private calContainerHeight(containerMargin) {
     const barNumber = this._data.length;
     const xAxisBarHeight = 20;
@@ -160,13 +212,6 @@ export class MergedChart {
       .range([0, 1]);
   }
 
-  public drawData() {
-    const bars = this.generateBars();
-    this.colorOpacityScale = this.createColorOpacityScale();
-    this.subbars = this.generateSubbars(bars);
-    this.addEventToSubbars();
-  }
-
   private generateBars() {
     const area = this.graphContainer
       .append('g')
@@ -199,13 +244,9 @@ export class MergedChart {
 
       .selectAll('rect.subbar')
 
-      .data((d: CnvGroup) => {
-        return filterDataInRegion(
-          d.cnvInfos,
-          this._domainOnX[0],
-          this._domainOnX[1]
-        );
-      })
+      .data((d: CnvGroup) =>
+        filterDataInRegion(d.cnvInfos, this._domainOnX[0], this._domainOnX[1])
+      )
       .join('rect')
       .attr('class', 'subbar');
 
@@ -226,20 +267,13 @@ export class MergedChart {
         return this.scaleY(parentData.cnvGroupName);
       })
       .attr('fill', this._color)
-      .attr('fill-opacity', (d: CnvInfo, i, n) => {
-        return this.colorOpacityScale(d.overlaps.length);
-      })
+      .attr('fill-opacity', (d: CnvInfo, i, n) =>
+        this.colorOpacityScale(d.overlaps.length)
+      )
       .attr('stroke', this._color)
       .attr('stroke-opacity', '0');
 
     return subbars;
-  }
-
-  public onClickSubbars(callback) {
-    this.subbars.on('click', (d, i, n) => {
-      const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
-      callback(parentData.cnvGroupName, d);
-    });
   }
 
   private addEventToSubbars() {
@@ -259,9 +293,7 @@ export class MergedChart {
           .transition()
           .duration(300)
           .attr('fill', this._color)
-          .attr('fill-opacity', () => {
-            return this.colorOpacityScale(d.overlaps.length);
-          })
+          .attr('fill-opacity', () => this.colorOpacityScale(d.overlaps.length))
           .attr('stroke-opacity', '0');
 
         // tooltip
@@ -303,33 +335,5 @@ export class MergedChart {
       .style('font-size', '1.3rem')
       .style('display', 'none')
       .style('z-index', '10');
-  }
-
-  public initVis(containerMargin) {
-    this.generateGraphContainer(containerMargin);
-    this.createScaleX();
-    this.createScaleY();
-    this.generateAxisX();
-    this.generateAxisY();
-
-    this.generateTooltip();
-    this.drawData();
-  }
-
-  public updateVis(newData, newDomainOnX) {
-    this._data = newData;
-    this._domainOnX = newDomainOnX;
-    this.createScaleX();
-    this.generateAxisX();
-    this.drawData();
-  }
-
-  public removeVis() {
-    if (this.svg) {
-      this.svg.remove();
-    }
-    if (this.tooltip) {
-      this.tooltip.remove();
-    }
   }
 }

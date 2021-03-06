@@ -6,6 +6,7 @@ import { NavigationComponent } from './navigation.component';
 import { ItemComponent } from './item/item.component';
 import { GroupComponent } from './group/group.component';
 import { CollapsableComponent } from './collapsable/collapsable.component';
+import { NavigationService } from './navigation.service';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { CollapsableComponent } from './collapsable/collapsable.component';
     CollapsableComponent
   ],
   imports: [SharedModule, RouterModule],
-  exports: [NavigationComponent, NavLoadingComponent]
+  exports: [NavigationComponent, NavLoadingComponent],
+  providers: [NavigationService]
 })
 export class NavigationModule {}
