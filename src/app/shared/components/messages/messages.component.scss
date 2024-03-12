@@ -1,13 +1,13 @@
+@use '~@angular/material' as mat;
 @import '../../../../styles/scss/abstracts/variables';
 
-@import '~@angular/material/theming';
 .messages-container {
   width: 100%;
   padding: 0.8rem 1.6rem;
   background-color: $color-warn-light;
   color: $color-warn-dark;
   border: 1 solid $color-warn-dark;
-  @include mat-elevation(6);
+  @include mat.elevation(6);
   position: fixed;
   top: 0;
   left: 0;
