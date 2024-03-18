@@ -110,7 +110,7 @@ export class SamplesetComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         filter(response => !!response),
-        tap((updatedSampleset: Sampleset) =>
+        switchMap((updatedSampleset: Sampleset) =>
           this.samplesetService.addSampleset(updatedSampleset)
         )
       )

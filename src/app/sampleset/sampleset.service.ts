@@ -32,17 +32,13 @@ export class SamplesetService {
   addSampleset(sampleset: Sampleset) {
     console.log('addSampleset');
     const url = `${this.baseRouteUrl}`;
-    return this._http
-      .post(url, { ...sampleset })
-      .pipe(tap(() => this.onTriggerDataChanged.next()));
+    return this._http.post(url, { ...sampleset });
   }
 
   editSampleset(sampleset: Sampleset) {
     const samplesetId = sampleset.samplesetId;
     const url = `${this.baseRouteUrl}/${samplesetId}`;
-    return this._http
-      .put(url, sampleset)
-      .pipe(tap(() => this.onTriggerDataChanged.next()));
+    return this._http.put(url, sampleset);
   }
 
   deleteSamplesets(samplesetIds: number[]) {
