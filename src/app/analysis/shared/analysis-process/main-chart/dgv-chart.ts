@@ -264,11 +264,12 @@ export class DgvChart {
         // tooltip
         this.tooltip.style('display', 'none');
       })
-      .on('mousemove', (d: DgvVariant, i, n) => {
+      .on('mousemove', (event, d: DgvVariant) => {
+        const [x, y] = d3.pointer(event); 
         // tooltip
         this.tooltip
-          .style('left', d3.mouse(n[i])[0] + 60 + 'px')
-          .style('top', d3.mouse(n[i])[1] - 80 + 'px')
+          .style('left', x + 60 + 'px')
+          .style('top', y - 80 + 'px')
           .style('display', null);
 
         this.tooltip.html(() => {

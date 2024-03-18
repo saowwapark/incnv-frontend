@@ -1,3 +1,4 @@
+@use '@angular/material' as mat;
 .layout--absolute-default {
   overflow: auto;
   position: absolute;
@@ -23,7 +24,7 @@
 
   > .layout__header-container {
     position: relative;
-    background-color: mat-color($primary);
+    background-color: mat.get-color-from-palette($primary);
     color: white;
     width: 100%;
     height: $header-container-height;

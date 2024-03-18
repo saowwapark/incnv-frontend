@@ -1,21 +1,22 @@
+@use '@angular/material' as mat;
 @import './../../../../styles/scss/theme';
 @import './../../../../styles/scss/abstracts/variables';
 :host {
   background-color: $color-primary;
-  color: mat-color($background, text);
+  color: mat.get-color-from-palette($background, text);
   flex: 1;
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
   height: $header-container-height;
-  @include mat-elevation(3);
+  @include mat.elevation(3);
 }
 
 .delete {
-  background-color: mat-color($warn);
+  background-color: mat.get-color-from-palette($warn);
 }
 
 .use {
-  background-color: mat-color($accent);
+  background-color: mat.get-color-from-palette($accent);
 }

@@ -1,15 +1,16 @@
+@use '@angular/material' as mat;
 @import './../theme';
 
 $color-text-dark: yellow;
 
 //COLORS
-$color-primary: mat-color($primary); // #1976d2
-$color-primary-light: mat-color($primary, lighter); //#2196f3
-$color-primary-dark: mat-color($primary, darker); //#0d47a1
+$color-primary: mat.get-color-from-palette($primary); // #1976d2
+$color-primary-light: mat.get-color-from-palette($primary, lighter); //#2196f3
+$color-primary-dark: mat.get-color-from-palette($primary, darker); //#0d47a1
 
-$color-warn: mat-color($warn);
-$color-warn-light: mat-color($warn, lighter);
-$color-warn-dark: mat-color($warn, darker);
+$color-warn: mat.get-color-from-palette($warn);
+$color-warn-light: mat.get-color-from-palette($warn, lighter);
+$color-warn-dark: mat.get-color-from-palette($warn, darker);
 
 $color-blue-1: #039be5; //light-blue-600
 

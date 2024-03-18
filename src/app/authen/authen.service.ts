@@ -5,8 +5,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, concat } from 'rxjs';
 
 import { AuthenReq, AuthenRes } from './authen.model';
-import { map, tap, finalize, take } from 'rxjs/operators';
-import { error } from '@angular/compiler/src/util';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthenService {

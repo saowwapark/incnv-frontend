@@ -1,3 +1,4 @@
+@use '@angular/material' as mat;
 .mat-dialog-container {
   padding: 0 !important;
 }
@@ -13,7 +14,7 @@
 
 .dialog-default {
   .mat-toolbar {
-    background-color: mat-color($primary, lighter);
+    background-color: mat.get-color-from-palette($primary, lighter);
     color: white !important;
     margin-bottom: 0 !important;
   }
@@ -40,7 +41,7 @@
 
 .dialog-warning {
   .mat-toolbar {
-    background-color: mat-color($warn);
+    background-color: mat.get-color-from-palette($warn);
     color: white !important;
   }
 }

@@ -1,8 +1,9 @@
+@use '@angular/material' as mat;
 .mat-card {
   padding: 0 !important;
 
   .mat-card-header {
-    background-color: mat-color($primary, lighter);
+    background-color: mat.get-color-from-palette($primary, lighter);
     color: white !important;
     height: 5rem;
 
