@@ -1,6 +1,6 @@
 export interface ChrSize {
   chromosome: string;
-  length: string;
+  length: number;
 }
 
 export const chrGrch37: ChrSize[] = [];

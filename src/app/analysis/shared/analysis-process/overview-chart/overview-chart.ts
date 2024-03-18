@@ -57,7 +57,7 @@ export class OverviewChart {
         [0, 0],
         [this.graphContainer.attr('width'), this.graphContainer.attr('height')]
       ])
-      .on('end', () => this.brushed(callback));
+      .on('end', (event) => this.brushed(event, callback));
     // Append brush component
     const brushComponent = this.graphContainer
       .append('g')
@@ -227,9 +227,9 @@ export class OverviewChart {
       .attr('fill', this._color);
   }
 
-  private brushed(callback) {
+  private brushed(event, callback) {
     // Get the selection coordinate
-    const extent = d3.event.selection;
+    const extent = event.selection;
     if (extent) {
       const sx1 = Math.round(this.scaleX.invert(extent[0]));
       const sx2 = Math.round(this.scaleX.invert(extent[1]));
@@ -251,17 +251,16 @@ export class OverviewChart {
         [0, 0],
         [width, height]
       ])
-      .on('zoom', () => {
-        this.zoomed();
+      .on('zoom', (event) => {
+        this.zoomed(event);
       });
     return zoomScale;
   }
 
-  private zoomed() {
+  private zoomed(event) {
     // update scaleX
     // this.scaleX.range([0, width].map(d => d3.event.transform.applyX(d)));
-
-    this.scaleX = d3.event.transform.rescaleX(this.copyScaleX);
+    this.scaleX = event.transform.rescaleX(this.copyScaleX);
 
     // create new chart with new scaleX
     this.graphContainer

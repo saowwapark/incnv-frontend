@@ -321,11 +321,12 @@ export class ComparedChart {
         // tooltip
         this.tooltip.style('display', 'none');
       })
-      .on('mousemove', (d, i, n) => {
+      .on('mousemove', (event, d) => {
+        const [x, y] = d3.pointer(event);
         // tooltip
         this.tooltip
-          .style('left', d3.mouse(n[i])[0] + 60 + 'px')
-          .style('top', d3.mouse(n[i])[1] - 20 + 'px')
+          .style('left', x + 60 + 'px')
+          .style('top', y - 20 + 'px')
           .style('display', null);
 
         this.tooltip.html(() => {

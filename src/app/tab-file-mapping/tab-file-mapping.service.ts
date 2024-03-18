@@ -48,7 +48,7 @@ export class TabFileMappingService implements Resolve<any> {
           this.searchText = searchText;
           this.getTabFileMapping();
         });
-        resolve();
+        resolve(null);
       }, reject);
     });
   }
