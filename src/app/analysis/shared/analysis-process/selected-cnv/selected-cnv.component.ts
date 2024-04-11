@@ -1,9 +1,10 @@
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AnnotationDialogComponent } from '../annotation-dialog/annotation-dialog.component';
 import { AnalysisProcessService } from '../analysis-process.service';
 import {
   CnvInfo,
+  CnvInfoView,
   MULTIPLE_SAMPLE_ANALYSIS
 } from 'src/app/analysis/analysis.model';
 import {
@@ -46,29 +47,26 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class SelectedCnvComponent implements OnInit, OnDestroy {
   @Input() analysisType: string;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  selectedCnvs: CnvInfo[];
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  selectedCnvs: CnvInfoView[];
   displayedColumns = [
     'no',
     'chromosome',
     'startBp',
     'endBp',
     'cnvType',
-    'overlappingNumbers',
+    'overlapLength',
     'cnvTools',
     'delete'
   ];
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
   expandedElement: string | null;
 
-  // matSort: MatSort;
-  // @ViewChild(MatSort, { static: false }) set content(content: MatSort) {
-  //   console.log(content);
-  //   this.matSort = content;
-  // }
+  dataSource = new MatTableDataSource<CnvInfoView>();
+  cnvInfoViews: CnvInfoView[] = [];
+  shownTableData: CnvInfoView[] = [];
 
-  dataSource = new MatTableDataSource<CnvInfo>();
   private _unsubscribeAll: Subject<void>;
 
   constructor(
@@ -88,23 +86,17 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
         'startBp',
         'endBp',
         'cnvType',
-        'overlappingNumbers',
+        'overlapLength',
         'samples',
         'delete'
       ];
     }
     this.service.onSelectedCnvChanged
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cnvInfos: CnvInfo[]) => {
+      .subscribe((cnvInfos: CnvInfoView[]) => {
         this.selectedCnvs = cnvInfos;
-        this.dataSource.data = this.selectedCnvs;
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-        if (this.dataSource.paginator) {
-          this.dataSource.paginator.firstPage();
-        }
+        this.updateTableData();
       });
-    this.createCustomSort();
   }
 
   /**
@@ -143,21 +135,35 @@ export class SelectedCnvComponent implements OnInit, OnDestroy {
   }
 
   /************************* Sort Row **************************/
-  createCustomSort() {
-    this.dataSource.sortingDataAccessor = (item: CnvInfo, property) => {
-      // property = this.sortBy;
-      // console.log('item: '+JSON.stringify(item)+' '+' property: '+ property);
-      switch (property) {
-        case 'overlappingNumbers': {
-          return item.overlaps.length;
-        }
+  sortFunc(array: Object[], propName: string, direction: 'asc' | 'desc' | '') {
+    if (direction === 'asc') array.sort((a, b) => a[propName] - b[propName]);
+    else if (direction === 'desc') array.sort((a, b) => b[propName] - a[propName]);
+  }
 
-        default: {
-          return item[property];
-        }
-      }
-    };
-    this.dataSource.sort = this.sort;
+  onHandleSort(event: Sort) {
+    const column = event.active;
+    const direction = event.direction;
+    this.sortFunc(this.cnvInfoViews, column, direction);
+    this.updateTableData();
+  }
+
+  onSearchAll() {
+    this.updateTableData();
+  }
+
+  updateTableData() {
+    this.paginator.length = this.selectedCnvs.length;
+    this.shownTableData = this.slicePageData(this.selectedCnvs);
+    this.dataSource.data = this.shownTableData;
+  }
+
+
+  slicePageData(datas: CnvInfoView[]) {
+    const pageIndex = this.paginator.pageIndex;
+    const pageSize = this.paginator.pageSize;
+    const startIndex = pageIndex * pageSize;
+    const endIndex = startIndex + pageSize;
+    return datas.slice(startIndex, endIndex);
   }
 
   exportCnvInfos() {

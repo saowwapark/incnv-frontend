@@ -21,16 +21,16 @@
                   color="accent"
                   selected
                   *ngFor="
-                    let filterValue of filteredEnsembl.filterValues;
+                    let tag of ensemblTags;
                     let i = index
                   "
                   selectable="false"
                   [removable]="true"
                   (removed)="
-                    onRemoveFilterValue(i, filteredEnsembl.filterValues)
+                    onRemoveFilterValue(i, ensemblTags)
                   "
                 >
-                  {{ filterValue }}
+                  {{ tag }}
                   <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
@@ -38,7 +38,7 @@
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   matChipInputAddOnBlur="true"
                   (matChipInputTokenEnd)="
-                    onAddFilterValue($event, filteredEnsembl.filterValues)
+                    onAddFilterValue($event, ensemblTags)
                   "
                 />
               </mat-chip-list>
@@ -48,7 +48,7 @@
                 mat-icon-button
                 color="warn"
                 aria-label="clear search keywords"
-                (click)="onClearFilterValues(filteredEnsembl.filterValues)"
+                (click)="onClearFilterValues(ensemblTags)"
               >
                 <mat-icon>clear</mat-icon>
               </button>
@@ -72,14 +72,14 @@
                   color="accent"
                   selected
                   *ngFor="
-                    let filterValue of filteredDgv.filterValues;
+                    let dgvTag of dgvTags;
                     let i = index
                   "
                   selectable="false"
                   [removable]="true"
-                  (removed)="onRemoveFilterValue(i, filteredDgv.filterValues)"
+                  (removed)="onRemoveFilterValue(i, dgvTags)"
                 >
-                  {{ filterValue }}
+                  {{ dgvTag }}
                   <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
@@ -87,7 +87,7 @@
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   matChipInputAddOnBlur="true"
                   (matChipInputTokenEnd)="
-                    onAddFilterValue($event, filteredDgv.filterValues)
+                    onAddFilterValue($event, dgvTags)
                   "
                 />
               </mat-chip-list>
@@ -97,7 +97,7 @@
                 mat-icon-button
                 color="warn"
                 aria-label="clear search keywords"
-                (click)="onClearFilterValues(filteredDgv.filterValues)"
+                (click)="onClearFilterValues(dgvTags)"
               >
                 <mat-icon>clear</mat-icon>
               </button>
@@ -121,16 +121,16 @@
                   color="accent"
                   selected
                   *ngFor="
-                    let filterValue of filteredClinvarOmimId.filterValues;
+                    let clinvarOmimIdTag of clinvarOmimIdTags;
                     let i = index
                   "
                   selectable="false"
                   [removable]="true"
                   (removed)="
-                    onRemoveFilterValue(i, filteredClinvarOmimId.filterValues)
+                    onRemoveFilterValue(i, clinvarOmimIdTags)
                   "
                 >
-                  {{ filterValue }}
+                  {{ clinvarOmimIdTag }}
                   <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
@@ -138,7 +138,7 @@
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   matChipInputAddOnBlur="true"
                   (matChipInputTokenEnd)="
-                    onAddFilterValue($event, filteredClinvarOmimId.filterValues)
+                    onAddFilterValue($event, clinvarOmimIdTags)
                   "
                 />
               </mat-chip-list>
@@ -149,7 +149,7 @@
                 color="warn"
                 aria-label="clear search keywords"
                 (click)="
-                  onClearFilterValues(filteredClinvarOmimId.filterValues)
+                  onClearFilterValues(clinvarOmimIdTags)
                 "
               >
                 <mat-icon>clear</mat-icon>
@@ -174,7 +174,7 @@
                   color="accent"
                   selected
                   *ngFor="
-                    let filterValue of filteredClinvarPhenotype.filterValues;
+                    let clinvarPhenotypeTag of clinvarPhenotypeTags;
                     let i = index
                   "
                   selectable="false"
@@ -182,11 +182,11 @@
                   (removed)="
                     onRemoveFilterValue(
                       i,
-                      filteredClinvarPhenotype.filterValues
+                      clinvarPhenotypeTags
                     )
                   "
                 >
-                  {{ filterValue }}
+                  {{ clinvarPhenotypeTag }}
                   <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
@@ -196,7 +196,7 @@
                   (matChipInputTokenEnd)="
                     onAddFilterValue(
                       $event,
-                      filteredClinvarPhenotype.filterValues
+                      clinvarPhenotypeTags
                     )
                   "
                 />
@@ -208,7 +208,7 @@
                 color="warn"
                 aria-label="clear search keywords"
                 (click)="
-                  onClearFilterValues(filteredClinvarPhenotype.filterValues)
+                  onClearFilterValues(clinvarPhenotypeTags)
                 "
               >
                 <mat-icon>clear</mat-icon>
@@ -238,16 +238,16 @@
                   color="accent"
                   selected
                   *ngFor="
-                    let filterValue of filteredOverlapping.filterValues;
+                    let overlappingTag of overlappingTags;
                     let i = index
                   "
                   selectable="false"
                   [removable]="true"
                   (removed)="
-                    onRemoveFilterValue(i, filteredOverlapping.filterValues)
+                    onRemoveFilterValue(i, overlappingTags)
                   "
                 >
-                  {{ filterValue }}
+                  {{ overlappingTag }}
                   <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input
@@ -259,7 +259,7 @@
                   (matChipInputTokenEnd)="
                     onAddOverlappingFilterValue(
                       $event,
-                      filteredOverlapping.filterValues
+                      overlappingTags
                     )
                   "
                 />
@@ -270,7 +270,7 @@
                 mat-icon-button
                 color="warn"
                 aria-label="clear search keywords"
-                (click)="onClearFilterValues(filteredOverlapping.filterValues)"
+                (click)="onClearFilterValues(overlappingTags)"
               >
                 <mat-icon>clear</mat-icon>
               </button>
@@ -283,20 +283,21 @@
           mat-button
           mat-raised-button
           color="primary"
-          (click)="applyFilter()"
+          (click)="onSearchAll()"
         >
           Search
         </button>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-  <div class="table-container" *ngIf="dataSource.data?.length">
+  <div class="table-container">
     <table
       mat-table
       [dataSource]="dataSource"
       multiTemplateDataRows
       matSort
       [trackBy]="trackByFn"
+      (matSortChange)="onHandleSort($event)"
     >
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
@@ -376,7 +377,7 @@
       </ng-container>
 
       <!-- Overlaps -->
-      <ng-container matColumnDef="overlappingNumbers">
+      <ng-container matColumnDef="overlapLength">
         <th
           mat-header-cell
           *matHeaderCellDef
@@ -386,13 +387,13 @@
           Overlapping Numbers
         </th>
         <td mat-cell class="data-right" *matCellDef="let row">
-          {{ row.overlaps.length }}
+          {{ row.overlapLength }}
         </td>
       </ng-container>
 
       <!-- CNV Tools -->
       <ng-container matColumnDef="cnvTools">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>CNV Tools</th>
+        <th mat-header-cell *matHeaderCellDef>CNV Tools</th>
         <td mat-cell *matCellDef="let row">
           {{ row.overlaps.join('; ') }}
         </td>
@@ -400,7 +401,7 @@
 
       <!-- Samples -->
       <ng-container matColumnDef="samples">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sample Names</th>
+        <th mat-header-cell *matHeaderCellDef>Sample Names</th>
         <td mat-cell *matCellDef="let row">
           {{ row.overlaps.join('; ') }}
         </td>
@@ -740,7 +741,9 @@
 
     <!-- page -->
     <mat-paginator
-      [length]="dataSource.data?.length"
+      [length]="cnvInfoViews.overlapLength"
+      (page)="updateTableData()"
+      [pageSize]="5"
       [pageSizeOptions]="[5, 10, 25, 50, 100]"
       class="paginator-sticky"
     >

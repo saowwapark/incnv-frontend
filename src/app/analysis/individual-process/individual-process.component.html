@@ -99,7 +99,7 @@
             </div>
           </mat-expansion-panel>
           <!-- Overview Chart -->
-          <!-- <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>Overview Chart</mat-panel-title>
             </mat-expansion-panel-header>
@@ -111,7 +111,8 @@
               [yAxisUnit]="'tools'"
               (selectChrRegion)="selectChrRegion($event)"
             ></app-overview-chart>
-          </mat-expansion-panel> -->
+          </mat-expansion-panel>
+
           <!-- All Merged CNVs-->
           <mat-expansion-panel [expanded]="false" *ngIf="!!data.mergedTool">
             <mat-expansion-panel-header>
@@ -122,6 +123,7 @@
               [mergedData]="data.mergedTool"
             ></app-merged-table>
           </mat-expansion-panel>
+
           <!-- Main Chart-->
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
@@ -138,6 +140,7 @@
             >
             </app-main-chart>
           </mat-expansion-panel>
+
           <!-- Selected CNVs-->
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>

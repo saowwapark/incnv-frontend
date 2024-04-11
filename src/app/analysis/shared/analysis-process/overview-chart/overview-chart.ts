@@ -1,14 +1,14 @@
 import * as d3 from 'd3';
 import {
-  CnvInfo,
   Y_AXIS_FONT_SIZE,
   X_AXIS_FONT_SIZE,
-  TICK_WIDTH
+  TICK_WIDTH,
+  CnvInfoView
 } from '../../../analysis.model';
 
 export class OverviewChart {
   _parentElement; // string
-  _data: CnvInfo[];
+  _data: CnvInfoView[];
   _yAxisUnit: string;
   _domainOnX;
   _domainOnY;
@@ -30,7 +30,7 @@ export class OverviewChart {
    */
   constructor(
     parentElement,
-    data: CnvInfo[],
+    data: CnvInfoView[],
     containerMargin,
     yUnit,
     domainOnX,
@@ -215,14 +215,14 @@ export class OverviewChart {
       .append('rect')
       .attr(
         'height',
-        (d: CnvInfo) =>
+        (d: CnvInfoView) =>
           this.graphContainer.attr('height') - this.scaleY(d.overlaps.length)
       )
-      .attr('x', (d: CnvInfo) => this.scaleX(d.startBp))
-      .attr('y', (d: CnvInfo) => this.scaleY(d.overlaps.length))
+      .attr('x', (d: CnvInfoView) => this.scaleX(d.startBp))
+      .attr('y', (d: CnvInfoView) => this.scaleY(d.overlapLength))
       .attr(
         'width',
-        (d: CnvInfo) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
+        (d: CnvInfoView) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
       )
       .attr('fill', this._color);
   }
@@ -265,10 +265,10 @@ export class OverviewChart {
     // create new chart with new scaleX
     this.graphContainer
       .selectAll('.overview-bar rect')
-      .attr('x', (d: CnvInfo) => this.scaleX(d.startBp))
+      .attr('x', (d: CnvInfoView) => this.scaleX(d.startBp))
       .attr(
         'width',
-        (d: CnvInfo) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
+        (d: CnvInfoView) => this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1
       );
 
     const newXAxis = d3.axisBottom(this.scaleX);

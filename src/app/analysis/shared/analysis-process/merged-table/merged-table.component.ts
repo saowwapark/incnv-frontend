@@ -1,7 +1,8 @@
 import {
   DgvAnnotation,
-  CnvGroup,
-  MULTIPLE_SAMPLE_ANALYSIS
+  MULTIPLE_SAMPLE_ANALYSIS,
+  CnvInfoView,
+  CnvGroup
 } from './../../../analysis.model';
 // onpush
 import { AnalysisProcessService } from './../analysis-process.service';
@@ -11,17 +12,15 @@ import {
   OnInit,
   Input,
   ViewChild,
-  OnChanges,
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  AfterViewChecked,
   AfterViewInit,
-  AfterContentInit
+  OnChanges,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import {
   trigger,
@@ -39,15 +38,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
 
-export class FilterObj {
-  id: string;
-  filterValues: string[];
-  constructor(id: string, filterValues: string[]) {
-    this.id = id;
-    this.filterValues = filterValues;
-  }
-}
-
 @Component({
   selector: 'app-merged-table',
   templateUrl: './merged-table.component.html',
@@ -64,17 +54,12 @@ export class FilterObj {
     ])
   ]
 })
-export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
+export class MergedTableComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() analysisType: string;
   @Input() mergedData: CnvGroup;
-  @ViewChild(MatPaginator, { static: false }) set paginator(mp: MatPaginator) {
-    console.log('@ViewChild - paginator');
-    this.dataSource.paginator = mp;
-  }
-  @ViewChild(MatSort, { static: false }) set sort(ms: MatSort) {
-    console.log('@ViewChild - sort');
-    this.createCustomSort();
-  }
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
   displayedColumns = [
     'select',
     'no',
@@ -82,51 +67,44 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
     'startBp',
     'endBp',
     'cnvType',
-    'overlappingNumbers',
+    'overlapLength',
     'cnvTools'
   ];
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
   expandedElement: string | null;
 
-  filteredEnsembl = new FilterObj('ensembl', []);
-  filteredDgv = new FilterObj('dgv', []);
-  filteredClinvarOmimId = new FilterObj('clinvarOmimId', []);
-  filteredClinvarPhenotype = new FilterObj('clinvarPhenotype', []);
-  filteredOverlapping = new FilterObj('overlapping', []);
+  ensemblTags: string[]= [];
+  dgvTags: string[] = [];
+  clinvarOmimIdTags: string[] = [];
+  clinvarPhenotypeTags: string[] = [];
+  overlappingTags: string[] = [];
 
   // mat-chip
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
   readonly overlappingSeparatorKeysCodes: number[] = [ENTER];
   readonly MULTIPLE_SAMPLE_ANALYSIS = MULTIPLE_SAMPLE_ANALYSIS;
 
-  dataSource = new MatTableDataSource<CnvInfo>();
-  selection = new SelectionModel<CnvInfo>(true, []);
+  dataSource = new MatTableDataSource<CnvInfoView>();
+  selection = new SelectionModel<CnvInfoView>(true, []);
+  cnvInfoViews: CnvInfoView[] = [];
+  shownTableData: CnvInfoView[] = [];
   private _unsubscribeAll: Subject<void>;
 
   // #########################################  Constructor  #######################################
   constructor(
     public _matDialog: MatDialog,
     private detectorRef: ChangeDetectorRef,
-    public service: AnalysisProcessService
+    public service: AnalysisProcessService,
+    private cdr: ChangeDetectorRef
   ) {
     this._unsubscribeAll = new Subject();
   }
 
   // #########################################  Life Cycle Hook #######################################
-  ngOnInit() {
-    this.dataSource.filterPredicate = this.createCustomFilterFn();
-    this.service.onSelectedCnvChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((cnvInfos: CnvInfo[]) => {
-        this.selection.clear();
-        this.updateAllSelectStatus(cnvInfos, false);
-        this.selection.select(...cnvInfos);
-        this.detectorRef.markForCheck();
-      });
+  ngOnChanges(): void {
+    this.cnvInfoViews = this.mergedData?.cnvInfos
   }
-  ngOnChanges() {
-    this.dataSource.data = this.mergedData?.cnvInfos;
-
+  ngOnInit() {
     if (this.analysisType === MULTIPLE_SAMPLE_ANALYSIS) {
       this.displayedColumns = [
         'select',
@@ -135,10 +113,22 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
         'startBp',
         'endBp',
         'cnvType',
-        'overlappingNumbers',
+        'overlapLength',
         'samples'
       ];
     }
+    this.service.onSelectedCnvChanged
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((cnvInfos: CnvInfoView[]) => {
+        this.selection.clear();
+        this.updateAllSelectStatus(cnvInfos, false);
+        this.selection.select(...cnvInfos);
+        this.detectorRef.markForCheck();
+      });
+  }
+  ngAfterViewInit(): void {
+    this.updateTableData();
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -175,21 +165,37 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /************************* Sort Row **************************/
-  createCustomSort() {
-    this.dataSource.sortingDataAccessor = (item: CnvInfo, property) => {
-      // property = this.sortBy;
-      // console.log('item: '+JSON.stringify(item)+' '+' property: '+ property);
-      switch (property) {
-        case 'overlappingNumbers': {
-          return item.overlaps.length;
-        }
+  
+  sortFunc(array: Object[], propName: string, direction: 'asc' | 'desc' | '') {
+    if (direction === 'asc') array.sort((a, b) => a[propName] - b[propName]);
+    else if (direction === 'desc') array.sort((a, b) => b[propName] - a[propName]);
+  }
 
-        default: {
-          return item[property];
-        }
-      }
-    };
-    this.dataSource.sort = this.sort;
+  onHandleSort(event: Sort) {
+    const column = event.active;
+    const direction = event.direction;
+    this.sortFunc(this.cnvInfoViews, column, direction);
+    this.updateTableData();
+  }
+
+  onSearchAll() {
+    this.updateTableData();
+  }
+
+  updateTableData() {
+    const data = this.searchAll();
+    this.paginator.length = data.length;
+    this.shownTableData = this.slicePageData(data);
+    this.dataSource.data = this.shownTableData;
+  }
+
+
+  slicePageData(datas: CnvInfoView[]) {
+    const pageIndex = this.paginator.pageIndex;
+    const pageSize = this.paginator.pageSize;
+    const startIndex = pageIndex * pageSize;
+    const endIndex = startIndex + pageSize;
+    return datas.slice(startIndex, endIndex);
   }
 
   /************************* Select Row **************************/
@@ -214,7 +220,7 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
     this.service.onSelectedCnvChanged.next(this.selection.selected);
   }
 
-  toggleRow(checked: boolean, cnvInfo: CnvInfo) {
+  toggleRow(checked: boolean, cnvInfo: CnvInfoView) {
     this.selection.toggle(cnvInfo);
     cnvInfo.isSelected = checked;
 
@@ -232,145 +238,107 @@ export class MergedTableComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
   /***************************** Filter Row *******************************/
-  applyFilter() {
-    const tableFilters = [
-      this.filteredEnsembl,
-      this.filteredDgv,
-      this.filteredClinvarOmimId,
-      this.filteredClinvarPhenotype,
-      this.filteredOverlapping
-    ];
-    this.dataSource.filter = JSON.stringify(tableFilters);
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
 
-  createCustomFilterFn() {
-    const customFilterFn = (row: CnvInfo, filtersJson: string) => {
-      const filters = JSON.parse(filtersJson) as FilterObj[];
-      let isEnsembl = true;
-      let isDgv = true;
-      let isClinvarOmimId = true;
-      let isClinvarPhenotype = true;
-      let isOverlapping = true;
-      for (const filter of filters) {
-        switch (filter.id) {
-          case 'ensembl':
-            isEnsembl = filter.filterValues.length > 0 ? false : true;
-            for (const ensembl of row.ensembls) {
-              for (const value of filter.filterValues) {
-                if (ensembl.geneSymbol.toLowerCase() === value.toLowerCase()) {
-                  isEnsembl = true;
-                  break;
-                }
-              }
-              if (isEnsembl === true) {
-                break;
+  searchAll(){
+
+    let filteredData: CnvInfoView[] = [];
+    for (const cnvInfo of this.cnvInfoViews) {
+      let isEnsembl = this.ensemblTags.length === 0;
+      let isDgv = this.dgvTags.length === 0;
+      let isClinvarOmimId = this.clinvarOmimIdTags.length === 0;
+      let isClinvarPhenotype = this.clinvarPhenotypeTags.length === 0;
+      let isOverlapping = this.overlappingTags.length === 0;
+      
+      if(!isEnsembl){
+        ensemblLoop: 
+        for (const ensembl of cnvInfo.ensembls) {
+          for (const tag of this.ensemblTags) {
+            if(ensembl.geneSymbol.toLowerCase() === tag.toLowerCase()) {
+              isEnsembl = true;
+              break ensemblLoop;
+            }
+          }
+        }
+      }
+      
+      if(!isDgv){
+        dgvLoop:
+        for(const dgv of cnvInfo.dgvs) {
+          // [ 'duplication', 'deletion', 'gain', 'loss', 'gain+loss' ]
+          const dgvAnnotations: DgvAnnotation[] = dgv.values;
+          for (const dgvAnnotation of dgvAnnotations) {
+            for (const tag of this.dgvTags) {
+              if (
+                dgvAnnotation.variantAccession.toLowerCase() ===
+                tag.toLowerCase()
+              ) {
+                isDgv = true;
+                break dgvLoop;
               }
             }
-            break;
-          case 'dgv':
-            isDgv = filter.filterValues.length > 0 ? false : true;
-            for (const dgv of row.dgvs) {
-              // [ 'duplication', 'deletion', 'gain', 'loss', 'gain+loss' ]
-              const dgvAnnotations: DgvAnnotation[] = dgv.values;
-              for (const dgvAnnotation of dgvAnnotations) {
-                for (const searchValue of filter.filterValues) {
-                  if (
-                    dgvAnnotation.variantAccession.toLowerCase() ===
-                    searchValue.toLowerCase()
-                  ) {
-                    isDgv = true;
-                    break;
-                  }
-                }
-                if (isDgv === true) {
-                  break;
-                }
-              }
+          }
+        }
+      }
+      
+      if(!isClinvarOmimId){
+        clinvarOmimIdLoop:
+        for (const omimId of cnvInfo.clinvar.omimIds) {
+          for (const tag of this.clinvarOmimIdTags) {
+            if (omimId.toLowerCase() === tag.toLowerCase()) {
+              isClinvarOmimId = true;
+              break clinvarOmimIdLoop;
             }
-            break;
-          case 'clinvarOmimId':
-            isClinvarOmimId = filter.filterValues.length > 0 ? false : true;
-            for (const omimId of row.clinvar.omimIds) {
-              for (const value of filter.filterValues) {
-                if (omimId.toLowerCase() === value.toLowerCase()) {
-                  isClinvarOmimId = true;
-                  break;
-                }
-              }
-              if (isClinvarOmimId === true) {
-                break;
-              }
-            }
-            break;
-          case 'clinvarPhenotype':
-            isClinvarPhenotype = filter.filterValues.length > 0 ? false : true;
-            for (const phenotype of row.clinvar.phenotypes) {
-              for (const value of filter.filterValues) {
-                if (phenotype.toLowerCase().includes(value.toLowerCase())) {
-                  isClinvarPhenotype = true;
-                  break;
-                }
-              }
-              if (isClinvarPhenotype) {
-                break;
-              }
-            }
-            break;
-          case 'overlapping':
-            isOverlapping = filter.filterValues.length > 0 ? false : true;
-            for (const overlap of row.overlaps) {
-              for (const value of filter.filterValues) {
-                if (overlap.toLowerCase() === value.toLowerCase()) {
-                  isOverlapping = true;
-                  break;
-                }
-              }
-              if (isOverlapping) {
-                break;
-              }
-            }
-            break;
+          }
         }
       }
 
-      return (
-        isEnsembl &&
-        isDgv &&
-        isClinvarOmimId &&
-        isClinvarPhenotype &&
-        isOverlapping
-      );
-    };
-    return customFilterFn;
+      if(!isClinvarPhenotype){
+        clinvarPhenotypLoop:
+        for (const phenotype of cnvInfo.clinvar.phenotypes) {
+          for (const tag of this.clinvarPhenotypeTags) {
+            if (phenotype.toLowerCase().includes(tag.toLowerCase())) {
+              isClinvarPhenotype = true;
+              break clinvarPhenotypLoop;
+            }
+          }
+        }
+      }
+
+      if(!isOverlapping){
+        overlappingLoop:
+        for (const overlap of cnvInfo.overlaps) {
+          for (const tag of this.overlappingTags) {
+            if (overlap.toLowerCase() === tag.toLowerCase()) {
+              isOverlapping = true;
+              break overlappingLoop;
+            }
+          }
+        }
+      }
+      if(isEnsembl && isDgv && isClinvarOmimId && isClinvarPhenotype && isOverlapping) filteredData.push(cnvInfo);
+    }
+
+    return filteredData;
   }
+
   onRemoveFilterValue(index: number, filterValues: string[]): void {
     if (index >= 0) {
       filterValues.splice(index, 1);
-      this.applyFilter();
     }
   }
 
   onClearFilterValues(filterValues: string[]): void {
-    filterValues.splice(0, filterValues.length);
-    this.applyFilter();
+    filterValues = [];
   }
+
   onAddFilterValue(event: MatChipInputEvent, filterValues: string[]): void {
-    const input = event.input;
-    const value = event.value;
-    if ((value || '').trim()) {
-      const splitedValues: string[] = value.trim().split(/[ ,]+/);
-      splitedValues.forEach(splitedValue => {
-        filterValues.push(splitedValue.trim());
-      });
+    const value = (event.value || '').trim();
+    if (value) {
+      filterValues.push(value);
     }
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
+    event.chipInput!.clear();
   }
+
   onAddOverlappingFilterValue(
     event: MatChipInputEvent,
     filterValues: string[]

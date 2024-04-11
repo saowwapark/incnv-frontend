@@ -1,4 +1,4 @@
-import { DgvVariant } from './../../analysis.model';
+import { CnvInfoView, DgvVariant, IndividualProcessData, MultipleProcessData, transformToCnvInfoViews } from './../../analysis.model';
 import {
   CnvGroup,
   IndividualSampleConfig,
@@ -22,8 +22,8 @@ import { ConstantsService } from 'src/app/services/constants.service';
 @Injectable()
 export class AnalysisProcessService {
   baseRouteUrl: string;
-  onSelectedCnvChanged: Subject<CnvInfo[]>;
-  onSelectedCnv: Subject<CnvInfo>;
+  onSelectedCnvChanged: Subject<CnvInfoView[]>;
+  onSelectedCnv: Subject<CnvInfoView>;
   onIndividualSampleConfigChanged: BehaviorSubject<IndividualSampleConfig>;
   onMultipleSampleConfigChanged: BehaviorSubject<MultipleSampleConfig>;
 
@@ -37,7 +37,7 @@ export class AnalysisProcessService {
 
   getIndividualSampleData(
     config: IndividualSampleConfig
-  ): Observable<[CnvGroup[], CnvGroup]> {
+  ): Observable<IndividualProcessData> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -57,6 +57,13 @@ export class AnalysisProcessService {
         shareReplay({ refCount: true, bufferSize: 1 }),
         timeout(600000),
         map(res => res['payload']),
+        map((individualSampleData: [CnvGroup[], CnvGroup]) => {
+          const annotatedCnvTools = individualSampleData[0].map(annotatedCnvTool => {
+            return {cnvGroupName: annotatedCnvTool.cnvGroupName, cnvInfos: transformToCnvInfoViews(annotatedCnvTool.cnvInfos)}
+          });
+          const annotatedMergedTool = {cnvGroupName: individualSampleData[1].cnvGroupName, cnvInfos: transformToCnvInfoViews(individualSampleData[1].cnvInfos)};
+          return {annotatedCnvTools, annotatedMergedTool}
+        }),
         catchError((error: unknown) => {
           // Error...
           // Handle 'timeout over' error
@@ -72,7 +79,7 @@ export class AnalysisProcessService {
 
   getMultipleSampleData(
     config: MultipleSampleConfig
-  ): Observable<[CnvGroup[], CnvGroup]> {
+  ): Observable<MultipleProcessData> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -90,6 +97,13 @@ export class AnalysisProcessService {
       })
       .pipe(
         map(res => res['payload']),
+        map((multipleSampleData: [CnvGroup[], CnvGroup]) => {
+          const annotatedCnvSamples = multipleSampleData[0].map(annotatedCnvSample => {
+            return {cnvGroupName: annotatedCnvSample.cnvGroupName, cnvInfos: transformToCnvInfoViews(annotatedCnvSample.cnvInfos)}
+          });
+          const annotatedMergedTool = {cnvGroupName: multipleSampleData[1].cnvGroupName, cnvInfos: transformToCnvInfoViews(multipleSampleData[1].cnvInfos)};
+          return {annotatedCnvSamples, annotatedMergedTool}
+        }),
         shareReplay({ refCount: true, bufferSize: 1 })
       );
   }
@@ -105,27 +119,8 @@ export class AnalysisProcessService {
         chromosome
       }
     };
-    return this._http
-      .get(url, options)
-      .pipe(
-        map(
-          res => res['payload'],
-          shareReplay({ refCount: true, bufferSize: 1 })
-        )
-      );
-  }
-
-  getCnvInfos(cnvInfos: CnvInfo[]) {
-    return (
-      this._http
-        // .get(`${this.baseRouteUrl}/final-cnv-annotations`, {
-        //   params: { cnvs: cnvs.toString() }
-        // })
-        .post(`${this.baseRouteUrl}/cnv-infos`, [...cnvInfos])
-        .pipe(
-          map(res => res['payload']),
-          shareReplay({ refCount: true, bufferSize: 1 })
-        )
+    return this._http.get(url, options).pipe(
+        map(res => res['payload'])
     );
   }
 

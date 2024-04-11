@@ -1,12 +1,9 @@
+import { Subject, throwError, Observable, combineLatest } from 'rxjs';
 import {
   DgvVariant,
   CHRACTER_WIDTH,
-  INDIVIDUAL_SAMPLE_ANALYSIS
-} from '../analysis.model';
-import { Subject, throwError, Observable, combineLatest } from 'rxjs';
-
-import {
-  CnvInfo,
+  INDIVIDUAL_SAMPLE_ANALYSIS,
+  CnvInfoView,
   RegionBp,
   CnvGroup,
   IndividualSampleConfig,
@@ -63,7 +60,7 @@ interface IndividaulData {
 export class IndividualProcessComponent implements OnInit, OnDestroy {
   data$: Observable<IndividaulData>;
   selectedChrRegion: RegionBp;
-  selectedCnvs: CnvInfo[];
+  selectedCnvs: CnvInfoView[];
   readonly analysisType = INDIVIDUAL_SAMPLE_ANALYSIS;
 
   // private
@@ -85,27 +82,35 @@ export class IndividualProcessComponent implements OnInit, OnDestroy {
 
     const dgvVariants$ = individualConfig$.pipe(
       mergeMap((config: IndividualSampleConfig) =>
-        this.service.getDgvVariants(config.referenceGenome, config.chromosome)
+        this.service.getDgvVariants(config.referenceGenome, config.chromosome).pipe(
+          catchError((err: unknown) => {
+            const message = 'Could not load DGV variants';
+            this.messagesService.showErrors(message);
+            console.log(message, err);
+            this.router.navigate(['/individual-sample']);
+            return throwError(err);
+          })
+        )
       ),
-      startWith(undefined as DgvVariant[]),
-      catchError((err: unknown) => {
-        const message = 'Could not load DGV variants';
-        this.messagesService.showErrors(message);
-        console.log(message, err);
-        this.router.navigate(['/individual-sample']);
-        return throwError(err);
-      })
+      shareReplay({ refCount: true, bufferSize: 1 })
     );
     const individualSampleData$ = individualConfig$.pipe(
       mergeMap((config: IndividualSampleConfig) =>
-        this.service.getIndividualSampleData(config)
+        this.service.getIndividualSampleData(config).pipe(
+          catchError((err: unknown) => {
+            const message = 'Could not load individual sample data';
+            this.messagesService.showErrors(message);
+            console.log(message, err);
+            this.router.navigate(['/individual-sample']);
+            return throwError(err);
+          })
+        )
       ),
       shareReplay({ refCount: true, bufferSize: 1 })
     );
 
     const cnvTools$ = individualSampleData$.pipe(
-      map(individaulSampleData => individaulSampleData[0]),
-      startWith(undefined as CnvGroup[]),
+      map(individaulSampleData => individaulSampleData.annotatedCnvTools),
       catchError((err: unknown) => {
         const message = 'Could not load CNV tools';
         this.messagesService.showErrors(message);
@@ -114,8 +119,7 @@ export class IndividualProcessComponent implements OnInit, OnDestroy {
       })
     );
     const mergedTool$ = individualSampleData$.pipe(
-      map(individaulSampleData => individaulSampleData[1]),
-      startWith(undefined as CnvGroup),
+      map(individaulSampleData => individaulSampleData.annotatedMergedTool),
       catchError((err: unknown) => {
         const message = 'Could not load merged CNV tools';
         this.messagesService.showErrors(message);
@@ -125,8 +129,7 @@ export class IndividualProcessComponent implements OnInit, OnDestroy {
     );
 
     const containerMargin$ = cnvTools$.pipe(
-      map(cnvTools => this.calContainerMargin(cnvTools)),
-      startWith(undefined as Margin)
+      map(cnvTools => this.calContainerMargin(cnvTools))
     );
 
     this.data$ = combineLatest([

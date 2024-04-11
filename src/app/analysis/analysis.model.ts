@@ -59,8 +59,11 @@ export class MultipleSampleConfig {
 }
 export class CnvGroup {
   cnvGroupName?: string; // cnv tool name and parameter.
-  cnvInfos?: CnvInfo[]; // annotation for a given cnv tool.
+  cnvInfos?: CnvInfoView[]; // annotation for a given cnv tool.
 }
+
+export type IndividualProcessData = {annotatedCnvTools: CnvGroup[], annotatedMergedTool: CnvGroup};
+export type MultipleProcessData = {annotatedCnvSamples: CnvGroup[], annotatedMergedTool: CnvGroup};
 
 export class Sequence {
   chromosome?: string;
@@ -84,6 +87,13 @@ export class CnvInfo {
   isSelected?: boolean;
 }
 
+export interface CnvInfoView extends CnvInfo {
+  overlapLength: number;
+}
+
+export function transformToCnvInfoViews(array: CnvInfo[]) {
+ return array.map(data => ({...data, overlapLength: data.overlaps ? data.overlaps.length : 0}));
+}
 export class ClinvarAnnotationList {
   omimIds?: string[];
   phenotypes?: string[];
