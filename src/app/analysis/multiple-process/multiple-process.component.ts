@@ -91,7 +91,7 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
       shareReplay({ refCount: true, bufferSize: 1 })
     );
     const cnvSamples$ = multipleSampleData$.pipe(
-      map(multipleSampleData => multipleSampleData[0]),
+      map(multipleSampleData => multipleSampleData.annotatedCnvSamples),
       startWith(undefined as CnvGroup[]),
       catchError((err: unknown) => {
         const message = 'Could not load CNV tools';
@@ -102,7 +102,7 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
     );
 
     const mergedTool$ = multipleSampleData$.pipe(
-      map(multipleSampleData => multipleSampleData[1]),
+      map(multipleSampleData => multipleSampleData.annotatedMergedTool),
       startWith(undefined as CnvGroup),
       catchError((err: unknown) => {
         const message = 'Could not load merged CNV tools';

@@ -1,4 +1,5 @@
 import { filterDataInRegion } from './../visualizeBp.utility';
+import { Selection } from 'd3-selection';
 import * as d3 from 'd3';
 import {
   CnvGroup,
@@ -24,7 +25,7 @@ export class ComparedChart {
   xAxis;
   yAxis;
   tooltip;
-  subbars;
+  subbars: Selection<SVGSVGElement, CnvInfo, HTMLElement, any>;
   svg;
 
   /**
@@ -67,6 +68,10 @@ export class ComparedChart {
     this.drawData();
   }
 
+  public setDomainOnX(domainOnX: number[]) {
+    this._domainOnX = domainOnX;
+  }
+  
   public updateVis(newData, newDomainOnX) {
     this._data = newData;
     this._domainOnX = newDomainOnX;
@@ -80,8 +85,8 @@ export class ComparedChart {
     this.releaseInstances();
   }
   public onClickSubbars(callback) {
-    this.subbars.on('click', (d, i, n) => {
-      const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+    this.subbars.on('click', (event, d) => {
+      const parentData = d3.select<HTMLElement, CnvGroup>(event.currentTarget.parentNode as HTMLElement).datum()
       callback(parentData.cnvGroupName, d);
     });
   }
@@ -248,10 +253,8 @@ export class ComparedChart {
   }
 
   private generateSubbars(bars) {
-    const subbars = bars
-
+    const subbars: Selection<SVGSVGElement, CnvInfo, HTMLElement, any> = bars
       .selectAll('rect.subbar')
-
       .data((d: CnvGroup) =>
         filterDataInRegion(d.cnvInfos, this._domainOnX[0], this._domainOnX[1])
       )
@@ -264,27 +267,24 @@ export class ComparedChart {
           return this.scaleX(d.endBp) - this.scaleX(d.startBp) + 1;
         }
       })
-      .attr('x', d => {
+      .attr('x', (d: CnvInfo) => {
         if (d.startBp) {
           return this.scaleX(d.startBp);
         }
       })
       .attr('height', this.scaleY.bandwidth)
-      .attr('y', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+      .attr('y', (d: CnvInfo, i, n) => {
+        const parentData = d3.select<HTMLElement, CnvGroup>(n[i].parentNode as HTMLElement).datum();
         return this.scaleY(parentData.cnvGroupName);
       })
       .attr('fill', (d: CnvInfo, i, n) => {
-        const parentData: CnvGroup = d3
-          .select(n[i].parentNode)
-          .datum() as CnvGroup;
+        const parentData = d3.select<HTMLElement, CnvGroup>(n[i].parentNode as HTMLElement).datum();
         const cnvGroupName = parentData.cnvGroupName;
-
         return this.colorScale(cnvGroupName) as string;
       })
       .attr('fill-opacity', () => this.colorOpacityScale(1))
-      .attr('stroke', (d, i, n) => {
-        const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+      .attr('stroke', (d: CnvInfo, i, n) => {
+        const parentData = d3.select<HTMLElement, CnvGroup>(n[i].parentNode as HTMLElement).datum();
         return this.colorScale(parentData.cnvGroupName);
       })
       .attr('stroke-opacity', '0');
@@ -295,23 +295,26 @@ export class ComparedChart {
   private addEventToSubbars() {
     // Add Events
     this.subbars
-      .on('mouseover', (d, i, n) => {
+      .on('mouseover', (event: MouseEvent, d: CnvInfo)  => {
         // change color subbar
-        d3.select(n[i]).raise();
-        d3.select(n[i])
+        const targetElement = event.currentTarget as HTMLElement;
+        d3.select(targetElement).raise();
+        d3.select(targetElement)
           .transition()
           .duration(300)
           .attr('fill', '#444444')
           .attr('stroke-opacity', '1')
           .style('cursor', 'pointer');
       })
-      .on('mouseout', (d, i, n) => {
+      .on('mouseout', (event: MouseEvent, d: CnvInfo) => {
         // subbar
-        d3.select(n[i])
+        const targetElement = event.currentTarget as HTMLElement;
+        d3.select(targetElement)
           .transition()
           .duration(300)
-          .attr('fill', () => {
-            const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+          .attr('fill', (d, i, n) => {
+            const parentData = d3.select<HTMLElement, CnvGroup>(n[i].parentNode as HTMLElement).datum();
+    
             const cnvGroupName = parentData.cnvGroupName;
             return this.colorScale(cnvGroupName) as string;
           })

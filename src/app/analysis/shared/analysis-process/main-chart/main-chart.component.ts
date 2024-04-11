@@ -2,7 +2,7 @@ import createNumberMask from '../../../../../../node_modules/text-mask-addons/di
 import { chrGrch37 } from './../../../analysis-result/human_chr';
 import { takeUntil, tap } from 'rxjs/operators';
 import { DgvChart } from './dgv-chart';
-import { DgvVariant } from './../../../analysis.model';
+import { CnvInfoView, DgvVariant } from './../../../analysis.model';
 import { AnalysisProcessService } from '../analysis-process.service';
 
 import {
@@ -30,7 +30,7 @@ import {
   MERGED_RESULT_NAME
 } from 'src/app/analysis/analysis.model';
 import { AnnotationDialogComponent } from '../annotation-dialog/annotation-dialog.component';
-import { Subject, concat } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
 
 @Component({
@@ -40,11 +40,11 @@ import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/err
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() chromosome: string; // static
-  @Input() dgvVaraints: DgvVariant[]; // static
-  @Input() comparedData: CnvGroup[]; // static
-  @Input() mergedData: CnvGroup; // static
-  @Input() selectedChrRegion: RegionBp; // always changed
+  @Input() chromosome: string;
+  @Input() dgvVaraints: DgvVariant[];
+  @Input() comparedData: CnvGroup[];
+  @Input() mergedData: CnvGroup;
+  @Input() selectedChrRegion: RegionBp;
   @Input() containerMargin: {
     // static
     top: number;
@@ -67,10 +67,10 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
   readonly compareChartColor = ['#FDA404']; // ['#ff7f02'];
   readonly mergedChartColor = '#d32f2f';
   readonly finalChartColor = '#613EB4';
-  dgvChart;
-  comparedChart;
-  mergedChart;
-  finalResultChart;
+  dgvChart: DgvChart;
+  comparedChart: ComparedChart;
+  mergedChart: MergedChart;
+  finalResultChart: MergedChart;
   finalResultData: CnvGroup;
   dialogRef: MatDialogRef<AnnotationDialogComponent>;
   numberMark;
@@ -99,11 +99,14 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
+  private previousWidth;
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    // const chartWidth = event.target.innerWidth;
-
-    this.createAllCharts();
+    const currentWidth = window.innerWidth;
+    if(this.previousWidth !== currentWidth) {
+      this.previousWidth = currentWidth;
+      this.createAllCharts();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -125,7 +128,7 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     const updateFinalResultData$ = this.service.onSelectedCnvChanged.pipe(
-      tap((selectedCnvs: CnvInfo[]) => {
+      tap((selectedCnvs: CnvInfoView[]) => {
         // clear all CNV select status to false
         this.updateAllSelectStatus(this.mergedData.cnvInfos, false);
         // update status of merged CNVs and selected CNVs to be true
@@ -248,6 +251,7 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
       );
     } else {
       this.dgvChart.destroyChart();
+      this.dgvChart.setDomainOnX([this.selectedChrRegion.startBp, this.selectedChrRegion.endBp]);
       this.dgvChart.initVis(this.containerMargin);
     }
   }
@@ -268,6 +272,7 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
       );
     } else {
       this.comparedChart.destroyChart();
+      this.comparedChart.setDomainOnX([this.selectedChrRegion.startBp, this.selectedChrRegion.endBp]);
       this.comparedChart.initVis(this.containerMargin);
     }
 
@@ -301,22 +306,22 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
         maxOverlap,
         this.mergedChartColor
       );
-
-      this.mergedChart.onClickSubbars((cnvGroupName, data) => {
-        const selectedCnvRegions: RegionBp[] = [];
-        for (const selectedCnv of this.finalResultData.cnvInfos) {
-          const selectedCnvRegion = new RegionBp(
-            selectedCnv.startBp,
-            selectedCnv.endBp
-          );
-          selectedCnvRegions.push(selectedCnvRegion);
-        }
-        this.createDialog(MERGED_RESULT_NAME, data);
-      });
     } else {
       this.mergedChart.destroyChart();
+      this.mergedChart.setDomainOnX([this.selectedChrRegion.startBp, this.selectedChrRegion.endBp]);
       this.mergedChart.initVis(this.containerMargin);
     }
+    this.mergedChart.onClickSubbars((cnvGroupName, data) => {
+      const selectedCnvRegions: RegionBp[] = [];
+      for (const selectedCnv of this.finalResultData.cnvInfos) {
+        const selectedCnvRegion = new RegionBp(
+          selectedCnv.startBp,
+          selectedCnv.endBp
+        );
+        selectedCnvRegions.push(selectedCnvRegion);
+      }
+      this.createDialog(MERGED_RESULT_NAME, data);
+    });
   }
 
   createFinalResultChart() {
@@ -337,6 +342,7 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
       );
     } else {
       this.finalResultChart.destroyChart();
+      this.finalResultChart.setDomainOnX([this.selectedChrRegion.startBp, this.selectedChrRegion.endBp]);
       this.finalResultChart.initVis(this.containerMargin);
     }
 
@@ -405,7 +411,7 @@ export class MainChartComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     // add data
-    this.dialogRef.afterClosed().subscribe((response: CnvInfo) => {
+    this.dialogRef.afterClosed().subscribe((response: CnvInfoView) => {
       if (!response) {
         return;
       }

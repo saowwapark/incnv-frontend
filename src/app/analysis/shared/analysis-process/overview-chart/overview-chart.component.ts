@@ -43,26 +43,26 @@ export class OverviewChartComponent implements OnChanges, OnDestroy {
   chrLength: number;
 
   private overviewChart;
+  private previousWidth;
 
   svg: d3.Selection<SVGSVGElement, CnvGroup, null, undefined>;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    // const chartWidth = event.target.innerWidth;
-    if (this.overviewChart) {
+    const currentWidth = window.innerWidth;
+    if(this.previousWidth !== currentWidth && this.overviewChart) {
+      this.previousWidth = currentWidth;
       this.createOverviewChart();
     }
   }
 
-  constructor() {}
+  constructor() {
+    
+  }
 
   /********************* Life Cycle Hook ********************/
   ngOnChanges(): void {
-    if (!this.mergedData) {
-      return;
-    }
-
-    if (this.chromosome) {
+    if (this.mergedData && this.chromosome && this.yAxisUnit && this.yAxisMaxVaule && this.containerMargin) {
       this.chrLength =
         HUMAN_CHROMOSOME[`chr${this.chromosome.toUpperCase()}`].length;
       this.createOverviewChart();

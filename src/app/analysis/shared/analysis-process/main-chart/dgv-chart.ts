@@ -1,4 +1,5 @@
 import { TICK_WIDTH } from './../../../analysis.model';
+import { Selection } from 'd3-selection';
 import * as d3 from 'd3';
 import {
   DgvVariant,
@@ -21,7 +22,7 @@ export class DgvChart {
   xAxis;
   yAxis;
   tooltip;
-  subbars;
+  subbars: Selection<SVGAElement, DgvVariant, HTMLElement, any>;
   svg;
 
   /**
@@ -49,7 +50,9 @@ export class DgvChart {
     // this.domainOnY = domainOnY;
     this.initVis(containerMargin);
   }
-
+  public setDomainOnX(domainOnX: number[]) {
+    this._domainOnX = domainOnX;
+  }
   public initVis(containerMargin) {
     this.generateGraphContainer(containerMargin);
     this.createScaleX();
@@ -244,18 +247,20 @@ export class DgvChart {
   private addEventToSubbars() {
     // Add Events
     this.subbars
-      .on('mouseover', (d: DgvVariant, i, n) => {
+      .on('mouseover', (event: MouseEvent, d: DgvVariant) => {
         // change color subbar
-        d3.select(n[i])
+        const targetElement = event.currentTarget as SVGElement;
+        d3.select<SVGElement, DgvVariant>(targetElement)
           .transition()
           .duration(300)
           .attr('fill', '#444444')
           .attr('stroke-opacity', '1')
           .style('cursor', 'default');
       })
-      .on('mouseout', (d: DgvVariant, i, n) => {
+      .on('mouseout', (event: MouseEvent, d: DgvVariant) => {
         // subbar
-        d3.select(n[i])
+        const targetElement = event.currentTarget as HTMLElement
+        d3.select(targetElement)
           .transition()
           .duration(300)
           .attr('fill', this._color)

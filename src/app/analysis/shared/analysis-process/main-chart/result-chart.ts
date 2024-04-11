@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { Selection } from 'd3-selection';
 import {
   CnvGroup,
   CnvInfo,
@@ -24,7 +25,7 @@ export class MergedChart {
   xAxis;
   yAxis;
   tooltip;
-  subbars;
+  subbars: Selection<SVGSVGElement, CnvInfo, HTMLElement, any>;
   svg;
 
   /**
@@ -69,7 +70,9 @@ export class MergedChart {
     this.generateTooltip();
     this.drawData();
   }
-
+  public setDomainOnX(domainOnX: number[]) {
+    this._domainOnX = domainOnX;
+  }
   public updateVis(newData, newDomainOnX) {
     this._data = newData;
     this._domainOnX = newDomainOnX;
@@ -83,8 +86,8 @@ export class MergedChart {
     this.releaseInstances();
   }
   public onClickSubbars(callback) {
-    this.subbars.on('click', (d, i, n) => {
-      const parentData = d3.select(n[i].parentNode).datum() as CnvGroup;
+    this.subbars.on('click', (event, d) => {
+      const parentData = d3.select<HTMLElement, CnvGroup>(event.currentTarget.parentNode as HTMLElement).datum()
       callback(parentData.cnvGroupName, d);
     });
   }
@@ -279,17 +282,19 @@ export class MergedChart {
   private addEventToSubbars() {
     // Add Events
     this.subbars
-      .on('mouseover', (d: CnvInfo, i, n) => {
+      .on('mouseover', (event: MouseEvent, d: CnvInfo)  => {
         // change color subbar
-        d3.select(n[i])
+        const targetElement = event.currentTarget as HTMLElement;
+        d3.select(targetElement)
           .transition()
           .duration(300)
           .attr('fill', '#444444')
           .attr('stroke-opacity', '1');
       })
-      .on('mouseout', (d: CnvInfo, i, n) => {
+      .on('mouseout', (event: MouseEvent, d: CnvInfo)  => {
         // subbar
-        d3.select(n[i])
+        const targetElement = event.currentTarget as HTMLElement;
+        d3.select(targetElement)
           .transition()
           .duration(300)
           .attr('fill', this._color)
@@ -299,7 +304,7 @@ export class MergedChart {
         // tooltip
         this.tooltip.style('display', 'none');
       })
-      .on('mousemove', (event, d) => {
+      .on('mousemove', (event: MouseEvent, d: CnvInfo)  => {
         const [x, y] = d3.pointer(event);
         // tooltip
         this.tooltip
