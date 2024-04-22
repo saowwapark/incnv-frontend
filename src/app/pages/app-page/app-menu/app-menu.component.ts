@@ -2,11 +2,11 @@ import { Component, Renderer2, Output, EventEmitter } from '@angular/core';
 import { AuthenService } from 'src/app/authen/authen.service';
 
 @Component({
-  selector: 'app-welcome-menu',
-  templateUrl: './welcome-menu.component.html',
-  styleUrls: ['./welcome-menu.component.scss']
+  selector: 'app-menu',
+  templateUrl: './app-menu.component.html',
+  styleUrls: ['./app-menu.component.scss']
 })
-export class WelcomeMenuComponent {
+export class AppMenuComponent {
   @Output() menuToggled = new EventEmitter();
 
   // @ViewChild('collapsableArrow', { static: false }) collapsableArrow: MatIcon;

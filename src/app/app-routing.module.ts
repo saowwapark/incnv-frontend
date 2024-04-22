@@ -1,20 +1,31 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { WelcomeComponent } from './welcome-template/welcome-template.component';
+import { AppPageComponent } from './pages/app-page/app-page.component';
 
 import { AuthenGuard } from './authen/authen.guard';
-import { HomeContentComponent } from './home-template/home-content/home-content.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { RefreshGuard } from './shared/guards/refresh.guard';
+import { DatasourceComponent } from './datasource/datasource.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
+import { HomeContentComponent } from './pages/home-page/home-content/home-content.component';
 
 const appRoutes: Routes = [
-  // level1
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { 
+    path: 'home',
+    component: HomePageComponent,
+    children: [
+      { path: '', component: HomeContentComponent }
+    ]
+  }, 
   {
     path: '',
+    component: AppPageComponent,
     // canActivate: [AuthenGuard],
-
+    
     children: [
+      { path: 'install', component: DatasourceComponent },
       {
         path: 'upload-cnv-result',
         loadChildren: () =>
@@ -45,8 +56,6 @@ const appRoutes: Routes = [
       }
     ]
   },
-  { path: 'welcome-template', component: WelcomeComponent },
-  { path: 'home', component: HomeContentComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 
