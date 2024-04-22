@@ -7,11 +7,11 @@ import { AuthenService } from '../authen.service';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
 })
-export class SignupComponent implements OnInit, OnDestroy {
+export class RegisterComponent implements OnInit, OnDestroy {
   signupForm: FormGroup;
   private _unsubscribeAll: Subject<void>;
 

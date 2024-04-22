@@ -16,15 +16,15 @@ import { NavigationModule } from './navigation/navigation.module';
 /** Components */
 import { AppComponent } from './app.component';
 
-import { HomeComponent } from './home-template/home-template.component';
-import { HomeMenuComponent } from './home-template/home-menu/home-menu.component';
-import { HomeContentComponent } from './home-template/home-content/home-content.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
+import { HomeMenuComponent } from './pages/home-page/home-menu/home-menu.component';
+import { HomeContentComponent } from './pages/home-page/home-content/home-content.component';
 
-import { WelcomeComponent } from './welcome-template/welcome-template.component';
-import { WelcomeMenuComponent } from './welcome-template/welcome-menu/welcome-menu.component';
+import { AppPageComponent } from './pages/app-page/app-page.component';
+import { AppMenuComponent } from './pages/app-page/app-menu/app-menu.component';
 
 import { ExportFilesComponent } from './export-files/export-files.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 import { AuthenInterceptor } from './authen/authen-interceptor';
 
@@ -42,19 +42,22 @@ import { ErrorDialogComponent } from './shared/components/error-dialog/error-dia
 import { environment } from 'src/environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DatasourceService } from './datasource/datasource.service';
+import { DatasourceComponent } from './datasource/datasource.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    WelcomeComponent,
+    HomePageComponent,
+    AppPageComponent,
     ExportFilesComponent,
     PageNotFoundComponent,
     ConfirmDialogComponent,
     ErrorDialogComponent,
-    WelcomeMenuComponent,
+    AppMenuComponent,
     HomeContentComponent,
-    HomeMenuComponent
+    HomeMenuComponent,
+    DatasourceComponent
   ],
   imports: [
     HttpClientModule,
@@ -78,7 +81,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     TabFileMappingService,
     ConstantsService,
-    SamplesetService
+    SamplesetService,
+    DatasourceService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmDialogComponent, ErrorDialogComponent]
