@@ -71,28 +71,38 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
     const multipleConfig$ = this.service.onMultipleSampleConfigChanged
       .asObservable()
       .pipe(shareReplay({ refCount: true, bufferSize: 1 }));
-    const dgvVariants$ = multipleConfig$.pipe(
-      mergeMap((config: MultipleSampleConfig) =>
-        this.service.getDgvVariants(config.referenceGenome, config.chromosome)
-      ),
-      startWith(undefined as DgvVariant[]),
-      catchError((err: unknown) => {
-        const message = 'Could not load DGV variants';
-        this.messagesService.showErrors(message);
-        console.log(message, err);
-        this.router.navigate(['/individual-sample']);
-        return throwError(err);
-      })
-    );
+      const dgvVariants$ = multipleConfig$.pipe(
+        mergeMap((config: MultipleSampleConfig) =>
+          this.service.getDgvVariants(config.referenceGenome, config.chromosome).pipe(
+            catchError((err: unknown) => {
+              const message = 'Could not load DGV variants';
+              this.messagesService.showErrors(message);
+              console.log(message, err);
+              this.router.navigate(['/multiple-sample']);
+              return throwError(err);
+            })
+          )
+        ),
+        shareReplay({ refCount: true, bufferSize: 1 })
+      );
+
     const multipleSampleData$ = multipleConfig$.pipe(
       mergeMap((config: MultipleSampleConfig) =>
-        this.service.getMultipleSampleData(config)
+        this.service.getMultipleSampleData(config).pipe(
+          catchError((err: unknown) => {
+            const message = 'Could not load multiple sample data';
+            this.messagesService.showErrors(message);
+            console.log(message, err);
+            this.router.navigate(['/multiple-sample']);
+            return throwError(err);
+          })
+        )
       ),
       shareReplay({ refCount: true, bufferSize: 1 })
     );
+    
     const cnvSamples$ = multipleSampleData$.pipe(
       map(multipleSampleData => multipleSampleData.annotatedCnvSamples),
-      startWith(undefined as CnvGroup[]),
       catchError((err: unknown) => {
         const message = 'Could not load CNV tools';
         this.messagesService.showErrors(message);
@@ -141,7 +151,7 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
       ),
       catchError((err: unknown) => {
         console.log(err);
-        this.router.navigate(['/individual-sample']);
+        this.router.navigate(['/multiple-sample']);
         return throwError(err);
       })
     );
