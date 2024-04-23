@@ -3,14 +3,9 @@ table {
 }
 
 @mixin table-column($size) {
-  word-wrap: break-word !important;
   white-space: unset !important;
   width: $size !important;
-  flex: 0 0 $size !important;
   overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  word-break: break-word;
 
   -ms-hyphens: auto;
   -moz-hyphens: auto;
@@ -32,7 +27,7 @@ table {
 .mat-column-cnvType {
   @include table-column(6%);
 }
-.mat-column-overlappingNumbers {
+.mat-column-overlapLength {
   @include table-column(9%);
 }
 // table will choose one between cnvTools and samples
