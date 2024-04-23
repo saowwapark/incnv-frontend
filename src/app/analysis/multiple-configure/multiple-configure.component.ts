@@ -15,6 +15,7 @@ import { MultipleSampleConfig } from '../analysis.model';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
 import { Subject } from 'rxjs';
 import { MessagesService } from 'src/app/shared/components/messages/messages.service';
+import { MULTIPLE_CONFIG } from 'src/constants/local-storage.const';
 
 @Component({
   selector: 'app-multiple-configure',
@@ -107,7 +108,13 @@ export class MultipleConfigureComponent implements OnInit, OnDestroy {
       this.chosenSampleset.samplesetName,
       this.chosenSamples
     );
+    this.saveConfig(multipleConfig);
     this.processService.onMultipleSampleConfigChanged.next(multipleConfig);
+  }
+
+  saveConfig(config: MultipleSampleConfig) {
+    const multipleConfigString = JSON.stringify(config)
+    localStorage.setItem(MULTIPLE_CONFIG, multipleConfigString);
   }
 
   validateChosenSampleset() {

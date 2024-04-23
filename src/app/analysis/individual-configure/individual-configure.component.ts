@@ -12,6 +12,7 @@ import { IndividualSampleConfig } from '../analysis.model';
 import { AnalysisProcessService } from '../shared/analysis-process/analysis-process.service';
 import { Subject } from 'rxjs';
 import { MessagesService } from 'src/app/shared/components/messages/messages.service';
+import { INDIVIDUAL_CONFIG } from 'src/constants/local-storage.const';
 
 @Component({
   selector: 'app-individual-configure',
@@ -100,7 +101,12 @@ export class IndividualConfigureComponent implements OnInit, OnDestroy {
       this.chosenSampleset.samplesetName,
       this.chosenSample
     );
+    this.saveIndividualConfig(individualConfig);
     this.service.onIndividualSampleConfigChanged.next(individualConfig);
+  }
+  saveIndividualConfig(config: IndividualSampleConfig) {
+    const individaulConfigString = JSON.stringify(config)
+    localStorage.setItem(INDIVIDUAL_CONFIG, individaulConfigString);
   }
 
   validateChosenSampleset() {
