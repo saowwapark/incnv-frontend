@@ -20,7 +20,6 @@ export class AppComponent implements OnInit, OnDestroy {
   @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.authListenerSubs.unsubscribe();
-    this.authService.logout();
     console.log('app component is destroyed.');
     window['ngRef'].destroy();
   }
