@@ -6,6 +6,7 @@ import { BehaviorSubject, concat } from 'rxjs';
 
 import { AuthenReq, AuthenRes } from './authen.model';
 import { map, tap } from 'rxjs/operators';
+import { EMAIL, EXPIRATION, TOKEN } from 'src/constants/local-storage.const';
 
 @Injectable()
 export class AuthenService {
@@ -92,20 +93,20 @@ export class AuthenService {
   }
 
   private saveAuthData(email: string, token: string, expirationDate: Date) {
-    localStorage.setItem('email', email);
-    localStorage.setItem('token', token);
-    localStorage.setItem('expiration', expirationDate.toISOString());
+    localStorage.setItem(EMAIL, email);
+    localStorage.setItem(TOKEN, token);
+    localStorage.setItem(EXPIRATION, expirationDate.toISOString());
   }
 
   private clearAuthData() {
-    localStorage.removeItem('email');
-    localStorage.removeItem('token');
-    localStorage.removeItem('expiration');
+    localStorage.removeItem(EMAIL);
+    localStorage.removeItem(TOKEN);
+    localStorage.removeItem(EXPIRATION);
   }
 
   private getAuthData() {
-    const token = localStorage.getItem('token');
-    const expirationDate = localStorage.getItem('expiration');
+    const token = localStorage.getItem(TOKEN);
+    const expirationDate = localStorage.getItem(EXPIRATION);
     if (!token || !expirationDate) {
       return;
     }

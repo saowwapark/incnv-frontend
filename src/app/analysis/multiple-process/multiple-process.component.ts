@@ -33,6 +33,7 @@ import {
 import { Router } from '@angular/router';
 import { Margin } from '../visualization.model';
 import { MessagesService } from 'src/app/shared/components/messages/messages.service';
+import { MULTIPLE_CONFIG } from 'src/constants/local-storage.const';
 
 interface MultipleData {
   multipleConfig: MultipleSampleConfig;
@@ -70,7 +71,15 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const multipleConfig$ = this.service.onMultipleSampleConfigChanged
       .asObservable()
-      .pipe(shareReplay({ refCount: true, bufferSize: 1 }));
+      .pipe(
+        map(() => {
+          const multipleConfigString = localStorage.getItem(MULTIPLE_CONFIG);
+          if(multipleConfigString) {
+            return JSON.parse(multipleConfigString);
+          }
+        }
+      ));
+
       const dgvVariants$ = multipleConfig$.pipe(
         mergeMap((config: MultipleSampleConfig) =>
           this.service.getDgvVariants(config.referenceGenome, config.chromosome).pipe(

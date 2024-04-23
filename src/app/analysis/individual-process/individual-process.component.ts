@@ -19,7 +19,6 @@ import {
   mergeMap,
   shareReplay,
   map,
-  startWith
 } from 'rxjs/operators';
 import {
   trigger,
@@ -32,6 +31,7 @@ import { Router } from '@angular/router';
 import { LoadingService } from 'src/app/shared/loading/loading.service';
 import { MessagesService } from 'src/app/shared/components/messages/messages.service';
 import { Margin } from '../visualization.model';
+import { INDIVIDUAL_CONFIG } from 'src/constants/local-storage.const';
 
 interface IndividaulData {
   individualConfig: IndividualSampleConfig;
@@ -78,7 +78,14 @@ export class IndividualProcessComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const individualConfig$ = this.service.onIndividualSampleConfigChanged
       .asObservable()
-      .pipe(shareReplay({ refCount: true, bufferSize: 1 }));
+      .pipe(
+        map(() => {
+          const individualConfigString = localStorage.getItem(INDIVIDUAL_CONFIG);
+          if(individualConfigString) {
+            return JSON.parse(individualConfigString);
+          }
+        }
+      ));
 
     const dgvVariants$ = individualConfig$.pipe(
       mergeMap((config: IndividualSampleConfig) =>
