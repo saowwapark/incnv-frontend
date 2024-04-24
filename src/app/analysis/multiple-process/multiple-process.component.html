@@ -3,8 +3,9 @@
   <app-header [title]="'Multiple Sample Analysis'"> </app-header>
 
   <!-- CONTENT -->
+  <loading></loading>
   <div class="layout__content-container--default ">
-    <div *ngIf="data$ | async as data">
+    <div *ngIf="data">
       <div class="layout__content-items" fxLayout="column" fxLayoutGap="32px">
         <mat-accordion [multi]="true">
           <!-- Overview Configuration-->
