@@ -28,12 +28,14 @@ import {
   mergeMap,
   shareReplay,
   startWith,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Margin } from '../visualization.model';
 import { MessagesService } from 'src/app/shared/components/messages/messages.service';
 import { MULTIPLE_CONFIG } from 'src/constants/local-storage.const';
+import { LoadingService } from 'src/app/shared/loading/loading.service';
 
 interface MultipleData {
   multipleConfig: MultipleSampleConfig;
@@ -46,10 +48,11 @@ interface MultipleData {
 @Component({
   selector: 'app-multiple-process',
   templateUrl: './multiple-process.component.html',
-  styleUrls: ['./multiple-process.component.scss']
+  styleUrls: ['./multiple-process.component.scss'],
+  providers: [LoadingService],
 })
 export class MultipleProcessComponent implements OnInit, OnDestroy {
-  data$: Observable<MultipleData>;
+  data: MultipleData;
   selectedChrRegion: RegionBp;
   selectedCnvs: CnvInfo[];
   containerMargin: { top: number; right: number; bottom: number; left: number };
@@ -60,16 +63,18 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<void>;
 
   constructor(
-    private service: AnalysisProcessService,
+    private analysisService: AnalysisProcessService,
     private messagesService: MessagesService,
-    private router: Router
+    private router: Router,
+    private loadingService: LoadingService
   ) {
     this.isLoading = new BehaviorSubject(true);
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
-    const multipleConfig$ = this.service.onMultipleSampleConfigChanged
+    this.loadingService.loadingOn();
+    const multipleConfig$ = this.analysisService.onMultipleSampleConfigChanged
       .asObservable()
       .pipe(
         map(() => {
@@ -82,7 +87,7 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
 
       const dgvVariants$ = multipleConfig$.pipe(
         mergeMap((config: MultipleSampleConfig) =>
-          this.service.getDgvVariants(config.referenceGenome, config.chromosome).pipe(
+          this.analysisService.getDgvVariants(config.referenceGenome, config.chromosome).pipe(
             catchError((err: unknown) => {
               const message = 'Could not load DGV variants';
               this.messagesService.showErrors(message);
@@ -97,7 +102,7 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
 
     const multipleSampleData$ = multipleConfig$.pipe(
       mergeMap((config: MultipleSampleConfig) =>
-        this.service.getMultipleSampleData(config).pipe(
+        this.analysisService.getMultipleSampleData(config).pipe(
           catchError((err: unknown) => {
             const message = 'Could not load multiple sample data';
             this.messagesService.showErrors(message);
@@ -136,7 +141,7 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
       startWith(undefined as Margin)
     );
 
-    this.data$ = combineLatest([
+    const data$ = combineLatest([
       multipleConfig$,
       dgvVariants$,
       cnvSamples$,
@@ -158,6 +163,9 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
           containerMargin
         })
       ),
+      tap(() => {
+        this.loadingService.loadingOff();
+      }),
       catchError((err: unknown) => {
         console.log(err);
         this.router.navigate(['/multiple-sample']);
@@ -165,7 +173,13 @@ export class MultipleProcessComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.service.onSelectedCnvChanged
+    data$
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(data => {
+        this.data = data;
+      });
+
+    this.analysisService.onSelectedCnvChanged
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(cnvInfos => {
         this.selectedCnvs = cnvInfos;
