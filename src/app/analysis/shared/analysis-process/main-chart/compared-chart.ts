@@ -305,6 +305,35 @@ export class ComparedChart {
           .attr('fill', '#444444')
           .attr('stroke-opacity', '1')
           .style('cursor', 'pointer');
+        
+        // tooltip
+        const [x, y] = d3.pointer(event);
+        this.tooltip
+          .style('left', x + 10 + 'px')
+          .style('top', y + 10 + 'px')
+          .style('display', null)
+          .style('min-width', '200px');
+        
+        // Check if tooltip is extending beyond screen boundaries
+        const tooltipRect = this.tooltip.node().getBoundingClientRect();
+        const bodyRect = this._parentElement.getBoundingClientRect();
+        
+        if (tooltipRect.right > bodyRect.right) {
+          this.tooltip.style('left', (x - tooltipRect.width - 10) + 'px');
+        }
+        if (tooltipRect.bottom > bodyRect.bottom) {
+          this.tooltip.style('top', (y - tooltipRect.height - 10) + 'px');
+        }
+
+        this.tooltip.html(() => {
+          let content = `<b>chromosome ${
+            d.chromosome
+          }:</b> ${formatNumberWithComma(d.startBp)} - ${formatNumberWithComma(
+            d.endBp
+          )}`;
+          content += ``;
+          return content;
+        });
       })
       .on('mouseout', (event: MouseEvent, d: CnvInfo) => {
         // subbar
@@ -323,24 +352,6 @@ export class ComparedChart {
 
         // tooltip
         this.tooltip.style('display', 'none');
-      })
-      .on('mousemove', (event, d) => {
-        const [x, y] = d3.pointer(event);
-        // tooltip
-        this.tooltip
-          .style('left', x + 60 + 'px')
-          .style('top', y - 20 + 'px')
-          .style('display', null);
-
-        this.tooltip.html(() => {
-          let content = `<b>chromosome ${
-            d.chromosome
-          }:</b> ${formatNumberWithComma(d.startBp)} - ${formatNumberWithComma(
-            d.endBp
-          )}`;
-          content += ``;
-          return content;
-        });
       });
   }
 
