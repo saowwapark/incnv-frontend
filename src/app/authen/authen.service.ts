@@ -37,7 +37,7 @@ export class AuthenService {
     return concat(this.addUser(email, password), this.login(email, password));
   }
 
-  createAuthData(token, expiresInDuration) {
+  createAuthData(token: string, expiresInDuration: number) {
     if (token && expiresInDuration) {
       this.setAuthTimer(expiresInDuration);
       const now = new Date();
@@ -51,11 +51,9 @@ export class AuthenService {
     return this._http.post<any>(`${this.baseRouteUrl}/login`, authReq).pipe(
       map(res => res['payload']),
       tap((authenRes: AuthenRes) => {
-        const token = authenRes.token;
-        const expiresInDuration = authenRes.expiresIn;
-        const authData = this.createAuthData(token, expiresInDuration);
+        const authData = this.createAuthData(authenRes.token, authenRes.expiresIn);
         this.saveAuthData(email, authData.token, authData.expirationDate);
-        this.token = token;
+        this.token = authData.token;
         this.isAuthenSubject.next(true);
       })
     );
