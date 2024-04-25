@@ -27,7 +27,7 @@ export class SigninComponent implements OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({
         next: () => {
-          this._router.navigate(['/upload-cnv-result']);
+          this._router.navigate(['/upload-cnvs']);
         },
         error: () => {
           console.log('cannot login');

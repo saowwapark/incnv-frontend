@@ -2,54 +2,46 @@ import { Navigation } from './navigation.model';
 
 export const navigationData: Navigation[] = [
   {
-    id: 'preparation',
-    title: 'Preparation',
+    id: 'files',
+    title: 'Files',
     type: 'group',
-    icon: 'apps',
+    icon: 'folder',
     children: [
       {
-        id: 'cnvtool',
-        title: 'CNV Tool',
-        type: 'collapsable',
-        icon: 'build',
-        children: [
-          {
-            id: 'tabFileMapping',
-            title: 'File Mapping',
-            type: 'item',
-            icon: 'list',
-            url: '/tabfilemapping'
-          }
-        ]
+        id: 'uploadCnvs',
+        title: 'Upload CNVs',
+        type: 'item',
+        icon: 'upload_file',
+        url: '/upload-cnvs'
+      },
+      {
+        id: 'myFiles',
+        title: 'My Files',
+        type: 'item',
+        icon: 'folder',
+        url: '/myfiles'
+      }
+    ]
+  },
+  {
+    id: 'mapping',
+    title: 'Mapping',
+    type: 'group',
+    icon: 'build',
+    children: [
+      {
+        id: 'tabFileMapping',
+        title: 'File Mapping',
+        type: 'item',
+        icon: 'article',
+        url: '/tabfilemapping'
       },
       {
         id: 'sampleset',
         title: 'Sample Set',
         type: 'item',
-        icon: 'face',
+        icon: 'person',
         url: '/sampleset'
-      },
-      {
-        id: 'upload',
-        title: 'Upload',
-        type: 'collapsable',
-        icon: 'folder',
-        children: [
-          {
-            id: 'uploadCnvResult',
-            title: 'Upload CNV Result',
-            type: 'item',
-            icon: 'cloud_upload',
-            url: '/upload-cnv-result'
-          },
-          {
-            id: 'myFiles',
-            title: 'My Files',
-            type: 'item',
-            icon: 'description',
-            url: '/myfiles'
-          }
-        ]
       }
     ]
   },
