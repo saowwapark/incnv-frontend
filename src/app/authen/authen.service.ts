@@ -6,7 +6,7 @@ import { BehaviorSubject, concat } from 'rxjs';
 
 import { AuthenReq, AuthenRes } from './authen.model';
 import { map, tap } from 'rxjs/operators';
-import { EMAIL, EXPIRATION, TOKEN } from 'src/constants/local-storage.const';
+import { EMAIL, EXPIRATION, INDIVIDUAL_CONFIG, MULTIPLE_CONFIG, TOKEN } from 'src/constants/local-storage.const';
 
 @Injectable()
 export class AuthenService {
@@ -76,7 +76,7 @@ export class AuthenService {
     this.token = null;
     this.isAuthenSubject.next(false);
     clearTimeout(this.tokenTimer);
-    this.clearAuthData();
+    this.clearLocalStorage();
     this._router.navigate(['']);
   }
   /**
@@ -100,6 +100,15 @@ export class AuthenService {
     localStorage.removeItem(EMAIL);
     localStorage.removeItem(TOKEN);
     localStorage.removeItem(EXPIRATION);
+  }
+  private clearAnalysisConfig() {
+    localStorage.removeItem(INDIVIDUAL_CONFIG);
+    localStorage.removeItem(MULTIPLE_CONFIG);
+  }
+
+  private clearLocalStorage() {
+    this.clearAuthData();
+    this.clearAnalysisConfig();
   }
 
   private getAuthData() {
