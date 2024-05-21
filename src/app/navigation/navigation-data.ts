@@ -66,20 +66,5 @@ export const navigationData: Navigation[] = [
         url: '/analysis/multiple-sample'
       }
     ]
-  },
-  {
-    id: 'maintenance',
-    title: 'Maintenance',
-    type: 'group',
-    icon: 'pages',
-    children: [
-      {
-        id: 'version',
-        title: 'Version',
-        type: 'item',
-        icon: 'miscellaneous_services',
-        url: '/maintenance/version'
-      }
-    ]
   }
 ];
