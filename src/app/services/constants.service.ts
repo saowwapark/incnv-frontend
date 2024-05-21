@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ConstantsService {
-  // change from http://localhost:3000 to /
-  // readonly baseAppUrl: string = '';
-  readonly baseAppUrl: string = 'http://localhost:3000';
+  baseAppUrl = environment.apiDomain;
 }

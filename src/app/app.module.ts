@@ -9,7 +9,6 @@ import { AuthenModule } from './authen/authen.module';
 import { AnalysisModule } from './analysis/analysis.module';
 import { SharedModule } from './shared/shared.module';
 import { ReformatCnvToolResultModule } from './reformat-cnv-tool-result/reformat-cnv-tool-result.module';
-import { MaintenanceModule } from './maintenance/maintenance.module';
 
 import { NavigationModule } from './navigation/navigation.module';
 
@@ -72,7 +71,6 @@ import { DatasourceComponent } from './datasource/datasource.component';
     NavigationModule,
     MyFileModule,
     ReformatCnvToolResultModule,
-    MaintenanceModule,
 
     // app routing must be last
     AppRoutingModule

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "myProject": {
+    "incnv-frontend": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/myProject",
+            "outputPath": "dist/incnv-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -59,18 +59,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "myProject:build"
+            "browserTarget": "incnv-frontend:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "myProject:build:production"
+              "browserTarget": "incnv-frontend:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "myProject:build"
+            "browserTarget": "incnv-frontend:build"
           }
         },
         "test": {
@@ -96,7 +96,7 @@
         }
       }
     },
-    "myProject-e2e": {
+    "incnv-frontend-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -104,11 +104,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "myProject:serve"
+            "devServerTarget": "incnv-frontend:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "myProject:serve:production"
+              "devServerTarget": "incnv-frontend:serve:production"
             }
           }
         },
