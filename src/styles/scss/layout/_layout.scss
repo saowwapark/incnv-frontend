@@ -1,26 +1,11 @@
 @use '@angular/material' as mat;
-.layout--absolute-default {
-  overflow: auto;
-  position: absolute;
-  top: $top-menu-height;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-}
 
-.layout--absolute-1vh {
-  // margin-top: 5.0rem;
+.layout--100vh {
   overflow: auto;
-  position: absolute;
-  top: $top-menu-height;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  height: calc(100% - #{$top-menu-height});
+  height: calc(100vh - #{$top-menu-height});
 
   > .layout__header-container {
     position: relative;

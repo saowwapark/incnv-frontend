@@ -12,14 +12,14 @@ export const navigationData: Navigation[] = [
         title: 'Upload CNVs',
         type: 'item',
         icon: 'upload_file',
-        url: '/upload-cnvs'
+        url: 'app/upload-cnvs'
       },
       {
         id: 'myFiles',
         title: 'My Files',
         type: 'item',
         icon: 'folder',
-        url: '/myfiles'
+        url: 'app/myfiles'
       }
     ]
   },
@@ -34,14 +34,14 @@ export const navigationData: Navigation[] = [
         title: 'File Mapping',
         type: 'item',
         icon: 'article',
-        url: '/tabfilemapping'
+        url: 'app/tabfilemapping'
       },
       {
         id: 'sampleset',
         title: 'Sample Set',
         type: 'item',
         icon: 'person',
-        url: '/sampleset'
+        url: 'app/sampleset'
       }
     ]
   },
@@ -56,14 +56,14 @@ export const navigationData: Navigation[] = [
         title: 'Individual Sample',
         type: 'item',
         icon: 'analytics',
-        url: '/analysis/individual-sample'
+        url: 'app/analysis/individual-sample'
       },
       {
         id: 'mulitpleSamples',
         title: 'Multiple Samples',
         type: 'item',
         icon: 'analytics',
-        url: '/analysis/multiple-sample'
+        url: 'app/analysis/multiple-sample'
       }
     ]
   }

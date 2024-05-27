@@ -2,12 +2,10 @@
 .top-menu__container {
   width: 100%;
   padding: 0.8rem 1.6rem;
-
-  width: 100%;
   height: $top-menu-height;
   background-color: $color-primary;
-  @include mat.elevation(6);
-  position: fixed;
+  @include mat.elevation(4);
+  position: relative;
   top: 0;
   left: 0;
   right: 0;

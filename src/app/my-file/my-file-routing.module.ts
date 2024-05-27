@@ -4,7 +4,7 @@ import { MyFileUploadCnvToolResultComponent } from './my-file-upload-cnv-tool-re
 import { MyFileReformatCnvToolResultComponent } from './my-file-reformat-cnv-tool-result/my-file-reformat-cnv-tool-result.component';
 const routes: Routes = [
   {
-    path: 'myfiles',
+    path: 'app/myfiles',
     component: MyFileUploadCnvToolResultComponent
   },
   {

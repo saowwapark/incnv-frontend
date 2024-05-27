@@ -9,23 +9,17 @@ import { RefreshGuard } from './shared/guards/refresh.guard';
 import { DatasourceComponent } from './datasource/datasource.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { HomeContentComponent } from './pages/home-page/home-content/home-content.component';
-
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { 
-    path: 'home',
-    component: HomePageComponent,
-    children: [
-      { path: '', component: HomeContentComponent }
-    ]
-  }, 
+  { path: 'home', component: HomeContentComponent }, 
   {
-    path: '',
+    path: 'app',
     component: AppPageComponent,
-    // canActivate: [AuthenGuard],
-    
+    canActivate: [AuthenGuard], 
     children: [
-      { path: 'install', component: DatasourceComponent },
+      { path: 'install',
+        component: DatasourceComponent
+      },
       {
         path: 'upload-cnvs',
         loadChildren: () =>
