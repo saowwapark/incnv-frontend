@@ -34,7 +34,4 @@ export class DatasourceComponent implements OnInit, OnDestroy  {
         console.error('Error receiving download status:', error);
       });
   }
-  goToHomePage() {
-    this.router.navigate(['']);
-  }
 }
