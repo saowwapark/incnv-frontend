@@ -7,7 +7,7 @@
   flex: 1 1 auto;
   height: calc(100vh - #{$top-menu-height});
 
-  > .layout__header-container {
+   .layout__header-container {
     position: relative;
     background-color: mat.get-color-from-palette($primary);
     color: white;
@@ -26,27 +26,10 @@
       align-items: center;
       justify-content: space-between;
     }
+    
   }
-  > .layout__content-container--default {
-    width: 100%;
+   .layout__content-items {
+    margin: 3rem;
     flex: 1 1 auto;
-    > .layout__content-items {
-      margin: 3rem;
-      flex: 1 1 auto;
-    }
-  }
-  // Scrollbar
-  > .layout__content-container--scrollbar {
-    position: relative;
-    width: 100%;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    overflow-x: hidden;
-    overflow-y: auto;
-    > .layout__content-items {
-      margin: 3rem;
-      flex: 1 1 auto;
-    }
   }
 }

@@ -5,7 +5,7 @@
 </app-header>
 
 <!-- SELECTED BAR -->
-<app-selected-bar
+<selected-bar
   *ngIf="selectedResults.length > 0"
   [selectedData]="selectedResults"
   [selectedBarType]="2"
@@ -13,19 +13,14 @@
   (deselectAllEmitter)="onDelselectedAll()"
   [@slideInTop]
 >
-</app-selected-bar>
-<!-- / SELECTED BAR -->
+</selected-bar>
 
 <!-- CONTENT -->
-<div class="layout__content-container--scrollbar ">
-  <div class="layout__content-items">
-    <app-reformat-list
-      [uploadCnvToolResultId]="uploadCnvToolResultId"
-    ></app-reformat-list>
-  </div>
+<div class="layout__content-items">
+  <app-reformat-list
+    [uploadCnvToolResultId]="uploadCnvToolResultId"
+  ></app-reformat-list>
 </div>
-
-<!-- / CONTENT -->
 
 <!-- ADD BUTTON -->
 <button
@@ -37,4 +32,3 @@
 >
   <mat-icon>add</mat-icon>
 </button>
-<!-- / ADD SAMPLESET BUTTON -->

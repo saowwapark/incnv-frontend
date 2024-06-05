@@ -4,9 +4,8 @@
 :host {
   background-color: $color-primary;
   color: mat.get-color-from-palette($background, text);
-  flex: 1;
   position: absolute;
-  top: 0;
+  top: $top-menu-height;
   right: 0;
   left: 0;
   height: $header-container-height;
