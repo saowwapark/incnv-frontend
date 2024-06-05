@@ -1,30 +1,22 @@
-<div id="history-upload-cnv-tool-result" class="layout--100vh">
-  <!-- HEADER -->
-  <app-header [title]="'My Files'">
-    <!-- SEARCH -->
-    <app-search></app-search>
-  </app-header>
+<!-- HEADER -->
+<app-header [title]="'My Files'">
 
-  <!-- SELECTED BAR -->
-  <app-selected-bar
-    *ngIf="selectedUploads.length > 0"
-    [selectedData]="selectedUploads"
-    [selectedBarType]="2"
-    (submitEmitter)="onSubmitAllSelected($event)"
-    (deselectAllEmitter)="onDelselectedAll()"
-    [@slideInTop]
-  >
-  </app-selected-bar>
-  <!-- / SELECTED BAR -->
+  <!-- SEARCH -->
+  <app-search></app-search>
+</app-header>
 
-  <!-- CONTENT -->
-  <div class="layout__content-container--scrollbar ">
-    <div class="layout__content-items">
-      <app-my-file-upload-cnv-tool-result-list></app-my-file-upload-cnv-tool-result-list>
-    </div>
-  </div>
+<!-- SELECTED BAR -->
+<selected-bar
+  *ngIf="selectedUploads.length > 0"
+  [selectedData]="selectedUploads"
+  [selectedBarType]="2"
+  (submitEmitter)="onSubmitAllSelected($event)"
+  (deselectAllEmitter)="onDelselectedAll()"
+  [@slideInTop]
+>
+</selected-bar>
 
-  <!-- / CONTENT -->
-
-  <!-- / ADD SAMPLESET BUTTON -->
+<!-- CONTENT -->
+<div class="layout__content-items">
+  <app-my-file-upload-cnv-tool-result-list></app-my-file-upload-cnv-tool-result-list>
 </div>

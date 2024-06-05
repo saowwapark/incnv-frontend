@@ -1,4 +1,4 @@
-<div id="sampleset" class="layout--100vh">
+<div id="sampleset">
   <!-- HEADER -->
   <app-header [title]="'Sample Set'">
     <!-- SEARCH -->
@@ -8,24 +8,19 @@
   <!-- / HEADER -->
 
   <!-- SELECTED BAR -->
-  <app-selected-bar
+  <selected-bar
     *ngIf="selectedSamplesets.length > 0"
     [selectedData]="selectedSamplesets"
     [selectedBarType]="2"
     (submitEmitter)="onSubmitAllSelected($event)"
     (deselectAllEmitter)="onDelselectedAll()"
     [@slideInTop]
-  ></app-selected-bar>
-  <!-- / SELECTED BAR -->
+  ></selected-bar>
 
   <!-- CONTENT -->
-  <div class="layout__content-container--scrollbar ">
-    <div class="layout__content-items">
-      <app-sampleset-list [samplesets]="samplesets"></app-sampleset-list>
-    </div>
+  <div class="layout__content-items">
+    <app-sampleset-list [samplesets]="samplesets"></app-sampleset-list>
   </div>
-
-  <!-- / CONTENT -->
 
   <!-- ADD SAMPLESET BUTTON -->
   <button
@@ -37,6 +32,4 @@
   >
     <mat-icon>add</mat-icon>
   </button>
-  <!-- / ADD SAMPLESET BUTTON -->
-  <div></div>
 </div>

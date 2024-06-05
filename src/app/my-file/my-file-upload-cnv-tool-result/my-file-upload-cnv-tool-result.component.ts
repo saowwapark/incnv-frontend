@@ -3,11 +3,8 @@ import { MyFileUploadCnvToolResultService } from './my-file-upload-cnv-tool-resu
 import {
   Component,
   OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit
 } from '@angular/core';
-import { Subject, fromEvent, NEVER } from 'rxjs';
+import { Subject, NEVER } from 'rxjs';
 import {
   takeUntil,
   debounceTime,

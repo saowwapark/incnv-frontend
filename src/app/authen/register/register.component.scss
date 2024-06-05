@@ -7,6 +7,11 @@ mat-form-field {
   width: 40rem;
   height: 23rem;
   padding: 2rem;
-  // border-radius: 2rem;
-  // box-shadow: 0 10px 40px #1de9b6, 0 0 0 20px #ffffffeb;
+}
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
