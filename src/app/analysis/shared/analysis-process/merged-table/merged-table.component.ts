@@ -240,15 +240,16 @@ export class MergedTableComponent implements OnInit, OnDestroy, AfterViewInit, O
   /***************************** Filter Row *******************************/
 
   searchAll(){
+    let isEnsembl = this.ensemblTags.length === 0;
+    let isDgv = this.dgvTags.length === 0;
+    let isClinvarOmimId = this.clinvarOmimIdTags.length === 0;
+    let isClinvarPhenotype = this.clinvarPhenotypeTags.length === 0;
+    let isOverlapping = this.overlappingTags.length === 0;
+
+    if (isEnsembl && isDgv && isClinvarOmimId && isClinvarPhenotype && isOverlapping) return this.cnvInfoViews;
 
     let filteredData: CnvInfoView[] = [];
     for (const cnvInfo of this.cnvInfoViews) {
-      let isEnsembl = this.ensemblTags.length === 0;
-      let isDgv = this.dgvTags.length === 0;
-      let isClinvarOmimId = this.clinvarOmimIdTags.length === 0;
-      let isClinvarPhenotype = this.clinvarPhenotypeTags.length === 0;
-      let isOverlapping = this.overlappingTags.length === 0;
-      
       if(!isEnsembl){
         ensemblLoop: 
         for (const ensembl of cnvInfo.ensembls) {
@@ -324,11 +325,13 @@ export class MergedTableComponent implements OnInit, OnDestroy, AfterViewInit, O
   onRemoveFilterValue(index: number, filterValues: string[]): void {
     if (index >= 0) {
       filterValues.splice(index, 1);
+      this.updateTableData()
     }
   }
 
   onClearFilterValues(filterValues: string[]): void {
-    filterValues = [];
+    filterValues.length = 0;
+    this.updateTableData();
   }
 
   onAddFilterValue(event: MatChipInputEvent, filterValues: string[]): void {
