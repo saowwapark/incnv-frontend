@@ -6,9 +6,7 @@ import { FormsModule } from '@angular/forms';
 /** Custom Modules */
 import { AppRoutingModule } from './app-routing.module';
 import { AuthenModule } from './authen/authen.module';
-import { AnalysisModule } from './analysis/analysis.module';
 import { SharedModule } from './shared/shared.module';
-import { ReformatCnvToolResultModule } from './reformat-cnv-tool-result/reformat-cnv-tool-result.module';
 
 import { NavigationModule } from './navigation/navigation.module';
 
@@ -27,7 +25,6 @@ import { AuthenInterceptor } from './authen/authen-interceptor';
 /** Services or Resolvers */
 import { ConstantsService } from './services/constants.service';
 import { TabFileMappingService } from './tab-file-mapping/tab-file-mapping.service';
-import { MyFileModule } from './my-file/my-file.module';
 import { SamplesetService } from './sampleset/sampleset.service';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 
@@ -63,10 +60,7 @@ import { NavigationService } from './navigation/navigation.service';
     // custom modules
     AuthenModule,
     SharedModule,
-    AnalysisModule,
     NavigationModule,
-    MyFileModule,
-    ReformatCnvToolResultModule,
 
     // app routing must be last
     AppRoutingModule
