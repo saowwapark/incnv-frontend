@@ -14,14 +14,11 @@ import { NavigationModule } from './navigation/navigation.module';
 
 /** Components */
 import { AppComponent } from './app.component';
-
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { HomeMenuComponent } from './pages/home-page/home-menu/home-menu.component';
 import { HomeContentComponent } from './pages/home-page/home-content/home-content.component';
-
 import { AppPageComponent } from './pages/app-page/app-page.component';
 import { AppMenuComponent } from './pages/app-page/app-menu/app-menu.component';
-
 import { ExportFilesComponent } from './export-files/export-files.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
@@ -37,12 +34,11 @@ import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 /** Entry Components */
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorDialogComponent } from './shared/components/error-dialog/error-dialog.component';
-
-import { environment } from 'src/environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatasourceService } from './datasource/datasource.service';
 import { DatasourceComponent } from './datasource/datasource.component';
+import { NavigationService } from './navigation/navigation.service';
 
 @NgModule({
   declarations: [
@@ -80,7 +76,8 @@ import { DatasourceComponent } from './datasource/datasource.component';
     TabFileMappingService,
     ConstantsService,
     SamplesetService,
-    DatasourceService
+    DatasourceService,
+    NavigationService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmDialogComponent, ErrorDialogComponent]

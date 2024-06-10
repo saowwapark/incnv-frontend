@@ -5,9 +5,7 @@ import { AppPageComponent } from './pages/app-page/app-page.component';
 
 import { AuthenGuard } from './authen/authen.guard';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
-import { RefreshGuard } from './shared/guards/refresh.guard';
 import { DatasourceComponent } from './datasource/datasource.component';
-import { HomePageComponent } from './pages/home-page/home-page.component';
 import { HomeContentComponent } from './pages/home-page/home-content/home-content.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -15,7 +13,7 @@ const appRoutes: Routes = [
   {
     path: 'app',
     component: AppPageComponent,
-    canActivate: [AuthenGuard], 
+    canActivate: [AuthenGuard],
     children: [
       { path: 'install',
         component: DatasourceComponent
@@ -25,6 +23,13 @@ const appRoutes: Routes = [
         loadChildren: () =>
           import('./upload-configure/upload-configure.module').then(
             module => module.UploadConfigureModule
+          )
+      },
+      {
+        path: 'myfiles',
+        loadChildren: () => 
+          import('./my-file/my-file.module').then(
+            module => module.MyFileModule
           )
       },
       {
