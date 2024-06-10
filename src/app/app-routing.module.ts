@@ -14,6 +14,7 @@ const appRoutes: Routes = [
     path: 'app',
     component: AppPageComponent,
     canActivate: [AuthenGuard],
+    canActivateChild: [AuthenGuard],
     children: [
       { path: 'install',
         component: DatasourceComponent
