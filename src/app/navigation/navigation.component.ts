@@ -1,9 +1,8 @@
 import {
   Component,
+  OnDestroy,
   OnInit,
-  Input,
   ChangeDetectorRef,
-  OnDestroy
 } from '@angular/core';
 import { Subject, merge } from 'rxjs';
 import { NavigationService } from './navigation.service';
@@ -15,7 +14,7 @@ import { navigationData } from './navigation-data';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
   navigationData: any;
 
   // Private
@@ -69,8 +68,23 @@ export class NavigationComponent implements OnInit {
     )
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(() => {
+
         // Mark for check
         this._changeDetectorRef.markForCheck();
+
+        // Handle navigation item changes
+        this.navigationData = this._navigationService.getCurrentNavigation();
       });
   }
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    console.log('NavigationComponent ngOnDestroy called');
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+
 }

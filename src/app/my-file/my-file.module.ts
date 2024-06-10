@@ -1,4 +1,3 @@
-import { MyFileComponent } from './my-file.component';
 import { MyFileRoutingModule } from './my-file-routing.module';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -15,10 +14,8 @@ import { MyFileUploadCnvToolResultService } from './my-file-upload-cnv-tool-resu
 import { UploadFormService } from '../upload-configure/configure-upload-cnv-tool-result/upload-form/upload-form.service';
 import { ConfigureCnvToolFilesService } from '../services/configure-cnv-tool-files.service';
 import { UploadHistoryService } from './my-file.service';
-
 @NgModule({
   declarations: [
-    MyFileComponent,
     MyFileReformatCnvToolResultComponent,
     MyFileUploadCnvToolResultComponent,
     MyFileUploadCnvToolResultListComponent,
@@ -31,7 +28,7 @@ import { UploadHistoryService } from './my-file.service';
     MyFileUploadCnvToolResultService,
     UploadFormService,
     ConfigureCnvToolFilesService,
-    UploadHistoryService
+    UploadHistoryService,
   ],
   entryComponents: [UploadDialogComponent]
 })
