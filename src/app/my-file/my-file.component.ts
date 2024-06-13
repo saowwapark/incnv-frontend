@@ -1,5 +1,5 @@
 import { UploadCnvToolResult } from 'src/app/shared/models/upload-cnv-tool-result.model';
-import { MyFileUploadCnvToolResultService } from './my-file-upload-cnv-tool-result.service';
+import { MyFileService } from './my-file.service';
 import {
   Component,
   OnInit,
@@ -17,12 +17,12 @@ import { myAnimations } from 'src/app/shared/animations';
 import { SearchService } from 'src/app/shared/components/search/search.service';
 
 @Component({
-  selector: 'app-my-file-upload-cnv-tool-result',
-  templateUrl: './my-file-upload-cnv-tool-result.component.html',
-  styleUrls: ['./my-file-upload-cnv-tool-result.component.scss'],
+  selector: 'my-file',
+  templateUrl: './my-file.component.html',
+  styleUrls: ['./my-file.component.scss'],
   animations: myAnimations
 })
-export class MyFileUploadCnvToolResultComponent implements OnInit {
+export class MyFileComponent implements OnInit {
   selectedUploads: any[] = [];
   hasSelectedRows = false;
   confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
@@ -31,7 +31,7 @@ export class MyFileUploadCnvToolResultComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    public myFileService: MyFileUploadCnvToolResultService,
+    public myFileService: MyFileService,
     public matDialog: MatDialog
   ) {
     this._unsubscribeAll = new Subject();

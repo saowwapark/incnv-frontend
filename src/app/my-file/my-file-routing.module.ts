@@ -1,15 +1,15 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { MyFileUploadCnvToolResultComponent } from './my-file-upload-cnv-tool-result/my-file-upload-cnv-tool-result.component';
-import { MyFileReformatCnvToolResultComponent } from './my-file-reformat-cnv-tool-result/my-file-reformat-cnv-tool-result.component';
+import { MyFileComponent } from './my-file.component';
+import { CnvFileDetailComponent } from '../cnv-file-detail/cnv-file-detail.component';
 const routes: Routes = [
   {
     path: '',
-    component: MyFileUploadCnvToolResultComponent
+    component: MyFileComponent
   },
   {
     path: 'reformat/:id',
-    component: MyFileReformatCnvToolResultComponent
+    component: CnvFileDetailComponent 
   }
 ];
 

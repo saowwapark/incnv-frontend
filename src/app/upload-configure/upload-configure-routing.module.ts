@@ -7,7 +7,6 @@ const routes: Routes = [
   {
     path: '',
     component: UploadConfigureComponent
-    // canActivate: [AuthGuard],
   }
 ];
 

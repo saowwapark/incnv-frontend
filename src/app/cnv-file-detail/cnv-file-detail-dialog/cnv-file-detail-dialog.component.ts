@@ -1,15 +1,15 @@
-import { ReformatCnvToolResult } from '../../reformat-cnv-tool-result.model';
+import { CnvFileDetail } from '../cnv-file-detail.model';
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogAction } from 'src/app/shared/models/dialog.action.model';
 
 @Component({
-  selector: 'app-reformat-dialog',
-  templateUrl: './reformat-dialog.component.html',
-  styleUrls: ['./reformat-dialog.component.scss']
+  selector: 'cnv-file-detail-dialog',
+  templateUrl: './cnv-file-detail-dialog.component.html',
+  styleUrls: ['./cnv-file-detail-dialog.component.scss']
 })
-export class ReformatDialogComponent {
+export class CnvFileDetailDialogComponent {
   action: number;
   form: FormGroup;
   dialogTitle: string;
@@ -17,7 +17,7 @@ export class ReformatDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) { reformatCnvToolResult, action }: any,
     private _fb: FormBuilder,
-    public dialogRef: MatDialogRef<ReformatDialogComponent>
+    public dialogRef: MatDialogRef<CnvFileDetailDialogComponent>
   ) {
     this.action = action;
     this.form = this._createForm(reformatCnvToolResult);
@@ -36,7 +36,7 @@ export class ReformatDialogComponent {
   onSave() {
     this.dialogRef.close(this.form.value);
   }
-  private _createForm(reformatCnvToolResult: ReformatCnvToolResult): FormGroup {
+  private _createForm(reformatCnvToolResult: CnvFileDetail): FormGroup {
     return this._fb.group({
       reformatCnvToolResultId: [reformatCnvToolResult.reformatCnvToolResultId],
       sample: [reformatCnvToolResult.sample],

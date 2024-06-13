@@ -11,35 +11,33 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Subject, merge, of } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReformatCnvToolResult } from '../../reformat-cnv-tool-result.model';
+import { CnvFileDetail } from '../../cnv-file-detail.model';
 import {
   takeUntil,
   startWith,
   switchMap,
   map,
   catchError,
-  mergeMap,
   filter
 } from 'rxjs/operators';
-import { ReformatCnvToolResultService } from '../../reformat-cnv-tool-result.service';
+import { CnvFileDetailService } from '../../cnv-file-detail.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogAction } from 'src/app/shared/models/dialog.action.model';
-import { ReformatDialogComponent } from '../reformat-dialog/reformat-dialog.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { CnvFileDetailDialogComponent } from '../../cnv-file-detail-dialog/cnv-file-detail-dialog.component';
 
 @Component({
-  selector: 'app-reformat-list',
-  templateUrl: './reformat-list.component.html',
-  styleUrls: ['./reformat-list.component.scss'],
+  selector: 'cnv-file-detail-table-list',
+  templateUrl: './cnv-file-detail-table-list.component.html',
+  styleUrls: ['./cnv-file-detail-table-list.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CnvFileDetailTableListComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() uploadCnvToolResultId: number;
-  // @Input() reformatCnvToolResults: ReformatCnvToolResult[];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  dialogRef: MatDialogRef<ReformatDialogComponent>;
-  selection = new SelectionModel<ReformatCnvToolResult>(true, []);
+  dialogRef: MatDialogRef<CnvFileDetailDialogComponent>;
+  selection = new SelectionModel<CnvFileDetail>(true, []);
   displayedColumns = [
     'select',
     'no',
@@ -54,13 +52,11 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
-  dataSource: MatTableDataSource<ReformatCnvToolResult>;
-  // Private
+  dataSource: MatTableDataSource<CnvFileDetail>;
   private _unsubscribeAll: Subject<void>;
-  // dataSource: UploadReformatDataSource | null;
 
   constructor(
-    private _reformatService: ReformatCnvToolResultService,
+    private _reformatService: CnvFileDetailService,
     public _matDialog: MatDialog
   ) {
     this.dataSource = new MatTableDataSource();
@@ -119,7 +115,7 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
             this.paginator.pageSize
           );
         }),
-        map((data: { items: ReformatCnvToolResult[]; totalCount: number }) => {
+        map((data: { items: CnvFileDetail[]; totalCount: number }) => {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
           this.isRateLimitReached = false;
@@ -135,7 +131,7 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe(
-        (data: ReformatCnvToolResult[]) => (this.dataSource.data = data)
+        (data: CnvFileDetail[]) => (this.dataSource.data = data)
       );
   }
   ngOnDestroy() {
@@ -148,10 +144,10 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
   // @ Public methods
   // -----------------------------------------------------------------------------------------------------
 
-  onEditData(reformatCnvToolResult: ReformatCnvToolResult): void {
+  onEditData(reformatCnvToolResult: CnvFileDetail): void {
     this._reformatService.onSelectedChanged.next([]);
     // Original data
-    this.dialogRef = this._matDialog.open(ReformatDialogComponent, {
+    this.dialogRef = this._matDialog.open(CnvFileDetailDialogComponent, {
       panelClass: 'dialog-default',
       data: {
         reformatCnvToolResult,
@@ -164,7 +160,7 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
       .afterClosed()
       .pipe(
         filter(response => !!response),
-        switchMap((updatedData: ReformatCnvToolResult) =>
+        switchMap((updatedData: CnvFileDetail) =>
           this._reformatService.editReformatCnvToolResult(updatedData)
         ),
         takeUntil(this._unsubscribeAll)
@@ -194,7 +190,7 @@ export class ReformatListComponent implements OnInit, OnDestroy, AfterViewInit {
     this._reformatService.onSelectedChanged.next(this.selection.selected);
   }
 
-  toggleSelect(reformatCnvToolResult: ReformatCnvToolResult) {
+  toggleSelect(reformatCnvToolResult: CnvFileDetail) {
     this.selection.toggle(reformatCnvToolResult);
     this._reformatService.onSelectedChanged.next(this.selection.selected);
   }
