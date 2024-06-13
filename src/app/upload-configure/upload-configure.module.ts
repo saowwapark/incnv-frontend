@@ -5,7 +5,7 @@ import { UploadConfigureComponent } from './upload-configure.component';
 import { UploadFormComponent } from './configure-upload-cnv-tool-result/upload-form/upload-form.component';
 import { PreviewReformatCnvToolResultComponent } from './preview-reformat-cnv-tool-result/preview-reformat-cnv-tool-result.component';
 import { UploadConfigureRoutingModule } from './upload-configure-routing.module';
-import { ReformatCnvToolResultModule } from '../reformat-cnv-tool-result/reformat-cnv-tool-result.module';
+import { CnvFileDetailModule } from '../cnv-file-detail/cnv-file-detail.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,7 @@ import { ReformatCnvToolResultModule } from '../reformat-cnv-tool-result/reforma
     UploadConfigureRoutingModule,
     ReactiveFormsModule,
     SharedModule,
-    ReformatCnvToolResultModule
+    CnvFileDetailModule
   ],
   entryComponents: []
 })

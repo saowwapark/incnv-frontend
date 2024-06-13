@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { AppPageComponent } from './pages/app-page/app-page.component';
-
 import { AuthenGuard } from './authen/authen.guard';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { DatasourceComponent } from './datasource/datasource.component';

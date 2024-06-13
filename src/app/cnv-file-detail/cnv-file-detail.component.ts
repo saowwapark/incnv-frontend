@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-my-file-reformat-cnv-tool-result',
-  templateUrl: './my-file-reformat-cnv-tool-result.component.html',
-  styleUrls: ['./my-file-reformat-cnv-tool-result.component.scss']
+  selector: 'cnv-file-detail',
+  templateUrl: './cnv-file-detail.component.html',
+  styleUrls: ['./cnv-file-detail.component.scss']
 })
-export class MyFileReformatCnvToolResultComponent implements OnInit {
+export class CnvFileDetailComponent implements OnInit {
   uploadCnvToolResultId: number;
   constructor(private route: ActivatedRoute) {}
 

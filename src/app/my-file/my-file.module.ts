@@ -1,34 +1,35 @@
 import { MyFileRoutingModule } from './my-file-routing.module';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
-
-import { MyFileReformatCnvToolResultComponent } from './my-file-reformat-cnv-tool-result/my-file-reformat-cnv-tool-result.component';
-import { MyFileUploadCnvToolResultComponent } from './my-file-upload-cnv-tool-result/my-file-upload-cnv-tool-result.component';
+import { MyFileComponent } from './my-file.component';
 // eslint-disable-next-line max-len
-import { MyFileUploadCnvToolResultListComponent } from './my-file-upload-cnv-tool-result/my-file-upload-cnv-tool-result-list/my-file-upload-cnv-tool-result-list.component';
-import { ReformatCnvToolResultModule } from '../reformat-cnv-tool-result/reformat-cnv-tool-result.module';
-import { UploadDialogComponent } from './my-file-upload-cnv-tool-result/upload-dialog/upload-dialog.component';
-import { UploadDialogService } from './my-file-upload-cnv-tool-result/upload-dialog/upload-dialog.service';
+import { MyFileListComponent } from './my-file-list/my-file-list.component';
+import { UploadDialogComponent } from './upload-dialog/upload-dialog.component';
+import { UploadDialogService } from './upload-dialog/upload-dialog.service';
 import { UploadConfigureService } from '../upload-configure/upload-configure.service';
-import { MyFileUploadCnvToolResultService } from './my-file-upload-cnv-tool-result/my-file-upload-cnv-tool-result.service';
+import { MyFileService } from './my-file.service';
 import { UploadFormService } from '../upload-configure/configure-upload-cnv-tool-result/upload-form/upload-form.service';
 import { ConfigureCnvToolFilesService } from '../services/configure-cnv-tool-files.service';
-import { UploadHistoryService } from './my-file.service';
+import { CnvFileDetailModule } from '../cnv-file-detail/cnv-file-detail.module';
+
 @NgModule({
   declarations: [
-    MyFileReformatCnvToolResultComponent,
-    MyFileUploadCnvToolResultComponent,
-    MyFileUploadCnvToolResultListComponent,
-    UploadDialogComponent
+    MyFileComponent,
+    MyFileListComponent,
+    UploadDialogComponent,
   ],
-  imports: [SharedModule, MyFileRoutingModule, ReformatCnvToolResultModule],
+  imports: [
+    SharedModule,
+    CnvFileDetailModule,
+    MyFileRoutingModule,
+  ],
   providers: [
     UploadDialogService,
     UploadConfigureService,
-    MyFileUploadCnvToolResultService,
+    MyFileService,
     UploadFormService,
     ConfigureCnvToolFilesService,
-    UploadHistoryService,
+
   ],
   entryComponents: [UploadDialogComponent]
 })

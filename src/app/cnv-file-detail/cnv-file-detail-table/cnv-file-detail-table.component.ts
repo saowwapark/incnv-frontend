@@ -2,25 +2,17 @@ import {
   Component,
   OnInit,
   Input,
-  ViewChild,
-  Output,
-  ElementRef,
-  OnDestroy,
-  AfterViewInit
+  OnDestroy
 } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { ReformatCnvToolResult } from '../reformat-cnv-tool-result.model';
-import { ReformatDialogComponent } from './reformat-dialog/reformat-dialog.component';
-import { Subject, fromEvent, concat } from 'rxjs';
-import { ReformatCnvToolResultService } from '../reformat-cnv-tool-result.service';
+import { CnvFileDetail } from '../cnv-file-detail.model';
+import { Subject} from 'rxjs';
+import { CnvFileDetailService } from '../cnv-file-detail.service';
 import {
   takeUntil,
   debounceTime,
   distinctUntilChanged,
-  tap,
-  mergeMap,
   switchMap,
-  map,
   filter
 } from 'rxjs/operators';
 
@@ -28,23 +20,24 @@ import { DialogAction } from 'src/app/shared/models/dialog.action.model';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { myAnimations } from 'src/app/shared/animations';
 import { SearchService } from 'src/app/shared/components/search/search.service';
+import { CnvFileDetailDialogComponent } from '../cnv-file-detail-dialog/cnv-file-detail-dialog.component';
 
 @Component({
-  selector: 'app-reformat-cnv-tool-result-table',
-  templateUrl: './reformat-cnv-tool-result-table.component.html',
-  styleUrls: ['./reformat-cnv-tool-result-table.component.css'],
+  selector: 'cnv-file-detail-table',
+  templateUrl: './cnv-file-detail-table.component.html',
+  styleUrls: ['./cnv-file-detail-table.component.css'],
   animations: myAnimations
 })
-export class ReformatCnvToolResultTableComponent implements OnInit, OnDestroy {
+export class CnvFileDetailTableComponent implements OnInit, OnDestroy {
   @Input() uploadCnvToolResultId: number;
 
-  dialogRef: MatDialogRef<ReformatDialogComponent>;
-  selectedResults: ReformatCnvToolResult[];
+  dialogRef: MatDialogRef<CnvFileDetailDialogComponent>;
+  selectedResults: CnvFileDetail[];
   confirmDialogRef: MatDialogRef<ConfirmDialogComponent>;
   private _unsubscribeAll: Subject<void>;
 
   constructor(
-    private _reformatService: ReformatCnvToolResultService,
+    private _reformatService: CnvFileDetailService,
     private _matDialog: MatDialog,
     private _searchService: SearchService
   ) {
@@ -91,23 +84,23 @@ export class ReformatCnvToolResultTableComponent implements OnInit, OnDestroy {
    */
   onAddData(): void {
     // Original data
-    this.dialogRef = this._matDialog.open(ReformatDialogComponent, {
+    this.dialogRef = this._matDialog.open(CnvFileDetailDialogComponent, {
       panelClass: 'dialog-default',
       data: {
         action: DialogAction.New,
-        reformatCnvToolResult: new ReformatCnvToolResult()
+        reformatCnvToolResult: new CnvFileDetail()
       },
       disableClose: true
     });
 
     // Updated data
-    let reformatCnvToolResult: ReformatCnvToolResult;
+    let reformatCnvToolResult: CnvFileDetail;
     this.dialogRef
       .afterClosed()
       .pipe(
         // if false, this means closing dialog by pressing close button.
         filter(response => !!response),
-        switchMap((response: ReformatCnvToolResult) => {
+        switchMap((response: CnvFileDetail) => {
           reformatCnvToolResult = response;
           return this._reformatService.addReformatCnvToolResult(
             reformatCnvToolResult

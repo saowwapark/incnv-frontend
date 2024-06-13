@@ -1,4 +1,4 @@
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   Component,
@@ -12,9 +12,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
 
 import { Subject } from 'rxjs';
-import { UploadCnvToolResult } from '../../../shared/models/upload-cnv-tool-result.model';
+import { UploadCnvToolResult } from '../../shared/models/upload-cnv-tool-result.model';
 import { MatSort } from '@angular/material/sort';
-import { MyFileUploadCnvToolResultService } from '../my-file-upload-cnv-tool-result.service';
+import { MyFileService } from '../my-file.service';
 import { DialogAction } from 'src/app/shared/models/dialog.action.model';
 import { UploadDialogComponent } from '../upload-dialog/upload-dialog.component';
 import { IdAndName } from 'src/app/shared/models/id-and-name.model';
@@ -23,11 +23,11 @@ import { TabFileMappingService } from 'src/app/tab-file-mapping/tab-file-mapping
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-my-file-upload-cnv-tool-result-list',
-  templateUrl: './my-file-upload-cnv-tool-result-list.component.html',
-  styleUrls: ['./my-file-upload-cnv-tool-result-list.component.scss']
+  selector: 'my-file-list',
+  templateUrl: './my-file-list.component.html',
+  styleUrls: ['./my-file-list.component.scss']
 })
-export class MyFileUploadCnvToolResultListComponent
+export class MyFileListComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -61,7 +61,7 @@ export class MyFileUploadCnvToolResultListComponent
   private _unsubscribeAll: Subject<void>;
 
   constructor(
-    private _service: MyFileUploadCnvToolResultService,
+    private _service: MyFileService,
     public _matDialog: MatDialog,
     private _samplesetService: SamplesetService,
     private _tabFileMappingService: TabFileMappingService

@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-
 import { UploadFormService } from './configure-upload-cnv-tool-result/upload-form/upload-form.service';
-import { merge, Observable } from 'rxjs';
-import { ReformatCnvToolResultService } from '../reformat-cnv-tool-result/reformat-cnv-tool-result.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'upload-configure',
@@ -13,7 +11,6 @@ import { ReformatCnvToolResultService } from '../reformat-cnv-tool-result/reform
 export class UploadConfigureComponent {
   uploadCnvToolResultId: number;
   constructor(
-    private _reformatService: ReformatCnvToolResultService,
     private _uploadFormService: UploadFormService
   ) {}
 
@@ -39,11 +36,6 @@ export class UploadConfigureComponent {
       this.uploadCnvToolResultId
     );
     return deleteUpload$;
-    // // delete cascade
-    // const deleteReformat$ = this._reformatService.deleteReformatByUploadId(
-    //   this.uploadCnvToolResultId
-    // );
-    // return merge(deleteUpload$, deleteReformat$);
   }
 
   uploadAgain() {

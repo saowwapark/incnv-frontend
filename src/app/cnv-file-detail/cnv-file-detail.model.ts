@@ -1,4 +1,4 @@
-export class ReformatCnvToolResult {
+export class CnvFileDetail {
   reformatCnvToolResultId: number;
   uploadCnvToolResultId: number;
   sample: string;
