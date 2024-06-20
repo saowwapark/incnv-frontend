@@ -12,8 +12,8 @@ import {
   takeUntil,
   debounceTime,
   distinctUntilChanged,
-  switchMap,
-  filter
+  filter,
+  concatMap
 } from 'rxjs/operators';
 
 import { DialogAction } from 'src/app/shared/models/dialog.action.model';
@@ -100,7 +100,7 @@ export class CnvFileDetailTableComponent implements OnInit, OnDestroy {
       .pipe(
         // if false, this means closing dialog by pressing close button.
         filter(response => !!response),
-        switchMap((response: CnvFileDetail) => {
+        concatMap((response: CnvFileDetail) => {
           reformatCnvToolResult = response;
           return this._reformatService.addReformatCnvToolResult(
             reformatCnvToolResult
@@ -130,7 +130,7 @@ export class CnvFileDetailTableComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         filter(response => !!response),
-        switchMap(() => {
+        concatMap(() => {
           const reformatIds = [];
           for (const selectedRow of selectedResults) {
             reformatIds.push(selectedRow.reformatCnvToolResultId);
