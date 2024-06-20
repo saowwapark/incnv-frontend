@@ -134,7 +134,7 @@ export class SamplesetComponent implements OnInit, OnDestroy {
       }
     });
     this.confirmDialogRef.componentInstance.confirmMessage =
-      'Are you sure you want to delete?' + rowNames;
+      `Are you sure you want to delete '${rowNames}' ?`;
 
     // after closed dialog
     this.confirmDialogRef

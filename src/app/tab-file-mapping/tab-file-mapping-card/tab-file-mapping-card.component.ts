@@ -78,7 +78,7 @@ export class TabFileMappingCardComponent {
     });
 
     this.confirmDialogRef.componentInstance.confirmMessage =
-      'Are you sure you want to delete?';
+      `Are you sure you want to delete '${fileMappingConfigured.tabFileMappingName}' ?`;
 
     this.confirmDialogRef.afterClosed().subscribe(result => {
       if (result) {
