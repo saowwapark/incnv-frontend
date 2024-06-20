@@ -9,7 +9,7 @@ import {
   takeUntil,
   debounceTime,
   distinctUntilChanged,
-  switchMap
+  concatMap
 } from 'rxjs/operators';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -54,16 +54,16 @@ export class MyFileComponent implements OnInit {
       }
     });
     this.confirmDialogRef.componentInstance.confirmMessage =
-      'Are you sure you want to delete?' + rowNames;
+      `Are you sure you want to delete '${rowNames}'? `;
 
     this.confirmDialogRef
       .afterClosed()
       .pipe(
-        switchMap(result => {
+        concatMap(result => {
           if (!result) {
             return NEVER;
           } else {
-            this.myFileService.deleteUploadCnvToolResults(ids);
+            return this.myFileService.deleteUploadCnvToolResults(ids);
           }
         }),
         takeUntil(this._unsubscribeAll)
