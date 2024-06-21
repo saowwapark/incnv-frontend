@@ -10,12 +10,12 @@ import {
   distinctUntilChanged,
   tap,
   switchMap,
-  filter
+  filter,
+  concatMap
 } from 'rxjs/operators';
 import {
   MatDialog,
   MatDialogRef,
-  MatDialogConfig
 } from '@angular/material/dialog';
 import { SamplesetFormDialogComponent } from './sampleset-form-dialog/sampleset-form-dialog.component';
 import { DialogAction } from '../shared/models/dialog.action.model';
@@ -110,23 +110,25 @@ export class SamplesetComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         filter(response => !!response),
-        switchMap((updatedSampleset: Sampleset) =>
+        concatMap((updatedSampleset: Sampleset) =>
           this.samplesetService.addSampleset(updatedSampleset)
-        )
+        ),
+        tap(() => this.samplesetService.onTriggerDataChanged.next())
       )
-      .subscribe(() => this.samplesetService.onTriggerDataChanged.next());
+      .subscribe();
   }
   onDelselectedAll() {
     this.samplesetService.onSelectedChanged.next([]);
   }
-  onSubmitAllSelected(selectedSamplesets) {
+  onSubmitAllSelected(selectedSamplesets: Sampleset[]) {
     this.confirmDialogRef = this._matDialog.open(ConfirmDialogComponent, {
       panelClass: 'dialog-warning',
       disableClose: false
     });
-
+    const ids: number[] = [];
     let rowNames = '';
     selectedSamplesets.forEach((selectedSampleset, index) => {
+      ids.push(selectedSampleset.samplesetId);
       if (index === 0) {
         rowNames += selectedSampleset.samplesetName;
       } else {
@@ -141,19 +143,14 @@ export class SamplesetComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         filter(response => !!response),
-        tap((samplesets: Sampleset[]) => {
-          const samplesetIds = [];
-          for (const selectedSampleset of samplesets) {
-            samplesetIds.push(selectedSampleset.samplesetId);
-          }
-          this.samplesetService.deleteSamplesets(samplesetIds);
+        concatMap(() => this.samplesetService.deleteSamplesets(ids)),
+        tap(() => {
+          this.samplesetService.onSelectedChanged.next([]);
+          this.samplesetService.onTriggerDataChanged.next();
+          // clear confirmDialogRef
+          this.confirmDialogRef = null;
         })
       )
-      .subscribe(() => {
-        this.samplesetService.onSelectedChanged.next([]);
-        this.samplesetService.onTriggerDataChanged.next();
-        // clear confirmDialogRef
-        this.confirmDialogRef = null;
-      });
+      .subscribe();
   }
 }
