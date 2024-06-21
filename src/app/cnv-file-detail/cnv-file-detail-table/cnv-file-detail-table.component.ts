@@ -101,7 +101,10 @@ export class CnvFileDetailTableComponent implements OnInit, OnDestroy {
         // if false, this means closing dialog by pressing close button.
         filter(response => !!response),
         concatMap((response: CnvFileDetail) => {
-          reformatCnvToolResult = response;
+          reformatCnvToolResult = {
+            ...response,
+            uploadCnvToolResultId: this.uploadCnvToolResultId
+          }
           return this._reformatService.addReformatCnvToolResult(
             reformatCnvToolResult
           );

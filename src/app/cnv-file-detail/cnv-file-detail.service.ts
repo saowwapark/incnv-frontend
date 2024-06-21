@@ -77,7 +77,7 @@ export class CnvFileDetailService {
   }
   addReformatCnvToolResult(reformatCnvToolResult: CnvFileDetail) {
     return this._http.post(
-      `${this.baseRouteUrl}/${reformatCnvToolResult.reformatCnvToolResultId}`,
+      `${this.baseRouteUrl}`,
       { reformatCnvToolResult }
     );
   }
