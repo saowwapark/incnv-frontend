@@ -19,6 +19,7 @@ import { SharedModule } from '../shared/shared.module';
     ReactiveFormsModule,
     SharedModule,
   ],
+  exports: [CnvFileDetailTableComponent],
   providers: [CnvFileDetailService],
   entryComponents: [CnvFileDetailDialogComponent]
 })
