@@ -8,15 +8,13 @@ import { HomeContentComponent } from './pages/home-page/home-content/home-conten
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeContentComponent }, 
+  { path: 'install', component: DatasourceComponent }, 
   {
     path: 'app',
     component: AppPageComponent,
     canActivate: [AuthenGuard],
     canActivateChild: [AuthenGuard],
     children: [
-      { path: 'install',
-        component: DatasourceComponent
-      },
       {
         path: 'upload-cnvs',
         loadChildren: () =>

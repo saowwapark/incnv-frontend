@@ -53,22 +53,22 @@ export class HomeContentComponent implements OnInit, AfterViewInit {
   }
 
   checkShouldUpdateDatasource() {
-    this.datasourceService.shouldUpdateDatasource().subscribe((result: boolean) => {
-      this.autheService.isAuthen$.subscribe(isAuthen => {
-        if(isAuthen === true && result === true) {
+    this.datasourceService.isShouldUpdateDatasource().subscribe((result: boolean) => {
+      
+        if(result === true) {
           this.goToInstallPage();
           this.datasourceService.onAllDownloadsCompleted().subscribe(() => {
-            this.goToDefaultPage();
+            this.goToHomePage();
           })
         }
       })
-    })
+    
   }
 
   goToInstallPage() {
-    this.router.navigate(['app/install']);
+    this.router.navigate(['install']);
   }
-  goToDefaultPage() {
-    this.router.navigate(['app/upload-cnvs']);
+  goToHomePage() {
+    this.router.navigate(['home']);
   }
 }
