@@ -32,7 +32,7 @@ export class DatasourceService {
         });
     }
 
-    shouldUpdateDatasource(): Observable<boolean> {
+    isShouldUpdateDatasource(): Observable<boolean> {
         return this._http
           .get(`${this.baseRouteUrl}/check-updated-datasource`)
           .pipe(map(res => res['payload']));
