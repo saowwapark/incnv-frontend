@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ConstantsService } from '../services/constants.service';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ export class DatasourceService {
     baseRouteUrl: string;
     private allDownloadsCompletedSubject = new Subject<void>();
 
-    constructor(private _http: HttpClient, private _constant: ConstantsService, private zone: NgZone) {
+    constructor(private _http: HttpClient, private _constant: ConstantsService) {
         this.baseRouteUrl = `${this._constant.baseAppUrl}/api/datasource`;
     }
     updatedDasource(): Observable<string> {
@@ -17,7 +17,7 @@ export class DatasourceService {
             const url = this.baseRouteUrl + '/update-datasource';
             const eventSource = new EventSource(url);
             eventSource.onmessage = event => {
-                this.zone.run(() => observer.next(event.data))
+                observer.next(event.data)
             };
 
             eventSource.onerror = error => {
@@ -26,7 +26,7 @@ export class DatasourceService {
                     eventSource.close();
                     this.notifyAllDownloadsCompleted();
                 } else {
-                    this.zone.run(() => observer.error(error))
+                    observer.error(error)
                 }
             };
         });

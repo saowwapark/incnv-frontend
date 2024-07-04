@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DatasourceService as DatasourceService } from './datasource.service';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -10,9 +9,9 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./datasource.component.scss'],
 })
 export class DatasourceComponent implements OnInit, OnDestroy  {
-  messages = [];
+  messages: string[] = [];
   private _unsubscribeAll: Subject<void>;
-  constructor(private router: Router, private datasourceService: DatasourceService) {
+  constructor( private datasourceService: DatasourceService, private cdr: ChangeDetectorRef) {
     this._unsubscribeAll = new Subject();
   }
 
@@ -30,6 +29,7 @@ export class DatasourceComponent implements OnInit, OnDestroy  {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(status => {
         this.messages.push(status);
+        this.cdr.detectChanges();
       }, error => {
         console.error('Error receiving download status:', error);
       });
